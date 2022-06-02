@@ -1,6 +1,10 @@
 <template>
-  <div class="home">
-    
+  <div class="container">
+    <div class="content" id="landingContent"></div>
+    <div class="content" id="aboutContent"></div>
+    <div class="content"></div>
+    <div class="content"></div>
+    <div class="content"></div>
   </div>
 </template>
 
@@ -15,3 +19,20 @@ export default {
   }
 }
 </script>
+
+<style>
+
+
+.content {
+    height: 100vh;
+}
+
+#landingContent{
+  background-color: blue;
+}
+
+#aboutContent{
+  background-color: pink;
+}
+
+</style>
