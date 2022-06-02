@@ -18,7 +18,11 @@ import store from '@/store.js'
 export default {
 name: 'App',
 data(){
-  store
+      return{
+        email: '',
+        password: '',
+        store
+      }
 },
 computed: { 
   isAuthenticated() {

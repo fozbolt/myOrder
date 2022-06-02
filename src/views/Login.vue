@@ -1,8 +1,8 @@
 <template>
   <div class="login">
       <div class="container">
-        <div class="row">
-          <img class="logo center" alt="logo center" src="../assets/logo.svg" />
+        <div class="row" id="logo-main">
+          <img class="logo center" alt="logo center" src="../assets/logo-main.svg" />
         </div>
         <div class="row">
           <img id="loginIcon" class="center" alt="svg login icon" src="../assets/team.svg" />
@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="password">
-                    <i class="fas fa-key"></i>
+                    <i class="fas fa-key" id="iconPassword"></i>
                     <input type="password" class="form-control"  id="hidden_password" placeholder="password..."  />
                     <i class="fas fa-eye" id="password_eye" v-on:click="show_password()"></i>
                     
@@ -76,6 +76,8 @@ export default {
 <style scoped>
 
 
+
+
 .logo{
   margin-bottom:5%;
   max-width: 250px;
@@ -84,7 +86,6 @@ export default {
 #loginIcon{
   max-width: 400px;
   max-height: 400px;
-  margin-top: -100px
 
 }
 
@@ -127,14 +128,7 @@ input {
   50% {border-bottom-color: #00a2ff;}
 }
 
-.logReg{
-  
-  margin-top:5px;
-  padding: 3px;
-  text-align: center;
-  color:#888888;
 
-}
 
 .border{
   animation: mymove 5s infinite;
@@ -159,6 +153,9 @@ input {
   color:#888888;
   margin-left: -20px;
 }
+
+
+
 
 i{
   
@@ -191,13 +188,110 @@ small{
   
 }
 
+#iconPassword{
+  margin-left: -15px;
+  
+}
+
 .form-control > .placeholderEmail {
   padding-left: 30px;
   background-color:red;
   color:red;
 }
 
+#password_eye {
+  display: none;
+}
 
+
+input:focus ~ #password_eye {
+  display: inline;
+  margin-left:5px;
+  /*
+  #iconPassword{
+  margin-left: -25px;
+  
+ }
+ */
+}
+
+
+@media (min-width:349px){
+  #logo-main{
+  margin-top: -15%;
+ }
+ #loginIcon{
+  max-width: 400px;
+  max-height: 400px;
+  margin-top: -10%;
+
+}
+ 
+}
+
+
+@media (min-width:370px){
+  #logo-main{
+  margin-top: -5%;
+ }
+ #loginIcon{
+  max-width: 400px;
+  max-height: 400px;
+  margin-top: -5%;
+
+}
+ 
+}
+
+
+@media (min-width:768px){
+  #logo-main{
+  margin-top: 5%;
+ }
+ #loginIcon{
+  max-width: 400px;
+  max-height: 400px;
+  margin-top: -2.5%;
+
+}
+}
+
+@media (min-width:1024px){
+  #logo-main{
+  margin-top: 2.5%;
+ }
+ #loginIcon{
+  max-width: 400px;
+  max-height: 400px;
+  margin-top: -2.5%;
+
+}
+}
+
+@media (min-width:1201px){
+  #logo-main{
+  margin-top:5%;
+ }
+ #loginIcon{
+  max-width: 400px;
+  max-height: 400px;
+  margin-top: -5%;
+
+}
+}
+
+
+@media (min-width:1920px){
+  #logo-main{
+  margin-top:10%;
+ }
+ #loginIcon{
+  max-width: 400px;
+  max-height: 400px;
+  margin-top: -5%;
+
+}
+}
 
 
 </style>
