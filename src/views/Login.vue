@@ -18,9 +18,10 @@
                    
                 </div>
 
-                <div class="password">
+                <div class="password" onfocus="document.getElementById('password_eye').style.display='block';"
+                      onblur="document.getElementById('password_eye').style.display='none';">
                     <i class="fas fa-key" id="iconPassword"></i>
-                    <input type="password" class="form-control"  id="hidden_password" placeholder="password..."  />
+                    <input type="password" class="form-control"  id="hidden_password" placeholder="password..."   />
                     <i class="fas fa-eye" id="password_eye" v-on:click="show_password()"></i>
                     
                 </div>
@@ -204,16 +205,11 @@ small{
 }
 
 
-input:focus ~ #password_eye {
+/* input:focus ~ #password_eye {
   display: inline;
   margin-left:5px;
-  /*
-  #iconPassword{
-  margin-left: -25px;
-  
- }
- */
-}
+ 
+} */
 
 
 @media (min-width:349px){
