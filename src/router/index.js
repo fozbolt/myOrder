@@ -1,5 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '@/views/Home.vue'
+import FoodList from '@/views/FoodList.vue'
+
+global.jQuery = require('jquery');
+var $ = global.jQuery;
+window.$ = $;
 
 const routes = [
   {
@@ -15,7 +20,12 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     // iskoristiti ovaj lazy loading ili maknuti, ali za login ne treba LL
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
-  }
+  },
+  {
+    path: '/food_list',
+    name: 'food_list',
+    component: FoodList
+  },
 ]
 
 const router = createRouter({
