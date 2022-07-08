@@ -10,7 +10,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item active" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
-              <a class="nav-link nav-link-ltr" @click="this.$router.push('/')">Order now</a>
+              <a @click="this.$router.push('/')"  class="nav-link nav-link-ltr">Order now</a>
             </li>
             <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
               <a class="nav-link  nav-link-ltr" href="#">About us</a>
@@ -24,6 +24,9 @@
              <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
               <a class="nav-link nav-link-ltr" href="#">Subscribe</a>
             </li>
+            <span v-if="auth.authenticated">
+              <a @click="logout" class="btn btn-info my-2 my-sm-0 mr-2 p-1" href="#">Logout</a>
+            </span>
           </ul>
         </div>
         <a class="navbar-brand ms-auto" href="#">
@@ -34,8 +37,25 @@
 </template>
 
 <script>
+import {Auth} from "@/services/index.js";
+
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+
+  data(){
+      return{
+        auth: Auth.state,
+      }
+  },
+
+  methods: {
+      logout() {
+          Auth.logout();
+          //refresh
+          this.$router.go();
+      }
+  },
+
 }
 
 

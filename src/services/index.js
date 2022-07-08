@@ -3,13 +3,13 @@ import $router from '@/router'
 import store from '@/store.js';
 
 // instanca axios-a za potrebe myOrder backenda
-let Service = axios.create({
+let Api = axios.create({
     baseURL: 'http://localhost:3000/',
     timeout: 10000, 
 });
 
 
-Service.interceptors.request.use((request) => {
+Api.interceptors.request.use((request) => {
     try {
         request.headers['Authorization'] = 'Bearer ' + Auth.getToken();
     } catch (e) {
@@ -21,12 +21,11 @@ Service.interceptors.request.use((request) => {
 
 
 //Dodan i ovaj interceptor jer se može desiti da dodamo token i token ide prema backendu, backend skuži da je token isteko i vrati 401 grešku, pa da nas rerouta na login
-Service.interceptors.response.use( 
+Api.interceptors.response.use( 
     (response) => {return response},
     (error) => {
         if (error.response.status == 401) {
-            console.log('ka sam stvarno tu')
-            if($router.app.$route.name != "Login") $router.push({ path: '/Login'})
+            if($router.app.$route.name != "Login") $router.push({ path: '/login'})
             Auth.logout();
         }
     }
@@ -36,7 +35,7 @@ Service.interceptors.response.use(
 let Auth = {
     async register(new_user){
         //pass ide preko SSL-a pa ga nije nužno heshirati
-        const response = await Service.post('/register', {new_user});
+        const response = await Api.post('/register', {new_user});
         
         if(!response)
             return false
@@ -47,7 +46,7 @@ let Auth = {
 
 
     async login(login_info){
-        const response = await Service.post('/auth', login_info)
+        const response = await Api.post('/auth', login_info)
         
         if(!response) return false
 
@@ -61,7 +60,7 @@ let Auth = {
     },
 
     async changePassword(userData){
-        return await Service.patch('/change_password', userData);
+        return await Api.patch('/change_password', userData);
     },
     logout() {
         localStorage.removeItem('user');
@@ -106,37 +105,37 @@ let Auth = {
 let Posts = {
     Comments: {
         async addComment(postId, comment) {
-            await Service.post(`/posts/${postId}/comments/`, comment);
+            await Api.post(`/posts/${postId}/comments/`, comment);
         },
         async addReply(postId, comment, commentId) {
-            await Service.patch(`/posts/${postId}/comments/${commentId}`, comment);
+            await Api.patch(`/posts/${postId}/comments/${commentId}`, comment);
         },
         async changeComment(postId, comment, commentId) {
             //quickfix zbog dvije identicne rute je na backendu
-            await Service.patch(`/posts/${postId}/comments/${commentId}`, comment);
+            await Api.patch(`/posts/${postId}/comments/${commentId}`, comment);
         },
         async changeReply(postId, comment, commentId, replyId) {
-            await Service.patch(`/posts/${postId}/comments/${commentId}/replies/${replyId}`, comment);
+            await Api.patch(`/posts/${postId}/comments/${commentId}/replies/${replyId}`, comment);
         },
         async deleteComment(postId, commentId) {
-            await Service.delete(`/posts/${postId}/comments/${commentId}`);
+            await Api.delete(`/posts/${postId}/comments/${commentId}`);
         },
         async deleteReply(postId, commentId, replyId) {
-            await Service.delete(`/posts/${postId}/comments/${commentId}/replies/${replyId}`);
+            await Api.delete(`/posts/${postId}/comments/${commentId}/replies/${replyId}`);
         },
         
     },
     async validateImage(base64_img) {
         //prema SO je najbolje koristiti put ?? ako ne prolazi upit povecati axios timeout
-        let resp = await Service.put(`/posts`, {img: base64_img});
+        let resp = await Api.put(`/posts`, {img: base64_img});
 
         return resp.data
     },
     create(post) {
-        return Service.post('/posts', post);
+        return Api.post('/posts', post);
     },
     async getOne(id) {
-        let response = await Service.get(`/posts/${id}`);
+        let response = await Api.get(`/posts/${id}`);
 
         let doc = response.data;
 
@@ -153,6 +152,13 @@ let Posts = {
             }),
         };
     },
+    async test() {
+        let response = await Api.get(`/test`);
+
+        let doc = response.data;
+        return doc
+        
+    },
     async getAll(searchTerm) {
         let options = {};
 
@@ -162,7 +168,7 @@ let Posts = {
             };
         }
 
-        let response = await Service.get('/posts', options);
+        let response = await Api.get('/posts', options);
         return response.data.map((doc) => {
             return {
                 id: doc._id,
@@ -175,4 +181,4 @@ let Posts = {
     },
 };
 
-export { Service, Posts, Auth }; // exportamo Service za ručne pozive ili Posts za metode.
+export { Api, Posts, Auth }; // exportamo Api za ručne pozive ili Posts za metode.

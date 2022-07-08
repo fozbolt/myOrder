@@ -9,27 +9,42 @@
         </div>
         <div class="row">
           <div class="col-sm"></div>
+          <div class="col-sm"></div>
               <div class="col-sm">
 
                 <form>
                 <div class="email"> 
                     <i class="fa fa-envelope" id="iconEmail" aria-hidden="true"></i>
-                    <input type="email" class="form-control placeholderEmail" aria-describedby="emailHelp" placeholder=" e-mail..."  />
+                    <input v-model="email" type="email" class="form-control placeholderEmail" aria-describedby="emailHelp" placeholder=" e-mail..."  />
                    
                 </div>
 
                 <div class="password" onfocus="document.getElementById('password_eye').style.display='block';"
                       onblur="document.getElementById('password_eye').style.display='none';">
                     <i class="fas fa-key" id="iconPassword"></i>
-                    <input type="password" class="form-control"  id="hidden_password" placeholder="password..."   />
+                    <input v-model="password" type="password" class="form-control"  id="hidden_password" placeholder="password..."   />
                     <i class="fas fa-eye" id="password_eye" v-on:click="show_password()"></i>
                     
                 </div>
                 <br/>
+                <small class="logReg">
+                    <span>
+                      Dont have an account?
+                        <router-link to = "register" style="padding-left:3px;"> 
+                        Sign up 
+                        </router-link>
+                      !
+                    </span>
+                </small>
+
+                <div class="row pl-4 pr-4 d-flex justify-content-center" v-if="errorMessage">
+				          <small style="color: red">{{errorMessage}}</small><br>
+                </div>
                 <button type="submit" class="btn btn-primary" @click="login()">Login</button>
                 </form>
-
+          
               </div>
+            <div class="col-sm"></div>
             <div class="col-sm"></div>
           </div>
       </div>
@@ -38,39 +53,57 @@
 
 <script>
 import store from '@/store.js'
+import { Auth } from "@/services";
+import _ from 'lodash';
+
 export default {
   data(){
       return{
         email: '',
         password: '',
+        errorMessage: false,
         store
       }
     },
+  
+
+  //povecati tab space nazad na duplo od ovog
   methods: {
-      login(){
-        //login request to api
-        this.$router.push('/'); 
-      },
+    //kod logina se refresha login page ako je krivi login --popraviti
+    async login(){
+			const result = await Auth.login({'username': this.email, 'password': this.password});
 
-      authError(){
-        //handle auth error
-      },
+			if(result){
+				this.email = null;
+				this.password = null;
+        
+				this.$router.push('/');
+			}
+			else this.errorMessage = "Neuspjeli pokušaj prijave u sustav, molimo provjerite unesene podatke!";
+		},
 
-      show_password() {
-        
-        let x = document.getElementById("hidden_password");
-        
-        if (x.type === "password"){
-          x.type = "text";
-          document.getElementsByClassName("fas fa-eye")[0].className = "fas fa-eye-slash";
-        } 
-        else{
-          x.type = "password";
-          document.getElementsByClassName("fas fa-eye-slash")[0].className = "fas fa-eye";
-        } 
-        
-      }
+
+    show_password() {
+      
+      let x = document.getElementById("hidden_password");
+      
+      if (x.type === "password"){
+        x.type = "text";
+        document.getElementsByClassName("fas fa-eye")[0].className = "fas fa-eye-slash";
+      } 
+      else{
+        x.type = "password";
+        document.getElementsByClassName("fas fa-eye-slash")[0].className = "fas fa-eye";
+      } 
+      
     }
+ },
+  
+  watch:{
+		"errorMessage": _.debounce(function(){this.errorMessage = false}, 10000)
+	},
+
+  
 }
 </script>
 
@@ -85,8 +118,8 @@ export default {
 }
 
 #loginIcon{
-  max-width: 400px;
-  max-height: 400px;
+  max-width: 350px;
+  max-height: 350px;
 
 }
 
@@ -109,6 +142,15 @@ export default {
     
 }
 
+.logReg{
+  margin-top:5px;
+  border: 1px solid white;
+  animation: lightBulb 5s infinite;
+  padding: 3px;
+  text-align: left;
+  color:#888888;
+}
+
 
 
 form{
@@ -118,7 +160,7 @@ form{
 
 input {
   border-color:white;
-  font-size: 17.5px;
+  font-size: 16px;
   width:250px;
   display: inline-block;
 
@@ -212,82 +254,43 @@ small{
 } */
 
 
+/* placement of login content */
 @media (min-width:349px){
   #logo-main{
   margin-top: -15%;
  }
  #loginIcon{
-  max-width: 400px;
-  max-height: 400px;
+  max-width: 350px;
+  max-height: 350px;
   margin-top: -10%;
-
-}
- 
+  }
 }
 
 
 @media (min-width:370px){
   #logo-main{
-  margin-top: -5%;
+  margin-top: -7.5vh;
  }
  #loginIcon{
-  max-width: 400px;
-  max-height: 400px;
-  margin-top: -5%;
-
-}
- 
+  max-width: 350px;
+  max-height: 350px;
+  margin-top: 3vh;
+ }
 }
 
 
 @media (min-width:768px){
   #logo-main{
-  margin-top: 5%;
+  margin-top: 10vh;
  }
  #loginIcon{
-  max-width: 400px;
-  max-height: 400px;
-  margin-top: -2.5%;
-
-}
-}
-
-@media (min-width:1024px){
-  #logo-main{
-  margin-top: 2.5%;
- }
- #loginIcon{
-  max-width: 400px;
-  max-height: 400px;
-  margin-top: -2.5%;
-
-}
-}
-
-@media (min-width:1201px){
-  #logo-main{
-  margin-top:5%;
- }
- #loginIcon{
-  max-width: 400px;
-  max-height: 400px;
+  max-width: 350px;
+  max-height: 350px;
   margin-top: -5%;
-
-}
-}
-
-
-@media (min-width:1920px){
-  #logo-main{
-  margin-top:10%;
  }
- #loginIcon{
-  max-width: 400px;
-  max-height: 400px;
-  margin-top: -5%;
+}
 
-}
-}
+
 
 
 </style>

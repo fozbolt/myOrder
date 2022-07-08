@@ -1,9 +1,7 @@
 export default {
-    isAuthenticated: true,
   
     userId: 'your_id',
-    userEmail: null,
-    userPassword: '',
+    username: null,
 
     cards: [
       {name:"Meal name xyz", price:101, url: "https://picsum.photos/400/400"},

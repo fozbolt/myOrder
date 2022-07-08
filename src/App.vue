@@ -6,7 +6,7 @@
       <router-link to="/login">Login</router-link>
     </nav>
     -->
-    <Navbar/>
+    <Navbar v-if="auth.authenticated"/>
   
     <router-view/>
   <!-- </div> -->
@@ -16,6 +16,8 @@
 <script>
 import store from '@/store.js'
 import Navbar from '@/components/Navbar.vue'
+import {Auth} from "@/services/index.js";
+import { Posts } from '@/services';
 
 export default {
 name: 'App',
@@ -26,14 +28,15 @@ data(){
       return{
         email: '',
         password: '',
-        store
+        store,
+        auth: Auth.state,
       }
 },
-computed: { 
-  isAuthenticated() {
-    return store.isAuthenticated //this.$store....
-  },
- },
+async mounted() {
+        let result = await Posts.test()
+        console.log('this.auth.authenticated:', this.auth.authenticated)
+    }
+
 }
 
 
