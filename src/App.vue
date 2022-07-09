@@ -6,7 +6,7 @@
       <router-link to="/login">Login</router-link>
     </nav>
     -->
-    <Navbar v-if="auth.authenticated"/>
+    <Navbar v-if="auth.authenticated" @focusout="handleFocusOut" tabindex="0"/>
   
     <router-view/>
   <!-- </div> -->
@@ -18,26 +18,43 @@ import store from '@/store.js'
 import Navbar from '@/components/Navbar.vue'
 import {Auth} from "@/services/index.js";
 import { Posts } from '@/services';
+import * as $ from 'jquery';
 
 export default {
-name: 'App',
-components: {
-    Navbar
-},
-data(){
-      return{
-        email: '',
-        password: '',
-        store,
-        auth: Auth.state,
-      }
-},
-async mounted() {
-        let result = await Posts.test()
-        console.log('this.auth.authenticated:', this.auth.authenticated)
-    }
+  name: 'App',
+  components: {
+      Navbar
+  },
+  data(){
+        return{
+          email: '',
+          password: '',
+          store,
+          auth: Auth.state,
+        }
+  },
 
-}
+  methods:{
+  
+    handleFocusOut() {
+        $(document).click(function (event) {
+
+        /// If *navbar-collapse* is not among targets of event
+        if (!$(event.target).is('.navbar-collapse *')) {
+          $('.navbar-collapse').collapse('hide');
+        }
+
+      }); 
+    }
+    
+  },
+
+  async mounted() {
+          let result = await Posts.test()
+          console.log('this.auth.authenticated:', this.auth.authenticated)
+      }
+
+  }
 
 
 </script>

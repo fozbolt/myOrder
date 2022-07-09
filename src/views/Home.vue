@@ -6,7 +6,7 @@
         <img src="@/assets/HeroMobile.png" alt="Default hero image">
       </picture>
     </div>
-    <button @click="this.$router.push('/food_list')" type="button" id="orderNowButton" class="btn btn-primary visible-sm-block visible-lg-block">Order now</button>
+    <button  @click="this.$router.push('/food_list')" type="button" id="orderNowButton" class="btn btn-primary visible-sm-block visible-lg-block">Order now</button>
 
     <div class="content" id="aboutContent"></div>
     <div class="content"></div>
@@ -17,14 +17,13 @@
 
 <script>
 
-//import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
   name: 'Home',
-  
+
+  methods:{} 
+
 }
-
-
 </script>
 
 <style>

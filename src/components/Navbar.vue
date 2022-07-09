@@ -1,5 +1,5 @@
 <template>
- <nav class="navbar navbar-expand-lg navbar-light">
+ <nav class="navbar navbar-expand-lg navbar-light" :style="{backgroundColor:getColor()}">
       <div class="container-fluid">
         <button style="outline:none;box-shadow: none;border:none" class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -7,7 +7,7 @@
           <span class="icon-bar middle-bar"></span>
           <span class="icon-bar bottom-bar"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown" :style="{backgroundColor:getColor()}">
           <ul class="navbar-nav">
             <li class="nav-item active" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
               <a @click="this.$router.push('/')"  class="nav-link nav-link-ltr">Order now</a>
@@ -33,7 +33,7 @@
           <img id="logoNav" alt="navbar logoNav" src="@/assets/logo-main.svg" />
         </a>
       </div>
-    </nav>
+  </nav>
 </template>
 
 <script>
@@ -53,9 +53,16 @@ export default {
           Auth.logout();
           //refresh
           this.$router.go();
-      }
-  },
+      },
 
+      getColor(){
+        if (this.$route.path === '/') return ''
+        else return 'white'
+      },
+
+  }
+
+      
 }
 
 

@@ -172,10 +172,10 @@ let Posts = {
         return response.data.map((doc) => {
             return {
                 id: doc._id,
-                url: doc.source,
-                username: doc.createdBy,
-                title: doc.title,
-                posted_at: Number(doc.postedAt),
+                url: doc.url,
+                name: doc.name,
+                price: doc.price,
+                //posted_at: Number(doc.postedAt), buduci created at
             };
         });
     },

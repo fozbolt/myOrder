@@ -3,7 +3,8 @@
     <div class="card" >
         <img :src="info.url" class="card-img-top" alt="Meal image">
         <div class="card-body p-0">
-            <h5 class="card-title">{{info.name}}</h5>
+            <h5 class="card-title"><b>{{info.name}}</b></h5>
+            <h5 class="card-title">{{info.price}}</h5>
         </div>
     </div>
     </div>
