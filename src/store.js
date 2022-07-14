@@ -2,6 +2,10 @@ export default {
   
     userId: 'your_id',
     username: null,
+    searchText: '',
+    type: 'Food',
+    category: 'MainCourse',
+
 
     cards: [
       {name:"Meal name xyz", price:101, url: "https://picsum.photos/400/400"},

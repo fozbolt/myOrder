@@ -1,88 +1,113 @@
 <template>
-  <div id="search-field">
-  <input 
-        v-model="searchText" 
-        type="text"  
-        id="header-search" 
-        placeholder="Search..." />
-  <svg id="search-icon" class="search-icon" viewBox="0 0 24 24">
-    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-    <path d="M0 0h24v24H0z" fill="none"/>
-  </svg>
-</div>
-    <div id="filter">
-      <div id="type">
-        <h5 class="type-item"><b>Food</b></h5>
-        <h5 class="type-item"><b>Drink</b></h5>
-      </div>
-      <div id="category">
-        <h6 class="category-item"><b>Appetizer</b></h6>
-        <h6 class="category-item"><b>Main course</b></h6>
-        <h6 class="category-item"><b>Desert</b></h6>
-      </div>
-  
-     <div id="sub-category">
-        <h6 class="sub-category-item"><b>Pizza</b></h6>
-        <h6 class="sub-category-item"><b>Burgers</b></h6>
-        <h6 class="sub-category-item"><b>Forky</b></h6>
-        <h6 class="sub-category-item"><b>Sweet</b></h6>
-        <h6 class="sub-category-item"><b>Salads</b></h6>
-      </div>
-    </div>
-    <div class="container">
-        <div class="row">   
-                <Card :key="card.id" v-for="card in cards" :info="card"/> <!-- vrijednost varijable se prenosi u props info komponente card, dakle u info stavljamo da želimo proslijediti informaciju card, : uputa da vue ne uzima varijabblu kao običan string nego da pogleda unutra što se nalazi i to preda childu-->
-                <span v-if="searchText!== '' && !cards.length">No results found!</span>
+        <div id="search-field">
+          <input 
+                v-model="store.searchText" 
+                type="text"  
+                id="header-search" 
+                />
+          <svg id="search-icon" class="search-icon" viewBox="0 0 24 24">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+          </svg>
         </div>
-    </div>
+        <div id="filter">
+            <div id="type" @click="selectType($event)">
+              <button id="food" v-bind:class="{ foodActive: isFood }" class="square" @click="fn">
+                <h5 class="type-item">FOOD</h5>
+              </button>
+              <button id="drink" v-bind:class="{ drinkActive: isDrink }">
+                <h5 class="type-item">DRINK</h5>
+              </button>
+            </div>
+            <div id="category"  @click="selectCategory($event)">
+              <button id="appetizer" ref="appetizer">
+                <h6 class="category-item"><b>Appetizer</b></h6>
+              </button>
+              <button id="mainCourse" ref="mainCourse">
+                <h6 class="category-item"><b>Main course</b></h6>
+              </button>
+              <button id="dessert" ref="dessert">
+                <h6 class="category-item"><b>Dessert</b></h6>
+              </button>
+            </div>
+
+            <ScrollingTabs/>   
+        </div>
 </template>
 
 
 <script>
-import Card from '@/components/Card.vue'
+
+import ScrollingTabs from '@/components/ScrollingTabs';
 import store from '@/store.js'
-import { Posts } from '@/services';
-import _ from 'lodash';
+import * as $ from 'jquery';
 
 export default {
   name: 'FoodList',
   components: {
-    Card
+    ScrollingTabs
 },
     data() { 
         return {
-            //ne treba u store.js slati jer ne treba biti vidljiv ostalim komponentama, ali inace dobra praksa za ostale stvari
-            searchText:"",
             store,
-            cards: []
+            isDrink: false,
+            isFood: true
         }
     },
 
-    created() {
-        this.fetchPosts();
-    },
+    methods:{
+      selectType (event) {
+        let currentType = this.store.type;
+        this.store.type = event.target.innerHTML;
 
-    methods: {
-        async fetchPosts(term) {
-            term = term || store.searchTerm;        
-            let result = await Posts.getAll(term)
-
-            //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
-            this.cards = _.sortBy( result, 'price' ).reverse();
-      
-        },
-        gotoDetails(card) {
-            this.$router.push({ path: `post/${card.id}` });
+        //toggle active type
+        if (currentType !== this.store.type){
+          this.isFood = !this.isFood;
+          this.isDrink = !this.isDrink
         }
-    },
+        
+      },
+      selectCategory (event) {
+        this.store.category = event.target.innerHTML;
 
-     watch: {
-        //deprecated
-        'searchText': _.debounce(function(val) {
-            this.fetchPosts(val);
-        }, 500)
-    },
+        //privremeno rješenje za razmak
+        if (event.target.innerHTML === 'Main course') this.store.category = 'MainCourse'
 
+        //toggle active type - NEEDS REFACTORING
+        if (this.store.category == 'Appetizer'){
+          this.$refs.appetizer.style.color = '#0078D4';
+          this.$refs.mainCourse.style.color = 'black';
+          this.$refs.dessert.style.color = 'black';
+        }
+        else if(this.store.category == 'MainCourse'){
+          this.$refs.appetizer.style.color = 'black';
+          this.$refs.mainCourse.style.color = '#0078D4';
+          this.$refs.dessert.style.color = 'black';
+        }
+        else if(this.store.category == 'Dessert'){
+          this.$refs.appetizer.style.color = 'black';
+          this.$refs.mainCourse.style.color = 'black';
+          this.$refs.dessert.style.color = '#0078D4';
+        }
+      },
+
+      fn(){
+        var square = document.querySelector(".square");
+        square.addEventListener("click", function(e) {
+        e.preventDefault;
+
+        square.classList.remove("animated");
+
+        void square.offsetWidth;
+
+        square.classList.add("animated");
+        
+            navigator.vibrate(100);
+    }, false);
+      }
+
+    
+    }
 
 }
 </script>
@@ -90,6 +115,13 @@ export default {
 
 <style lang="scss">
 
+.row*{
+  margin-left:0px; 
+  margin-right:0px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+
+}
 
 //search
 #search-field{
@@ -122,26 +154,37 @@ export default {
 #filter{
    width: 100%; 
    height: 150px;
+   font-family: 'IM FELL French Canon SC';
 }
 
 
 #type{
   width: 100%;
-  height: 50px;
+  height: 40px;
   text-align: center;
+  margin-top: 10px;
 }
+
 
 
 .type-item{
   width: fit-content;
-  margin: 5px;
-  padding:5px;
+  margin: 5px 5px -2px 5px; //change this for changing bottom border on food and drink
+  padding:5px 5px 0px 5px;
   display: inline-block; /*when inline you can use text-align on parent */
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 26px;
+  display: flex;
+  align-items: center;
+  text-align: center;
 }
+
+
 
 #category{
   width: 100%;
-  height: 50px;
+  height: 35px;
   text-align: center;
 }
 
@@ -171,5 +214,67 @@ export default {
   margin: 0px;
 
 }
+
+//fora simulira klik - koristiti drugdje
+// #food:active {
+//   border: none;
+//   color: #0078D4 !important;
+//   background: transparent;
+// }
+
+//a ovo na webu
+// #food:hover {
+//   border: none;
+//   color: #0078D4 !important;
+//   background: transparent;
+// }
+
+
+// .i-am-active {
+//   color: #0078D4;
+// }
+
+
+#type > button, #category > button{
+    background-color: white;
+    border:none;
+    //border-bottom: 1.11765px solid #0078D4; //ukljuciti samo ovu i prvu liniju za fora effect buttton bordera (piramida)
+}
+
+#mainCourse {
+  color: #0078D4;
+  border-bottom: 1.11765px solid #0078D4;
+}
+
+
+.foodActive{
+  color: #0078D4;
+  border-bottom: 1.11765px solid #0078D4 !important;
+}
+
+.drinkActive{
+  color: #0078D4;
+  border-bottom: 1.11765px solid #0078D4 !important;
+}
+
+
+//animation: https://codepen.io/klebinhopk/details/OGMdOY
+.square {
+    cursor: pointer;
+    
+    &.animated {
+        animation: pulse 0.7s;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0px 0px 0px 0px rgba(35, 130, 220,1);
+    }
+    100% {
+        box-shadow: 0px 0px 0px 2px rgba(35, 130, 220,0);
+    }
+}
+
 
 </style>

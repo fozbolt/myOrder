@@ -122,7 +122,7 @@ nav {
 }
 
 
-@media (max-width:767px){
+@media (max-width:991px){
  .navbar-collapse {
     position:absolute;
     top:0;
@@ -147,7 +147,7 @@ nav {
 }
 
 
-@media (min-width:768px){
+@media (min-width:992px){
 //Desktop navbar on hover animation 
 
   .nav-link {

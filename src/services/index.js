@@ -159,22 +159,32 @@ let Posts = {
         return doc
         
     },
-    async getAll(searchTerm) {
+    async getAll(searchTerm, type, category, subcategory) {
         let options = {};
-
         if (searchTerm) {
             options.params = {
                 _any: searchTerm,
             };
         }
 
-        let response = await Api.get('/posts', options);
+        //sazeti u options.params
+        //   options.categories = {
+        //     type,
+        //     category,
+        //     subCategory: subcategory,
+
+        // }
+
+        let response = await Api.get(`/menu/${type}/${category}/${subcategory}`, options)
         return response.data.map((doc) => {
             return {
                 id: doc._id,
                 url: doc.url,
                 name: doc.name,
                 price: doc.price,
+                type: doc.type,
+                category: doc.category,
+                subCategory: doc.subCategory
                 //posted_at: Number(doc.postedAt), buduci created at
             };
         });
