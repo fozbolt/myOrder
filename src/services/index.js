@@ -102,29 +102,7 @@ let Auth = {
 }
 
 // naš objekt za sve pozive koji se dotiču `Post`ova
-let Posts = {
-    Comments: {
-        async addComment(postId, comment) {
-            await Api.post(`/posts/${postId}/comments/`, comment);
-        },
-        async addReply(postId, comment, commentId) {
-            await Api.patch(`/posts/${postId}/comments/${commentId}`, comment);
-        },
-        async changeComment(postId, comment, commentId) {
-            //quickfix zbog dvije identicne rute je na backendu
-            await Api.patch(`/posts/${postId}/comments/${commentId}`, comment);
-        },
-        async changeReply(postId, comment, commentId, replyId) {
-            await Api.patch(`/posts/${postId}/comments/${commentId}/replies/${replyId}`, comment);
-        },
-        async deleteComment(postId, commentId) {
-            await Api.delete(`/posts/${postId}/comments/${commentId}`);
-        },
-        async deleteReply(postId, commentId, replyId) {
-            await Api.delete(`/posts/${postId}/comments/${commentId}/replies/${replyId}`);
-        },
-        
-    },
+let Products = {
     async validateImage(base64_img) {
         //prema SO je najbolje koristiti put ?? ako ne prolazi upit povecati axios timeout
         let resp = await Api.put(`/posts`, {img: base64_img});
@@ -135,25 +113,24 @@ let Posts = {
         return Api.post('/posts', post);
     },
     async getOne(id) {
-        let response = await Api.get(`/posts/${id}`);
-
+        
+        let response = await Api.get(`/food_list/${id}`);
         let doc = response.data;
-
+    
         return {
+            //ovo premapirati i vidjeti koji podaci jos trebaju za jelo
             id: doc._id,
-            url: doc.source,
-            username: doc.createdBy,
-            title: doc.title,
-            posted_at: Number(doc.postedAt),
-            comments: (doc.comments || []).map((c) => {
-                c.id = c._id;
-                delete c._id;
-                return c;
-            }),
+            name: doc.name,
+            price: doc.price,
+            subCategory: doc.subCategory,
+            category: doc.category,
+            type: doc.type
+            //posted_at: Number(doc.postedAt),
+            
         };
     },
-    async test() {
-        let response = await Api.get(`/test`);
+    async getProductTypes() {
+        let response = await Api.get(`/get_product_types`);
 
         let doc = response.data;
         return doc
@@ -184,11 +161,21 @@ let Posts = {
                 price: doc.price,
                 type: doc.type,
                 category: doc.category,
-                subCategory: doc.subCategory
+                subCategory: doc.subCategory,
+                discount: doc.discount
                 //posted_at: Number(doc.postedAt), buduci created at
             };
         });
     },
+
+    async fetchProducts(term) {  
+        term = term || store.searchTerm; 
+        let result = await Products.getAll(term, store.type, store.category, store.selectedSubCategory )
+
+        //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
+        return  _.sortBy( result, 'price' ).reverse();
+  
+    },
 };
 
-export { Api, Posts, Auth }; // exportamo Api za ručne pozive ili Posts za metode.
+export { Api, Products, Auth }; // exportamo Api za ručne pozive ili Products za metode.

@@ -111,7 +111,7 @@ export default {
         if (this.password === this.confirmPassword) {
 
             const response = await Auth.register({username: this.email, password:this.password, name: this.name, surname: this.surname });
-            console.log(response)
+        
             if(response){
                 this.username = {};
                 this.password  =undefined;

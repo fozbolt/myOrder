@@ -1,57 +1,31 @@
+<!--source: https://www.youtube.com/watch?v=2-jQ1v6X7vA radi samo na prvom potomku i ako ima samo jedan potomak-->
 <template>
-    <div class="col-lg-2 col-6 col-md-3" id="column">
+    <div class="col-lg-2 col-6">
         <div class="card" >
-            <span v-if="info.discount" class="circle-left">
-                <b>{{info.discount}}</b> 
-                <small>OFF</small>
+            <span class="circle-left">
+                <small><b>40%</b><br/>OFF</small>
             </span>
-            <span class="circle-right">
-                {{info.price}}$
+            <span class="circle">
+                <b>{{info.price}}$</b>
             </span>
             <img :src="info.url" class="card-img-top" alt="Meal image">
 
             <div class="card-body p-0">
                 <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
                 <h5 class="card-title">{{info.name}}</h5>
-                <!-- <p>{{ userData.test }}</p> -->
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { ref } from 'vue'
-const loadUserData = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        test: 'this is a test message'
-      })
-      //hardcodiraj skeleton loading bar na 1000ms
-    }, 10)
-  })
-}
-
 export default {
   name: 'Card',
   props: ['info'],  //definiramo da card može primiti info odnosno propse
 
-  data() { 
-        return {
-            cards: [],
-        }
-  },  
-
   methods:{
-
-  },
-    async setup() {
-    const userData = ref(await loadUserData())
-    return {
-      userData,
-    }
+    
   }
-
 }
  
 
@@ -59,15 +33,11 @@ export default {
 
 
 <style lang="scss">
-#column{
-    justify-content: center;
-    display: flex;
-}
 
 .card{
     margin: 5px 0 40px 0;
-    width:150px;
-    border:none;
+    width:100%;
+        border:none;
 }
 
 .card-img-top{
@@ -87,10 +57,10 @@ export default {
 }
 
 
-.circle-right {
+.circle {
   position: absolute;
   top: -15px;
-  left: 110px; //jer right:-12px ili -15px stvaraju bug s boostrap responsivenes
+  right: -12px;
   width: 50px;
   height: 50px;
   -webkit-border-radius: 25px;
@@ -106,9 +76,9 @@ export default {
 .circle-left {
   position: absolute;
   top: -15px;
-  left: -10px;
+  left: -12px;
   width: 50px;
-  height: 35px;
+  height: 40px;
   -webkit-border-radius: 0px 20px 2px 0px;
   -moz-border-radius: 0px 20px 2px;
   border-radius: 0px 20px 2px;
@@ -128,14 +98,4 @@ export default {
     padding-bottom:1px;
 }
 
-
-.circle-left >small{
-    font-size:10px;
-    margin-top: -4px;
-}
-
-.circle-left > b {
-    margin-top: 2px;
-    font-size: 18px;
-}
 </style>

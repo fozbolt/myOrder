@@ -17,7 +17,7 @@
 import store from '@/store.js'
 import Navbar from '@/components/Navbar.vue'
 import {Auth} from "@/services/index.js";
-import { Posts } from '@/services';
+import { Products } from '@/services';
 import * as $ from 'jquery';
 
 export default {
@@ -49,9 +49,11 @@ export default {
     
   },
 
-  async mounted() {
-          let result = await Posts.test()
-          console.log('this.auth.authenticated:', this.auth.authenticated)
+  async beforeMount() {
+          //nek se za sada vuku na landingu, pa kasnije prebaciti u food_list?
+          let my_proxy = await Products.getProductTypes()
+          let destructuredProxy= {...my_proxy.type}
+          if (this.store.productTypes.length === 0) this.store.productTypes.push(destructuredProxy)
       }
 
   }

@@ -5,6 +5,23 @@ export default {
     searchText: '',
     type: 'Food',
     category: 'MainCourse',
+    selectedSubCategory: 'All',
+    selectedProducts: [],
+    productTypes: [],  
+
+    // nisam uspio dokučiti strukturu za sad
+    // productTypes : [
+    //   Food ={
+    //       'Appetizer': [],
+    //       'MainCourse': [],
+    //       'Dessert': []
+    //   },
+    //   Drink ={
+    //       'Appetizer2': [],
+    //       'MainCourse2': [],
+    //       'Dessert2': []
+    //   }
+    // ],
 
 
     cards: [

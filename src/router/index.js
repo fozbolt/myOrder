@@ -30,8 +30,29 @@ const routes = [
   {
     path: '/food_list',
     name: 'food_list',
-    component: FoodList
+    component: FoodList,
+    // children: [
+    //   {
+    //     path: '/:id',
+    //     props: true,
+    //     name: 'FoodInfo',
+    //     component: () => import(/* webpackChunkName: "FoodInfo" */ '../views/FoodInfo.vue')
+    //   }
+    // ]
   },
+  {
+      path: '/food_list/:id',
+      props: true,
+      name: 'FoodInfo',
+      component: () => import(/* webpackChunkName: "FoodInfo" */ '../views/FoodInfo.vue')
+  },
+  {
+    path: '/checkout',
+    props: true,
+    name: 'Chekout',
+    component: () => import(/* webpackChunkName: "Checkout" */ '../views/Checkout.vue')
+}
+
 ]
 
 const router = createRouter({

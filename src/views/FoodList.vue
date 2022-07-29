@@ -11,87 +11,120 @@
           </svg>
         </div>
         <div id="filter">
-            <div id="type" @click="selectType($event)">
-              <button id="food" v-bind:class="{ foodActive: isFood }" class="square" @click="fn">
+            <div id="type" >
+              <button id="food" @click="selectType($event)" v-bind:class="{ foodActive: isFood }" class="square">
                 <h5 class="type-item">FOOD</h5>
               </button>
-              <button id="drink" v-bind:class="{ drinkActive: isDrink }">
+              <button id="drink" @click="selectType($event)" v-bind:class="{ drinkActive: isDrink }" class="square">
                 <h5 class="type-item">DRINK</h5>
               </button>
             </div>
-            <div id="category"  @click="selectCategory($event)">
-              <button id="appetizer" ref="appetizer">
-                <h6 class="category-item"><b>Appetizer</b></h6>
-              </button>
-              <button id="mainCourse" ref="mainCourse">
-                <h6 class="category-item"><b>Main course</b></h6>
-              </button>
-              <button id="dessert" ref="dessert">
-                <h6 class="category-item"><b>Dessert</b></h6>
+
+            <div class="category">
+              <button 
+                @click="selectCategory($event)"
+                v-bind="getDataAttr(category)"   
+                v-for="(value, category, index) in store.productTypes[0][store.type]"
+                class="category-item"
+                >
+                 {{ category }}
               </button>
             </div>
 
-            <ScrollingTabs/>   
+            <CurrentTab/>   
         </div>
 </template>
 
 
 <script>
 
-import ScrollingTabs from '@/components/ScrollingTabs';
+import CurrentTab from '@/components/CurrentTab';
 import store from '@/store.js'
-import * as $ from 'jquery';
+import { Products } from '@/services';
+
 
 export default {
   name: 'FoodList',
   components: {
-    ScrollingTabs
+    CurrentTab
 },
     data() { 
         return {
             store,
             isDrink: false,
-            isFood: true
+            isFood: true,
         }
     },
 
     methods:{
       selectType (event) {
         let currentType = this.store.type;
-        this.store.type = event.target.innerHTML;
-
+        let elementText = event.target.textContent
+        this.store.type = elementText[0].toUpperCase() + elementText.slice(1).toLowerCase();
+  
         //toggle active type
         if (currentType !== this.store.type){
           this.isFood = !this.isFood;
           this.isDrink = !this.isDrink
         }
+
         
       },
-      selectCategory (event) {
-        this.store.category = event.target.innerHTML;
+      selectCategory (event=undefined) {
 
-        //privremeno rješenje za razmak
-        if (event.target.innerHTML === 'Main course') this.store.category = 'MainCourse'
+          this.store.category = event.target.textContent;
+            //privremeno rješenje za razmak
+          if (event.target.textContent === 'Main course') this.store.category = 'MainCourse'
 
-        //toggle active type - NEEDS REFACTORING
-        if (this.store.category == 'Appetizer'){
-          this.$refs.appetizer.style.color = '#0078D4';
-          this.$refs.mainCourse.style.color = 'black';
-          this.$refs.dessert.style.color = 'black';
-        }
-        else if(this.store.category == 'MainCourse'){
-          this.$refs.appetizer.style.color = 'black';
-          this.$refs.mainCourse.style.color = '#0078D4';
-          this.$refs.dessert.style.color = 'black';
-        }
-        else if(this.store.category == 'Dessert'){
-          this.$refs.appetizer.style.color = 'black';
-          this.$refs.mainCourse.style.color = 'black';
-          this.$refs.dessert.style.color = '#0078D4';
-        }
+          //toggle active type - 
+          this.toggleActiveCategory()
+           
+
+          //when category is changed, put subcategory on default 
+          //this.store.selectedSubCategory='All' ova linija ne treba ? malo testirano i izgleda da ne
+        
+
       },
 
+      toggleActiveCategory(){
+        //refs - optimal for vue but they aren't reactive
+        //  for (let ref in this.$refs) {
+        //     if (ref === this.store.category){
+        //        console.log('ref:',this.$refs[ref])
+        //        this.$refs[ref].style.color = '#0078D4'
+        //     }  
+        //     else{
+        //       //console.log(this.$refs[ref]);
+        //       this.$refs[ref].style.color = 'black'
+        //     }
+        //   }
+
+        //timeout kako bi se malo počekalo da se updejtaju DOM elementi
+        setTimeout(() => {
+          document.querySelectorAll('.category-item').forEach(function(categoryBtn) {
+                    if (categoryBtn.textContent === store.category){
+                        categoryBtn.style.color = '#0078D4'
+                    }  
+                    else{
+                        categoryBtn.style.color = 'black'
+                    }
+                });
+
+        }, 50)
+        
+        
+      },
+
+      getDataAttr(category) {  
+        return {
+          'id': category,
+          //'ref': category
+          }
+        },
+
+
       fn(){
+        //type animation - refactor and name source: 
         var square = document.querySelector(".square");
         square.addEventListener("click", function(e) {
         e.preventDefault;
@@ -102,12 +135,39 @@ export default {
 
         square.classList.add("animated");
         
-            navigator.vibrate(100);
+        navigator.vibrate(100);
     }, false);
       }
 
     
+    },
+     watch: {
+       
+      'store.type': {
+        handler: async function(newValue) {
+          //refactor to be more dynamic
+          if (this.store.type.toLowerCase() === 'food') this.store.category = 'MainCourse'
+          else this.store.category = 'Non-alcoholic'
+          
+          this.toggleActiveCategory()
+
+      }
+     },
+
+     'store.category': {
+          handler: async function(newValue) {
+            this.store.selectSubCategory = 'All'
+      }
+     }
+
+    },
+
+    async mounted(){
+       //not the best way - refs are not reactive so i cannot go with that option
+       //this.$refs[this.store.category].style.color = '#0078D4';
+       document.getElementById(this.store.category).style.color="#0078D4";
     }
+
 
 }
 </script>
@@ -182,7 +242,7 @@ export default {
 
 
 
-#category{
+.category{
   width: 100%;
   height: 35px;
   text-align: center;
@@ -191,10 +251,12 @@ export default {
 
 .category-item{
   width: fit-content;
-  margin: 5px;
-  padding:5px;
+  margin: 5px 2px;
+  padding:5px 10px;
   display: inline-block; /*when inline you can use text-align on parent */
+  font-weight: bold;
 }
+
 
 
 #sub-category{
@@ -235,7 +297,7 @@ export default {
 // }
 
 
-#type > button, #category > button{
+#type > button, .category > button{
     background-color: white;
     border:none;
     //border-bottom: 1.11765px solid #0078D4; //ukljuciti samo ovu i prvu liniju za fora effect buttton bordera (piramida)
@@ -243,7 +305,6 @@ export default {
 
 #mainCourse {
   color: #0078D4;
-  border-bottom: 1.11765px solid #0078D4;
 }
 
 
