@@ -103,14 +103,14 @@ let Auth = {
 
 // naš objekt za sve pozive koji se dotiču `Post`ova
 let Products = {
-    async validateImage(base64_img) {
-        //prema SO je najbolje koristiti put ?? ako ne prolazi upit povecati axios timeout
-        let resp = await Api.put(`/posts`, {img: base64_img});
 
-        return resp.data
-    },
-    create(post) {
-        return Api.post('/posts', post);
+    async newOrder(order_info){
+        const response = await Api.post('/new_order', order_info)
+        
+        if(!response) return false
+
+        else if(response.data) return true
+        
     },
     async getOne(id) {
         

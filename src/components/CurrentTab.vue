@@ -6,7 +6,8 @@
          <HorizontalScroller/>
         <div class="tab-content p-3" id="myTabContent">
           <div class="row">   
-              <Card  @click="gotoDetails(card)" :key="card.id" v-for="card in cards" :info="card" />   <!-- vrijednost varijable se prenosi u props info komponente card, dakle u info stavljamo da želimo proslijediti informaciju card, : uputa da vue ne uzima varijabblu kao običan string nego da pogleda unutra što se nalazi i to preda childu-->
+              <div v-if="loaded===false" class="loader"></div>
+              <Card v-else  @click="gotoDetails(card)" :key="card.id" v-for="card in cards" :info="card" />   <!-- vrijednost varijable se prenosi u props info komponente card, dakle u info stavljamo da želimo proslijediti informaciju card, : uputa da vue ne uzima varijabblu kao običan string nego da pogleda unutra što se nalazi i to preda childu-->
               <span v-if="store.searchText!== '' && !cards.length">No results found!</span>
               <span v-if="!cards.length">Currently no results in this subcategory</span>
           </div>
@@ -49,7 +50,8 @@ export default {
   data() { 
         return {
             store,
-            cards: []
+            cards: [],
+            loaded : false
         }
     },
 
@@ -57,7 +59,11 @@ export default {
         this.$watch(
         (vm) => [vm.store.type, vm.store.category, vm.store.selectedSubCategory],
         async (val)  => {
+          //nije najbolja praksa i dodan timeout da bude vise cool loader
           this.cards = await Products.fetchProducts();
+          if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
+
+        //da li treba ovo?
           this.store.searchText = ''
         },
         {
@@ -96,5 +102,22 @@ export default {
 
 <style lang="scss">
 
+.row{
+  justify-content: center;
+  display:flex;
+}
 
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>

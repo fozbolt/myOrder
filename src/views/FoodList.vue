@@ -1,4 +1,5 @@
 <template>
+  <div>
         <div id="search-field">
           <input 
                 v-model="store.searchText" 
@@ -12,10 +13,10 @@
         </div>
         <div id="filter">
             <div id="type" >
-              <button id="food" @click="selectType($event)" v-bind:class="{ foodActive: isFood }" class="square">
+              <button id="food" @click="selectType($event)" v-bind:class="{ foodActive: store.isFood }" class="square">
                 <h5 class="type-item">FOOD</h5>
               </button>
-              <button id="drink" @click="selectType($event)" v-bind:class="{ drinkActive: isDrink }" class="square">
+              <button id="drink" @click="selectType($event)" v-bind:class="{ drinkActive: store.isDrink }" class="square">
                 <h5 class="type-item">DRINK</h5>
               </button>
             </div>
@@ -25,6 +26,7 @@
                 @click="selectCategory($event)"
                 v-bind="getDataAttr(category)"   
                 v-for="(value, category, index) in store.productTypes[0][store.type]"
+                :key="index"
                 class="category-item"
                 >
                  {{ category }}
@@ -32,7 +34,10 @@
             </div>
 
             <CurrentTab/>   
+            <div style="background-color:blueviolet; width:100%; height:400px;">Test div is it in the bottom</div>
+            <FloatingMenu></FloatingMenu>
         </div>
+  </div>
 </template>
 
 
@@ -41,18 +46,18 @@
 import CurrentTab from '@/components/CurrentTab';
 import store from '@/store.js'
 import { Products } from '@/services';
+import FloatingMenu from '../components/FloatingMenu.vue';
 
 
 export default {
   name: 'FoodList',
   components: {
-    CurrentTab
+    CurrentTab,
+    FloatingMenu
 },
     data() { 
         return {
             store,
-            isDrink: false,
-            isFood: true,
         }
     },
 
@@ -60,12 +65,16 @@ export default {
       selectType (event) {
         let currentType = this.store.type;
         let elementText = event.target.textContent
+
+        //toggle active color
+        document.getElementById(this.store.type.toLowerCase()).style.color="black";
         this.store.type = elementText[0].toUpperCase() + elementText.slice(1).toLowerCase();
+        document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
   
-        //toggle active type
+        //toggle active type class
         if (currentType !== this.store.type){
-          this.isFood = !this.isFood;
-          this.isDrink = !this.isDrink
+          this.store.isFood = !this.store.isFood;
+          this.store.isDrink = !this.store.isDrink
         }
 
         
@@ -123,7 +132,7 @@ export default {
         },
 
 
-      fn(){
+      typeAnimation(){
         //type animation - refactor and name source: 
         var square = document.querySelector(".square");
         square.addEventListener("click", function(e) {
@@ -166,7 +175,18 @@ export default {
        //not the best way - refs are not reactive so i cannot go with that option
        //this.$refs[this.store.category].style.color = '#0078D4';
        document.getElementById(this.store.category).style.color="#0078D4";
+       document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
+
+    },
+
+    umounted(){
+      //check if this works or is useless
+      //reset filter - hardcoded a little bit
+      this.store.type='Food'
+      // this.store.category='MainCourse'
+      // this.store.selectSubCategory='All'
     }
+
 
 
 }

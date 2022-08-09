@@ -51,13 +51,21 @@ const routes = [
     props: true,
     name: 'Chekout',
     component: () => import(/* webpackChunkName: "Checkout" */ '../views/Checkout.vue')
+ },
+ {
+  path: '/placed_order',
+  props: true,
+  name: 'PlacedOrder',
+  component: () => import(/* webpackChunkName: "Checkout" */ '../views/PlacedOrder.vue')
 }
-
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior() {
+    document.getElementById('app').scrollIntoView({ behavior: 'smooth' }); //to get on top of the view
+}
 })
 
 

@@ -1,5 +1,5 @@
 <template>
- <nav class="navbar navbar-expand-lg navbar-light" :style="{backgroundColor:getColor()}">
+ <nav v-if="auth.authenticated" class="navbar navbar-expand-lg navbar-light" :style="{backgroundColor:getColor()}">
       <div class="container-fluid">
         <button style="outline:none;box-shadow: none;border:none" class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

@@ -1,5 +1,5 @@
 <template>
-  <!-- <div class="container"> -->
+  <div >
     <div class="content" id="landingContent">
       <picture id="landingImage">
         <source media="(min-width: 900px)" srcset="@/assets/HeroMedium.png">
@@ -30,21 +30,28 @@
     <div class="content"></div>
     <div class="content"></div>
     <div class="content"></div>
-  <!--</div> -->
+  
+  </div>
 </template>
 
+
 <script>
+import store from '@/store.js';
+import LoadingScreen from '@/components/LoadingScreen.vue';
 
 export default {
-  name: 'Home',
-
-  methods:{} 
-
+    name: "Home",
+    data() {
+        return {
+            store
+        };
+    },
+    methods: {},
+    components: { LoadingScreen }
 }
 </script>
 
 <style>
-
 
 .content {
     height: 100vh;
@@ -146,5 +153,8 @@ picture img {
 #italicText{
   color:white
   }
+  
+
+
 
 </style>

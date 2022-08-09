@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import Card from '@/components/Card.vue'
+
 import _ from 'lodash';
 import store from '@/store.js'
 import { Products } from '@/services';
@@ -28,8 +28,6 @@ import { Products } from '@/services';
 export default {
     name: 'HorizontalScroller',
     props: ['info'],  
-
-    components:{Card},
 
     data() { 
         return {

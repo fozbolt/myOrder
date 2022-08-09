@@ -8,6 +8,8 @@ export default {
     selectedSubCategory: 'All',
     selectedProducts: [],
     productTypes: [],  
+    isFood : true,
+    isDrink: false,
 
     // nisam uspio dokučiti strukturu za sad
     // productTypes : [
