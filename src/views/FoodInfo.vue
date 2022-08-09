@@ -1,10 +1,10 @@
 <template>
     <div v-if="card" id="contentHolder">
 
-        <div style="z-index:4;" class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="basicToast" ref="basicToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="width: fit-content;">
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="basicToast" ref="basicToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header text-light">
-                <img id="successIcon" src="@/assets/successIcon.png" style="width: 30px; margin-right: 10px;"/>
+                <img id="successIcon" src="@/assets/successIcon.png"/>
                 <!-- <i class="fa-regular fa-circle-check fa-bounce"></i> -->
                 <h6 class="my-0">{{this.card.name}} added to cart</h6>
             </div>
@@ -148,20 +148,15 @@ export default {
         };
     },
     async mounted() {
-          
         this.card = await Products.getOne(this.id);
         this.cart = JSON.parse(localStorage.getItem('cart')); 
-        //temporary solution
-        if (!Array.isArray(this.cart)) {
-            this.cart = []
-            console.log('u food info postavio na prazan');
-        }
-  
+
+        if (!Array.isArray(this.cart)) this.cart = []
+            
 
          setTimeout(() => {
             if(store.type.toLowerCase()==='food'){
-                this.toggleCollapsible()
-                
+                this.toggleCollapsible()    
             } 
            
             this.adjustResponsiveness()
@@ -501,31 +496,37 @@ small{
 
 
 .toast-header{
-  background-color: green;
-  border-radius: 20px;
+    background-color: green;
+    border-radius: 20px;
 }
 
 .toast-container {
- overflow: hidden;
- position: relative;
+    overflow: hidden;
+    position: relative;
+    z-index:4
 }
 .toast-container > .toast {
-//  position: absolute;
-//  width: 100%;
-//  height: 100%;
-//  margin: 0;
-//  line-height: 50px;
- text-align: right;
- animation: example1 1s linear;
+    width: fit-content;
+    height:fit-content;
+    text-align: right;
+    animation: example1 1s linear;
+    background: none;
+    border-radius:20px;
+    border:none; 
+}
+
+#successIcon{
+     width: 30px; 
+     margin-right: 10px;
 }
 
 @keyframes example1 {
- 0%   { 
- transform: translateX(200%); 		
- }
- 100% { 
- transform: translateX(0%); 
- }
+    0%   { 
+    transform: translateX(200%); 		
+    }
+    100% { 
+    transform: translateX(0%); 
+    }
 }
 
 

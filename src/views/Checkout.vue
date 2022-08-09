@@ -7,12 +7,12 @@
             <img id="backIcon-checkout" src="@/assets/backIconBlue.png" />
         </button>
         </div>
-        <div class="row" style="text-align:left; padding-left:15px;">
-           <h5 style="margin:0px"><b>Checkout</b></h5>
-           <small style="margin-left:10px;">{{'Table: 3'}}</small>
+        <div class="row" id="headerRow">
+           <h5><b>Checkout</b></h5>
+           <small >{{'Table: 3'}}</small>
         </div>
-        <div class="row">  
-            <span v-if="cartItems===undefined || cartItems.length<1" style="padding:20px 0px;">No chosen items yet</span> 
+        <div class="row" id="cardsRow">  
+            <span v-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
             <CartItem v-else :key="card.id" 
                 v-for="(card, index ) in cartItems" :info="card" 
                 v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
@@ -20,42 +20,40 @@
             /> 
               <!-- <FooterTest />  -->
         </div>
-        <div class="row" id="calculationDiv" style="margin: 0px 20px 10px 20px;">
+        <div class="row" id="calculationDiv">
             <div class="col">
                 <!-- Empty half -->
             </div>
-            <div class="col-8" style="text-align:left; line-height: 1.2; text-align: right;">
-            
-                <span  style="display:inline-block; width:100%">W/O tax: {{Math.round((totalSum - (totalSum*0.25)) * 100) / 100 || 0}} $</span>
-                <small  style="display:inline-block; width:100%">+ tax:  {{Math.round(totalSum*0.25 * 100) / 100 || 0}} $</small>
-                <span  style="display:inline-block; border-top:1px solid black; " >
-                    <span style="font-size:20px;">
+            <div class="col-8">
+                <span id="withoutTax" >W/O tax: {{Math.round((totalSum - (totalSum*0.25)) * 100) / 100 || 0}} $</span>
+                <small id="tax">+ tax:  {{Math.round(totalSum*0.25 * 100) / 100 || 0}} $</small>
+                <span id="withTax">
+                    <span>
                         Total: 
-                        <span style="color:#B8A929;"> 
+                        <span id="totalSum"> 
                         {{totalSum.toFixed(2)}} $
                         </span> 
                     </span>
                 </span>
             </div>
         </div>
-        <div class="row" >
+        <div class="row">
             <button @click="toggleCollapsible" class="collapsibleNotes" ref="collapsibleNotes">
-                <span style="margin-left:40px; display:flex; margin-bottom: 5px;">
+                <span>
                     <img src="@\assets\NotesIcon.svg" alt="">
-                    <b style="font-size:18px; padding-left: 5px;"> Add notes</b>
+                    <b> Add notes</b>
                 </span>
             </button>
-            <div  class="contentNotes"><textarea v-model="textualNote" placeholder="Feel free to leave additional request"  style="width: 85%; min-height: 100px; border:1px solid #6F6969; border-radius: 10px;"/></div>
+            <div  class="contentNotes"><textarea v-model="textualNote" placeholder="Feel free to leave additional request" /></div>
         </div>
 
-        <!--https://stackoverflow.com/questions/40182536/vue-js-routing-with-back-button router.go gubi podatke pa treba napraviti localstorage-->
-        <div style="display: flex; justify-content: space-around; margin-top:10px;" >
-            <button  @click="$router.push({ path: '/food_list'})" style="background-color:#6F6969; border:none;" class="btn btn-primary">ADD MEAL</button>
+        <div id="buttonsRow">
+            <button  @click="$router.push({ path: '/food_list'})" id="addMealBtn" class="btn btn-primary">ADD MEAL</button>
             <button  @click="placeOrder" class="btn btn-primary" >PLACE ORDER</button>
         </div>
 
-        <div class="row pl-4 pr-4 d-flex" v-if="errorMessage" style="padding:10px 0px">
-            <small style="color: red">{{errorMessage}}</small><br>
+        <div v-if="errorMessage" class="row pl-4 pr-4 d-flex" id="errorMessageDiv">
+            <small>{{errorMessage}}</small><br>
         </div>
         
     </div>
@@ -185,8 +183,19 @@ export default {
     border: none;
     text-align: left;
     outline: none;
-    font-size: 15px;
+    font-size: 18px;
 }
+
+.collapsibleNotes > span{
+    margin-left:30px; 
+    display:flex; 
+    margin-bottom: 5px;
+}
+
+.collapsibleNotes > span > b{
+    padding-left: 5px;
+}
+
 
 .collapsibleNotes:active {
   color: #0078D4;
@@ -199,6 +208,15 @@ export default {
   overflow: hidden;
   transition: max-height 0.5s ease-out;
 }
+
+.contentNotes > textarea{
+    width: 85%; 
+    min-height: 100px; 
+    border:1px solid #6F6969; 
+    border-radius: 10px;
+    padding:5px;
+}
+
 
 #circle-bottom-checkout {
   position: absolute;
@@ -232,7 +250,75 @@ export default {
     justify-content: space-evenly;
 }
 
-    
+#headerRow{
+     text-align:left; 
+     padding-left:15px;
+}
+
+#headerRow > h5 {
+    margin:0px;
+}
+
+#headerRow > small{
+    margin-left:15px;
+}
+
+#cardsRow > span{
+     padding:20px 0px;
+}
+
+#calculationDiv{
+    margin: 0px 20px 10px 20px;
+}
+
+
+#calculationDiv > .col-8{
+    text-align:left; 
+    line-height: 1.2; 
+    text-align: right; 
+    padding-right: 20px;
+}
+
+#withoutTax, #tax{
+     display:inline-block; 
+     width:100%
+}
+
+#withTax{
+    display:inline-block; 
+    border-top:1px solid black;
+}
+
+#withTax > span{
+     font-size:20px;
+     
+}
+
+#totalSum{
+    color:#B8A929;
+}
+
+
+#buttonsRow{
+   display: flex; 
+   justify-content: space-around; 
+   margin-top:10px;
+}
+
+#addMealBtn{
+    background-color:#6F6969; 
+    border:none;
+}
+
+#errorMessageDiv{
+    padding:10px 0px;
+}
+
+#errorMessageDiv > small{
+    color:red;
+}
+
+
 @media (min-width:900px){
  #checkoutContent{
     position: absolute; 

@@ -3,15 +3,15 @@
 
          <!-- Modal -->
         <div class="modal fade" id="myModal" ref="alertModal" role="dialog">
-            <div class="modal-dialog" style="top:50vw">
+            <div class="modal-dialog">
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-body">
-                        <p style="margin-bottom: 0;">Are you sure you want to remove this item from cart?</p>
+                        <p>Are you sure you want to remove this item from cart?</p>
                     </div>
                     <div class="modal-footer" >
-                        <button @click="toggleModal('removeItem')" type="button" class="btn btn-default" data-dismiss="modal" style="color:white; width:60px">Yes</button>
-                        <button @click="toggleModal('returnItem')" type="button" class="btn btn-default" data-dismiss="modal" style="color:white; width:60px">No</button>
+                        <button @click="toggleModal('removeItem')" type="button" class="btn btn-default" data-dismiss="modal" >Yes</button>
+                        <button @click="toggleModal('returnItem')" type="button" class="btn btn-default" data-dismiss="modal" >No</button>
                     </div>
                 </div>   
             </div>
@@ -22,17 +22,17 @@
         </div>
         <div id="dataDiv">
             {{info.name}}
-            <small style="font-size:10px;  line-height: 16px; display:block;">garlic, ketchup, salami, nectar, extra cheese</small>
-            <span style="color: #B8A929;">{{info.price}}$</span>
+            <small>garlic, ketchup, salami, nectar, extra cheese</small>
+            <span >{{info.price}}$</span>
         </div>
         <div id="quantityDiv">
-            <button @click="increment" id="plusButton" style="border:none; background-color: white; height: fit-content; display:block; font-size:18px;">
+            <button @click="increment" id="plusButton">
                 <img src="@/assets/plusIcon.svg" alt=""/>
             </button>
     
-            <span style="display: inline-block; line-height: 19px; font-size:20px; padding-bottom: -5px;">{{ info.quantity }}</span>
+            <span id="quantityDisplay" >{{ info.quantity }}</span>
 
-            <button @click="decrement" id="minusButton" style="border:none; background-color: white; height: fit-content; display:block;">
+            <button @click="decrement" id="minusButton">
                 <img src="@/assets/minusIcon.svg" alt=""/>
             </button>
         </div>
@@ -120,12 +120,28 @@ small{
     font-family: cursive;
 }
 
+#dataDiv > small{
+    font-size:10px;  line-height: 16px; display:block;
+}
+
+#dataDiv > span{
+   color: #B8A929;
+}
+
+
 #quantityDiv{
     width: 40px;
     height: 80px;
     margin-left: 5px;
     text-align: center;
     display:grid;
+}
+
+#quantityDiv > button{
+    border:none; 
+    background-color: white; 
+    height: fit-content; 
+    display:block; 
 }
 
 #plusButton:before {
@@ -141,6 +157,26 @@ small{
   background-color: white;
   border:none;
   
+}
+
+.modal-footer{
+    color:white; 
+    width:60px;
+}
+
+.modal-dialog{
+    top:50vw
+}
+
+.modal-body > p{
+    margin-bottom: 0;
+}
+
+#quantityDisplay{
+    display: inline-block; 
+    line-height: 19px; 
+    font-size:20px; 
+    padding-bottom: -5px;
 }
 
 

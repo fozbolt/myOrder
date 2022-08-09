@@ -1,25 +1,28 @@
 <template>
  <nav v-if="auth.authenticated" class="navbar navbar-expand-lg navbar-light" :style="{backgroundColor:getColor()}">
       <div class="container-fluid">
-        <button style="outline:none;box-shadow: none;border:none" class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+        <button @focusin="handleFocusIn()" class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="icon-bar top-bar"></span>
           <span class="icon-bar middle-bar"></span>
           <span class="icon-bar bottom-bar"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown" :style="{backgroundColor:getColor()}">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown" @focusout="handleFocusIn" :style="{backgroundColor:getColor()}">
           <ul class="navbar-nav">
             <li class="nav-item active" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
-              <a @click="this.$router.push('/')"  class="nav-link nav-link-ltr">Order now</a>
+              <a @click="this.$router.push('/')"  href="" class="nav-link nav-link-ltr">Order now</a>
             </li>
             <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
-              <a class="nav-link  nav-link-ltr" href="#">About us</a>
+              <a @click="this.$router.push('/')" href=""  class="nav-link nav-link-ltr">My orders</a>
             </li>
              <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
               <a class="nav-link nav-link-ltr" href="#">Top offers</a>
             </li>
              <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
               <a class="nav-link nav-link-ltr" href="#">New offers</a>
+            </li>
+            <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+              <a class="nav-link  nav-link-ltr" href="#">About us</a>
             </li>
              <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
               <a class="nav-link nav-link-ltr" href="#">Subscribe</a>
@@ -60,13 +63,36 @@ export default {
         else return 'white'
       },
 
+      //quick-fix because data-bs-toggle doesnt work
+      handleFocusIn() {
+        console.log('aaaaaaaaaa')
+        $(document).click(function (event) {
+
+        /// If *navbar-collapse* is not among targets of event
+        if ($(event.target).is('.nav-item *')) {
+          $('.navbar-collapse').collapse('hide');
+        }
+
+      }); 
+    },
+
+    toggleMenu() {
+      console.log('tu');
+      try {
+        let el = document.getElementById('navbarNavDropdown');
+        if (el) {
+         
+          el.classList.toggle('collapse');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
   }
 
       
 }
-
-
-//toggle hamburger menu when clicked on some choice
 
 </script>
 
@@ -113,12 +139,16 @@ nav {
     //hardcoded to begin after navbar height - not best solution
     left:0;
     width: 75%;
-    
-
 }
 
 .navbar-nav a {
   color:black;
+}
+
+.navbar-toggler{
+   outline:none; 
+   box-shadow: none !important;
+   border:none !important;
 }
 
 
@@ -182,7 +212,6 @@ nav {
 }
 
 //animated navbar toggle / hamburger menu
-
 .navbar-toggler span {
   display: block;
   background-color: black;
@@ -196,7 +225,6 @@ nav {
   transition: all 0.35s ease-out;
   transform-origin: center left;
 }
-
 
 
 .navbar-toggler span:nth-child(1) {
@@ -231,8 +259,8 @@ nav {
 
 //remove border from hamburger menu
 .btn:focus {
-outline: none;
-box-shadow: none;
-}
+  outline: none;
+  box-shadow: none;
+  }
 
 </style>
