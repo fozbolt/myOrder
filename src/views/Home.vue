@@ -1,6 +1,6 @@
 <template>
   <div >
-    <div class="content" id="landingContent">
+    <div class="homepageContent" id="landingContent">
       <picture id="landingImage">
         <source media="(min-width: 900px)" srcset="@/assets/HeroMedium.png">
         <img src="@/assets/HeroMobile.png" alt="Default hero image">
@@ -26,11 +26,13 @@
 
     </div>
      
-    <div class="content" id="aboutContent"></div>
-    <div class="content"></div>
-    <div class="content"></div>
-    <div class="content"></div>
-  
+    <div class="homepageContent" id="abouthomepageContent"></div>
+    <div class="homepageContent"></div>
+    <div class="homepageContent"></div>
+    <div class="homepageContent">
+      <div id="subscribeDiv"></div>
+    </div>
+    <Footer></Footer>
   </div>
 </template>
 
@@ -38,6 +40,7 @@
 <script>
 import store from '@/store.js';
 import LoadingScreen from '@/components/LoadingScreen.vue';
+import Footer from '@/components/Footer.vue';
 
 export default {
     name: "Home",
@@ -47,14 +50,15 @@ export default {
         };
     },
     methods: {},
-    components: { LoadingScreen }
+    components: { LoadingScreen, Footer }
 }
 </script>
 
 <style>
 
-.content {
+.homepageContent {
     height: 100vh;
+    width: 100%;
 }
 
 #landingContent{
@@ -85,7 +89,7 @@ picture img {
     width:100%;
 }
 
-#aboutContent{
+#abouthomepageContent{
   background-color: pink;
 }
 
@@ -104,7 +108,7 @@ picture img {
   font-size: 16px;
   text-align: center;
   height: 40px;
-  width: fit-content;
+  width: fit-homepageContent;
   border-radius: 50%;
   margin: 10px 2px 2px 2px;
 }
@@ -155,6 +159,11 @@ picture img {
   }
   
 
-
+#subscribeDiv{
+    background-image: url('@/assets/subscribe.jpg');
+    height: 100%;
+    width: 100%;
+    background-size:cover;
+}
 
 </style>

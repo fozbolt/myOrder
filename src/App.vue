@@ -77,6 +77,10 @@ export default {
         if (!Array.isArray(test)){
           localStorage.setItem('cart', JSON.stringify([]));
         }
+
+    //      $( document ).ready(function() {
+    //         $("#footer").css("bottom", window.innerHeight);
+    // });
        
       
 
@@ -113,13 +117,14 @@ export default {
   padding-bottom: 2.5rem;    /* Footer height */
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 2.5rem;            /* Footer height */
-  z-index: 999999;
-}
+// .footer {
+//   position: absolute;
+//   // bottom:0;
+//   // left:0;
+//   width: 100%;
+//   height: 2.5rem;            /* Footer height */
+//   z-index: 999999;
+// }
 
 // #loadingDiv{
 //   display: table;

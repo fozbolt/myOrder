@@ -56,6 +56,7 @@
             <small>{{errorMessage}}</small><br>
         </div>
         
+        <Footer style="margin-top:100px;"></Footer>
     </div>
 </template>
 
@@ -65,15 +66,17 @@ import CartItem from '@/components/CartItem.vue';
 import store from '@/store.js';
 import { Products } from '@/services';
 import FooterTest from '@/components/FooterTest.vue';
+import Footer from '@/components/Footer.vue';
 
 export default {
     name: 'Checkout',
     props: ['id'],
 
-    components: {   
-        CartItem,
-        FooterTest
-    },
+    components: {
+    CartItem,
+    FooterTest,
+    Footer
+},
  
     data() {
         return {
@@ -316,6 +319,11 @@ export default {
 
 #errorMessageDiv > small{
     color:red;
+}
+
+
+#checkoutContent > Footer{
+    margin-top:40px;
 }
 
 

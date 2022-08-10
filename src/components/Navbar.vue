@@ -7,7 +7,7 @@
           <span class="icon-bar middle-bar"></span>
           <span class="icon-bar bottom-bar"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown" @focusout="handleFocusIn" :style="{backgroundColor:getColor()}">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown" @focusin="toggleMenu" :style="{backgroundColor:getColor()}">
           <ul class="navbar-nav">
             <li class="nav-item active" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
               <a @click="this.$router.push('/')"  href="" class="nav-link nav-link-ltr">Order now</a>
@@ -69,8 +69,9 @@ export default {
         $(document).click(function (event) {
 
         /// If *navbar-collapse* is not among targets of event
-        if ($(event.target).is('.nav-item *')) {
-          $('.navbar-collapse').collapse('hide');
+        console.log(event.target)
+        if ($(event.target).is('.nav-link *')) {
+          $('.navbar-collapse').collapse();
         }
 
       }); 

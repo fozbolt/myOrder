@@ -34,8 +34,10 @@
             </div>
 
             <CurrentTab/>   
-            <div style="background-color:blueviolet; width:100%; height:400px;">Test div is it in the bottom</div>
             <FloatingMenu></FloatingMenu>
+
+            <!-- <div style="background-color:blueviolet; width:100%; height:400px;">Test div is it in the bottom</div> -->
+             <Footer></Footer>
         </div>
   </div>
 </template>
@@ -47,13 +49,15 @@ import CurrentTab from '@/components/CurrentTab';
 import store from '@/store.js'
 import { Products } from '@/services';
 import FloatingMenu from '../components/FloatingMenu.vue';
+import Footer from '@/components/Footer.vue';
 
 
 export default {
   name: 'FoodList',
   components: {
     CurrentTab,
-    FloatingMenu
+    FloatingMenu,
+    Footer
 },
     data() { 
         return {

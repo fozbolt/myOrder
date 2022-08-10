@@ -40,8 +40,8 @@ body {
 .triggerButton + label {
   cursor: pointer;
   position: absolute;
-  right: 0.5em;
-  bottom: 0.5em;
+  right: 1.5em;
+  bottom: 1.5em;
   background-color:  #74CF55;
   height: var(--l);
   width: var(--l);

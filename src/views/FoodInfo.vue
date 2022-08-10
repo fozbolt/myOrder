@@ -112,7 +112,8 @@
             <button  @click="addToCart" id="addToCartBtn" ref="addToCartBtn" class="btn btn-primary">Add to cart</button>
             <button  @click="goToCheckout" class="btn btn-primary">Checkout</button>
             
-            <div style="background-color:blueviolet; width:100%; height:400px;">Test div is it in the bottom</div>
+            <!-- <div style="background-color:blueviolet; width:100%; height:400px;">Test div is it in the bottom</div> -->
+            <Footer></Footer>
             
         </div>
 
@@ -128,6 +129,7 @@ import store from '@/store.js';
 import { Products } from '@/services';
 import Slider from '@/components/Slider.vue'
 import * as $ from 'jquery';
+import Footer from '@/components/Footer.vue';
 
 export default {
     props: ['id'],
@@ -135,6 +137,7 @@ export default {
     components: {
     Card,
     Slider,
+    Footer
 },
     data() {
         return {
