@@ -1,30 +1,30 @@
 <template>
  <nav v-if="auth.authenticated" class="navbar navbar-expand-lg navbar-light" :style="{backgroundColor:getColor()}">
       <div class="container-fluid">
-        <button @focusin="handleFocusIn()" class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="icon-bar top-bar"></span>
           <span class="icon-bar middle-bar"></span>
           <span class="icon-bar bottom-bar"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown" @focusin="toggleMenu" :style="{backgroundColor:getColor()}">
           <ul class="navbar-nav">
-            <li class="nav-item active" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+            <li class="nav-item active" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a @click="this.$router.push('/')"  href="" class="nav-link nav-link-ltr">Order now</a>
             </li>
-            <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+            <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a @click="this.$router.push('/')" href=""  class="nav-link nav-link-ltr">My orders</a>
             </li>
-             <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a class="nav-link nav-link-ltr" href="#">Top offers</a>
             </li>
-             <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a class="nav-link nav-link-ltr" href="#">New offers</a>
             </li>
-            <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+            <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a class="nav-link  nav-link-ltr" href="#">About us</a>
             </li>
-             <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a class="nav-link nav-link-ltr" href="#">Subscribe</a>
             </li>
             <span v-if="auth.authenticated">
@@ -41,6 +41,7 @@
 
 <script>
 import {Auth} from "@/services/index.js";
+
 
 export default {
   name: 'Navbar',
@@ -63,34 +64,7 @@ export default {
         else return 'white'
       },
 
-      //quick-fix because data-bs-toggle doesnt work
-      handleFocusIn() {
-        console.log('aaaaaaaaaa')
-        $(document).click(function (event) {
-
-        /// If *navbar-collapse* is not among targets of event
-        console.log(event.target)
-        if ($(event.target).is('.nav-link *')) {
-          $('.navbar-collapse').collapse();
-        }
-
-      }); 
-    },
-
-    toggleMenu() {
-      console.log('tu');
-      try {
-        let el = document.getElementById('navbarNavDropdown');
-        if (el) {
-         
-          el.classList.toggle('collapse');
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-  }
+  },
 
       
 }

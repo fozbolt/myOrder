@@ -108,14 +108,14 @@ export default {
    url(@/assets/fonts/Galindo-Regular.ttf) format("truetype");
 }
 
-.page-container {
-  position: relative;
-  min-height: 100vh;
-}
+// .page-container {
+//   position: relative;
+//   min-height: 100vh;
+// }
 
-.content-wrap {
-  padding-bottom: 2.5rem;    /* Footer height */
-}
+// .content-wrap {
+//   padding-bottom: 2.5rem;    /* Footer height */
+// }
 
 // .footer {
 //   position: absolute;
