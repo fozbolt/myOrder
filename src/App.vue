@@ -4,11 +4,10 @@
     <div v-else-if="(auth.authenticated || this.$route.path ==='/login') && loaded===true" class="page-container">
     <div class="content-wrap">
       <Navbar @focusout="handleFocusOut" tabindex="0"/>
-      <router-view/>
+      <router-view :key="$route.fullPath"/> <!--da refresha i podrute-->
     </div>
       <!-- <Footer class="footer"/> -->
     </div>
-
 </template>
 
 
@@ -77,12 +76,6 @@ export default {
         if (!Array.isArray(test)){
           localStorage.setItem('cart', JSON.stringify([]));
         }
-
-    //      $( document ).ready(function() {
-    //         $("#footer").css("bottom", window.innerHeight);
-    // });
-       
-      
 
         
   }

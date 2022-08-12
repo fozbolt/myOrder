@@ -72,6 +72,7 @@ export default {
     min-height: 225px;// ovo ce morati biti dinamicki
     width: 100%;
     background-size:cover;
+    margin-top: 100px;
 }
 
 #socialMedia > img{

@@ -1,20 +1,18 @@
 <template>
-    <div v-if="this.$route.path==='/food_list'" class="col-lg-2 col-6 col-md-3" id="column">
-        <div class="card" >
-            <span v-if="info.discount" class="circle-left">
-                <b>{{info.discount}}</b> 
-                <small>OFF</small>
-            </span>
-            <span class="circle-right">
-                {{info.price}}$
-            </span>
-            <img :src="info.url" class="card-img-top" alt="Meal image">
+    <div class="card" >
+        <span v-if="info.discount" class="circle-left">
+            <b>{{info.discount}}</b> 
+            <small>OFF</small>
+        </span>
+        <span class="circle-right">
+            {{info.price}}$
+        </span>
+        <img :src="info.url" class="card-img-top" alt="Meal image">
 
-            <div class="card-body p-0">
-                <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
-                <h5 class="card-title">{{info.name}}</h5>
-                <!-- <p>{{ userData.test }}</p> -->
-            </div>
+        <div class="card-body p-0">
+            <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
+            <h5 class="card-title">{{info.name}}</h5>
+            <!-- <p>{{ userData.test }}</p> -->
         </div>
     </div>
 </template>
@@ -33,7 +31,7 @@ const loadUserData = async () => {
 }
 
 export default {
-  name: 'Card',
+  name: 'SimilarMealsCard',
   props: ['info'],  //definiramo da card može primiti info odnosno propse
 
   data() { 
@@ -65,7 +63,7 @@ export default {
 }
 
 .card{
-    margin: 5px 0 40px 0;
+    margin: 5px 0 0 0;
     width:150px;
     border:none;
 }
@@ -84,6 +82,7 @@ export default {
 .card-title{
     font-weight: 200;
     margin-top:2px;
+    margin-bottom:0px
 }
 
 

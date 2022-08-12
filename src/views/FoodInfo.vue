@@ -1,4 +1,4 @@
-<template>
+<template > 
     <div v-if="card" id="contentHolder">
 
         <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -99,27 +99,25 @@
                         </tr>
                     </table>
                 </div>
-                
-            <div id="similarMealsDiv">
+
+            </div>
+
+            <div id="buttonRow">
+                <button  @click="addToCart" id="addToCartBtn" ref="addToCartBtn" class="btn btn-primary">Add to cart</button>
+                <button  @click="goToCheckout" class="btn btn-primary">Checkout</button>
+            </div>
+
+            <div id="similarMealsDiv"> <!-- ne prikazuj ovo ako nema bar jedan meal u toj kategoriji - još doraditi -->
                 <h4 v-if="store.type.toLowerCase() === 'food'">Similar meals</h4>
                 <h4 v-else>Similar driks</h4>
-                <!-- <Slider></Slider>     -->
+                <Slider/> 
             </div>
 
-            </div>
-
-        
-            <button  @click="addToCart" id="addToCartBtn" ref="addToCartBtn" class="btn btn-primary">Add to cart</button>
-            <button  @click="goToCheckout" class="btn btn-primary">Checkout</button>
-            
             <!-- <div style="background-color:blueviolet; width:100%; height:400px;">Test div is it in the bottom</div> -->
             <Footer></Footer>
             
         </div>
-
-        
         </div>
-   
     </div>
 </template>
 
@@ -523,6 +521,14 @@ small{
      margin-right: 10px;
 }
 
+#buttonRow{
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    align-items: center;
+    margin-top: 50px;
+}
+
 @keyframes example1 {
     0%   { 
     transform: translateX(200%); 		
@@ -542,6 +548,7 @@ small{
   margin-right: auto; 
   width: 600px;
  }
+
 }
 
 </style>
