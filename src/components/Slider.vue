@@ -53,12 +53,12 @@ export default {
                   snapAlign: 'center',
                 },
                 700: {
-                  itemsToShow: 3.5,
+                  itemsToShow: 2.5,
                   snapAlign: 'center',
                 },
                 1024: {
-                  itemsToShow: 5,
-                  snapAlign: 'start',
+                  itemsToShow: 3.5,
+                  snapAlign: 'center',
                 },
               },
 
@@ -77,7 +77,6 @@ export default {
    
     //ovo nije najtocnije - testirati na kraju
     this.filteredCards = this.cards.filter(item => item.category === this.store.category && item.id !== this.$route.params.id )
-    console.log(this.filteredCards)
   }
  
 }
@@ -96,6 +95,12 @@ export default {
   background-color: #0078D4;
   color:white;
   margin-top: -20px;
+  display: none; //I don't want to show arrows currently
+}
+
+.carousel__prev--in-active,
+.carousel__next--in-active {
+  display: none;
 }
 
 .carousel__slide {

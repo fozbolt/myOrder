@@ -2,7 +2,7 @@
    <div id="contentDiv" class="container" >
 
          <!-- Modal -->
-        <div class="modal fade" id="myModal" ref="alertModal" role="dialog">
+         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <!-- Modal content-->
                 <div class="modal-content">
@@ -70,7 +70,7 @@ export default {
             else if (value === 'removeItem') this.$emit('delete-item')
 
             //refactor and use refs
-            $("#myModal").modal("toggle");
+            $("#staticBackdrop").modal("toggle");
         }
  
     },
@@ -161,16 +161,24 @@ small{
 
 .modal-footer{
     color:white; 
-    width:60px;
+    width:100%;
+}
+
+.modal-footer > .btn{
+    color:white; 
 }
 
 .modal-dialog{
-    top:50vw
+    top:50vw;
 }
 
 .modal-body > p{
     margin-bottom: 0;
 }
+
+// .modal-backdrop {
+//   z-index: 1;
+// } 
 
 #quantityDisplay{
     display: inline-block; 

@@ -2,16 +2,16 @@
     <div v-if="card" id="contentHolder">
 
         <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="basicToast" ref="basicToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header text-light">
-                <img id="successIcon" src="@/assets/successIcon.png"/>
-                <!-- <i class="fa-regular fa-circle-check fa-bounce"></i> -->
-                <h6 class="my-0">{{this.card.name}} added to cart</h6>
-            </div>
-            <!-- <div class="toast-body">
-            I'll leave this body if needed later
-            </div> -->
-        </div>  
+            <div id="basicToast" ref="basicToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header text-light">
+                    <img id="successIcon" src="@/assets/successIcon.png"/>
+                    <!-- <i class="fa-regular fa-circle-check fa-bounce"></i> -->
+                    <h6 class="my-0">{{this.card.name}} added to cart</h6>
+                </div>
+                <!-- <div class="toast-body">
+                I'll leave this body if needed later
+                </div> -->
+            </div>  
         </div>
 
         <div id="imageZoomableDiv">
@@ -21,7 +21,7 @@
             <span id="circle-right">
                 {{this.card.price}}$
             </span>
-            <button @click="this.$router.go(-1)" :style="{ 'visibility': button_z_index }" id="circle-bottom">
+            <button @click="$router.push({ path: '/food_list' })" :style="{ 'visibility': button_z_index }" id="circle-bottom">
                 <img id="backIcon" src="@/assets/backIcon.png" />
             </button>
             <img @mousedown="button_z_index = 'hidden'" @mouseup="button_z_index = 'visible'" id="mainFoodImg" src="@/assets/foodInfo.jpg" alt="foodInfoImage"/>

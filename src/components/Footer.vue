@@ -11,25 +11,25 @@
                 
             </div>
             <div class="row" id="linkRow">
-                <div class="col-sm-3 col-6 m-auto">
+                <div class="col-sm-3 col-6 m-auto" @click="scrollToTop()" alt="">
                     <h5>My account</h5>
                             <h6>AbcDe</h6>
                             <h6>Evgdgijk</h6>
                             <h6>DMMDM oara</h6>
                 </div>
-                <div class="col-sm-3 col-6 m-auto">
+                <div class="col-sm-3 col-6 m-auto" @click="scrollToTop()" alt="">
                     <h5>My account</h5>
                             <h6>AbcDe</h6>
                             <h6>Evgdgijk</h6>
                             <h6>DMMDM oara</h6>
                 </div>
-                <div class="col-sm-3 col-6 m-auto">
+                <div class="col-sm-3 col-6 m-auto" @click="scrollToTop()" alt="">
                     <h5>My account</h5>
                             <h6>AbcDe</h6>
                             <h6>Evgdgijk</h6>
                             <h6>DMMDM oara</h6>
                 </div>
-                <div class="col-sm-3 col-6 m-auto">
+                <div class="col-sm-3 col-6 m-auto" @click="scrollToTop()" alt="">
                     <h5>My account</h5>
                             <h6>AbcDe</h6>
                             <h6>Evgdgijk</h6>
@@ -55,7 +55,7 @@ export default {
 
   methods:{
     scrollToTop(){
-         window.scrollTo(0, 20);
+         window.scrollTo(0, 40);
     }
   },
  

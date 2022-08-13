@@ -65,7 +65,6 @@
 import CartItem from '@/components/CartItem.vue';
 import store from '@/store.js';
 import { Products } from '@/services';
-import FooterTest from '@/components/FooterTest.vue';
 import Footer from '@/components/Footer.vue';
 
 export default {
@@ -74,7 +73,6 @@ export default {
 
     components: {
     CartItem,
-    FooterTest,
     Footer
 },
  

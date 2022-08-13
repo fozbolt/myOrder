@@ -64,19 +64,20 @@ export default {
 
 .card{
     margin: 5px 0 0 0;
-    width:150px;
+    width:130px;
     border:none;
 }
 
 .card-img-top{
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
     border-radius: 7px;
 }
 
 .card-body{
-    width:150px;
+    width: 130px;
     border-radius: 5px;
+    min-height: 45px;
 }
 
 .card-title{
@@ -136,5 +137,10 @@ export default {
 .circle-left > b {
     margin-top: 2px;
     font-size: 18px;
+}
+
+
+.card-body > h5{
+  width:130px;
 }
 </style>
