@@ -44,7 +44,7 @@ export default {
             settings:{
                 //"items-to-show": 3,
                 "wrap-around": true,
-                //"autoplay": 4000
+                "autoplay": 4000
             },
              breakpoints: {
                 // 350px and up

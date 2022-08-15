@@ -53,12 +53,22 @@ const routes = [
     component: () => import(/* webpackChunkName: "Checkout" */ '../views/Checkout.vue')
  },
  {
-  path: '/placed_order',
-  props: true,
-  name: 'PlacedOrder',
-  component: () => import(/* webpackChunkName: "Checkout" */ '../views/PlacedOrder.vue')
+    path: '/placed_order',
+    props: true,
+    name: 'PlacedOrder',
+    component: () => import(/* webpackChunkName: "PlacedOrder" */ '../views/PlacedOrder.vue')  
+},
+{
+    path: '/order_status',
+    props: true,
+    name: 'OrderStatus',
+    component: () => import(/* webpackChunkName: "OrderStatus" */ '../views/OrderStatus.vue')  
 }
 ]
+
+
+
+
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
@@ -67,6 +77,8 @@ const router = createRouter({
     document.getElementById('app').scrollIntoView({ behavior: 'smooth' }); //to get on top of the view
 }
 })
+
+
 
 
 // izvrši prije svake rute

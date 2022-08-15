@@ -28,7 +28,7 @@
               <a class="nav-link nav-link-ltr" href="#">Subscribe</a>
             </li>
             <span v-if="auth.authenticated">
-              <a @click="logout" class="btn btn-info my-2 my-sm-0 mr-2 p-1" href="#">Logout</a>
+              <a @click="logout" class="btn btn-info my-2 my-sm-0 mr-2 p-1" id="logoutBtn">Logout</a>
             </span>
           </ul>
         </div>
@@ -79,6 +79,7 @@ nav {
   top:0;
   left:0;
   background: rgba(255, 255, 255, 0.6);
+  z-index: 99999;
   
 
   a {
@@ -92,6 +93,7 @@ nav {
 }
 .navbar-nav{
   padding-left: 50px;
+  align-items: center;
 }
 
 .navbar{
@@ -113,7 +115,7 @@ nav {
     position:absolute;
     //hardcoded to begin after navbar height - not best solution
     left:0;
-    width: 75%;
+    width: 80%;
 }
 
 .navbar-nav a {
@@ -124,6 +126,13 @@ nav {
    outline:none; 
    box-shadow: none !important;
    border:none !important;
+}
+
+#logoutBtn{
+  margin-left: 5px;
+  border-radius: 10px;
+  background: azure;
+  padding: 0px !important;
 }
 
 
@@ -237,5 +246,42 @@ nav {
   outline: none;
   box-shadow: none;
   }
+
+
+
+@media (min-width:992px){
+  .navbar-nav a {
+    font-size: 1.25em;
+  }
+.navbar>.container-fluid{
+  height: 50px;
+  }
+  
+  #logoNav{
+    height:32px;
+    width:180px;
+  }
+}
+
+
+@media (min-width:1600px){
+  .navbar-nav a {
+    font-size: 1.5em;
+  }
+.navbar>.container-fluid{
+  height: 50px;
+  }
+  
+  #logoNav{
+    height:50px;
+    width:200px;
+  }
+
+  .navbar-expand-lg .navbar-nav .nav-link {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+}
+
 
 </style>
