@@ -86,7 +86,7 @@ export default {
 
 <style lang="scss">
 #app {
-  font-family:  'Roboto', Helvetica, Arial, sans-serif, 'Galindo-Regular';
+  font-family:  'Roboto','Open Sans', Helvetica, Arial, sans-serif, 'Galindo-Regular', 'IMFellFrenchCanonSC-Regular';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -99,6 +99,20 @@ export default {
   font-family: "Galindo-Regular";
   src: local("Galindo-Regular"),
    url(@/assets/fonts/Galindo-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "IMFellFrenchCanonSC-Regular";
+  src: local("IMFellFrenchCanonSC-Regular"),
+   url(@/assets/fonts/IMFellFrenchCanonSC-Regular.ttf) format("truetype");
+}
+
+.funkyFont{
+  font-family: 'IMFellFrenchCanonSC-Regular' !important;
+}
+
+.brandColor{
+  color: #0078D4 !important;
 }
 
 // .page-container {

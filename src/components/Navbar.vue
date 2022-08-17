@@ -32,7 +32,7 @@
             </span>
           </ul>
         </div>
-        <a class="navbar-brand ms-auto" href="#">
+        <a class="navbar-brand ms-auto" @click="$router.push({ path: `/` });">
           <img id="logoNav" alt="navbar logoNav" src="@/assets/logo-main.svg" />
         </a>
       </div>
@@ -79,7 +79,7 @@ nav {
   top:0;
   left:0;
   background: rgba(255, 255, 255, 0.6);
-  z-index: 99999;
+  z-index: 9;
   
 
   a {
@@ -94,6 +94,7 @@ nav {
 .navbar-nav{
   padding-left: 50px;
   align-items: center;
+  max-width: 200px;
 }
 
 .navbar{
@@ -141,7 +142,7 @@ nav {
     position:absolute;
     top:0;
     left:0;
-    width: 45%;
+    max-width: 200px;
     background: transparent;
     top:40px;
     z-index: 100;
@@ -261,6 +262,11 @@ nav {
     height:32px;
     width:180px;
   }
+
+  .navbar-expand-lg .navbar-nav .nav-link {
+    width: max-content;
+    font-size: 24px;
+}
 }
 
 

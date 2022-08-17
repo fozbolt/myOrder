@@ -371,6 +371,7 @@ button {
 #titleDiv > h5{
     font-weight: 100;
     margin-top:4px;
+    font-family:'IMFellFrenchCanonSC-Regular';
 }
 
 #ingredients{

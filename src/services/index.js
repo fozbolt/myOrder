@@ -64,6 +64,8 @@ let Auth = {
     },
     logout() {
         localStorage.removeItem('user');
+        this.$router.go(0); //this should be enough
+        //this.$router.push({ path: `/login` });
     },
     isAuthenticated(){
         if(Auth.getToken()) return true;
@@ -109,6 +111,14 @@ let Products = {
         
         if(!response) return false
 
+        else if(response.data) return response.data.id
+        
+    },
+    async saveFeedback(feedback){
+        const response = await Api.post('/leave_feedback', feedback)
+        
+        if(!response) return false
+
         else if(response.data) return true
         
     },
@@ -130,7 +140,14 @@ let Products = {
         };
     },
     async getProductTypes() {
-        let response = await Api.get(`/get_product_types`);
+        let response = await Api.get(`/product_types`);
+
+        let doc = response.data;
+        return doc
+        
+    },
+    async getOrder(id) {
+        let response = await Api.get(`/order_info/${id}`);
 
         let doc = response.data;
         return doc

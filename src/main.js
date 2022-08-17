@@ -8,7 +8,6 @@ global.jQuery = require('jquery');
 var $ = global.jQuery;
 window.$ = $;
 
-
 createApp(App).use(router).mount('#app')
 
 // const app = createApp(App);

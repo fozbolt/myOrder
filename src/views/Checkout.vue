@@ -80,7 +80,8 @@ export default {
         return {
             cartItems: [],
             textualNote: '',
-            errorMessage: false
+            errorMessage: false,
+            store
         
         };
     },
@@ -126,17 +127,20 @@ export default {
             if (this.cartItems.length > 0){
                 let info = {
                     date: Date.now(),
+                    table: '2', //hardcoded for now
                     totalAmount: this.totalSum,
-                    note: this.textualNote
+                    note: this.textualNote,
+                    orderStatus: 'Ordered' //placeholder for now
                 }
 
                 let bill = {
                     items: this.cartItems, orderInfo: info 
                 }
 
-                let success = await Products.newOrder(bill)
 
-                if (success) this.$router.push({ path: '/placed_order'})
+                let id = await Products.newOrder(bill)
+                
+                if (id) this.getInfo(id);
                 else console.log('place order error - creater message for this')
             
             }else{
@@ -149,13 +153,37 @@ export default {
             this.cartItems.splice(index, 1);
         },
 
+        async getInfo(id){
+            //timeout needed because operations and triggers in backend don't return orderId immediately 
+            //delete this function in case i dont need orderId and leave only await Products.getOrder(id) in callback  function
+            try{
+               
+                setTimeout(()=>{
+                    (async() => {
+                         let order = await Products.getOrder(id)  
+                         localStorage.setItem('orderID', JSON.stringify(order._id));
+                    })();   
+                  
+                    localStorage.setItem('cart', JSON.stringify([])); 
+                    this.$router.push({ path: '/placed_order'})
+                },2000)
+            }catch(e){
+                console.log(e)
+            }
+            
+      
+        }
+
      },
 
 
 
     unmounted(){
         //save changes when leaving page
-        localStorage.setItem('cart', JSON.stringify(this.cartItems || []));
+        if (this.$route.path !== '/placed_order'){
+            localStorage.setItem('cart', JSON.stringify(this.cartItems || []));
+        }
+
     },
 
     

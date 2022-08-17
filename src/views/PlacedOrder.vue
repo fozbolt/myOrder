@@ -1,5 +1,22 @@
 <template>
 <div>
+    <!-- Modal -->
+         <div class="modal fade" id="finishModal" data-bs-backdrop="true" data-bs-keyboard="false" tabindex="0" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p>If you finish order you won't be able to see order status or access order again. Proceed?</p>
+                    </div>
+                    <div class="modal-footer" >
+                        <button @click="finishOrder" type="button" class="btn btn-default" data-bs-dismiss="modal" >Yes</button>
+                        <button type="button" class="btn btn-default" data-bs-dismiss="modal" >No</button>
+                    </div>
+                </div>   
+            </div>
+        </div>
+
+
  <div id="funModeDiv">
      <div class="slide-left corner-top">
        <label id="funModeLabel" v-bind:style=" funMode ? 'color:black' : 'color: white;' ">Fun mode</label>
@@ -25,11 +42,12 @@
       <div class="row" id="placed-order-buttons">
         <div class="col">
           <button type="button" class="slide-right left-top"  @click="$router.push({ path: '/order_status'})" >Order status</button>
-          <button type="button" class="slide-right left-bottom" @click="toggleFunMode">Order details</button>
+          <button type="button" class="slide-right left-bottom">Order details</button>
         </div>
         <div class="col">
-          <button type="button" class="slide-left right-top">Leave feedback</button>
-          <button type="button" class="slide-left right-bottom">Finish order</button>
+          <button v-if="store.feedbackLeft === false" type="button" @click="$router.push({ path: '/order_feedback'})" class="slide-left right-top" >Leave feedback</button>
+          <button v-else type="button"  disabled  @click="toggleTooltip"  data-bs-toggle="tooltip" data-bs-placement="top" title="This is a Tooltip" class="slide-left right-top">Leave feedback</button>
+          <button type="button" class="slide-left right-bottom" @click="toggleModal">Finish order</button>
         </div>
       </div>
   </div>
@@ -40,17 +58,19 @@
       </div>
       <div id="placed-order-text">
         <p>
-          Your order is finished. Hope you had a great time :))
+          Your order is on the way. Hope you are having a great time :))
         </p>
       </div>
       <div class="row" id="placed-order-buttons">
         <div class="col">
-          <button type="button"  id="left-top-static"  @click="$router.push({ path: '/order_status'})" >Order status</button>
-          <button type="button"  id="left-bottom-static" @click="toggleFunMode">Order details</button>
+          <button type="button"  id="left-top-static"  @click="$router.push({ path: '/order_status'})" >Order status</button>  
+          <button type="button"  id="left-bottom-static" @click="$router.push({ path: '/order_details'})" >Order details</button>
+          <button id="left-bottom-static">Order details</button>
         </div>
         <div class="col">
-          <button type="button"  id="right-top-static">Leave feedback</button>
-          <button type="button"  id="right-bottom-static">Finish order</button>
+          <button v-if="store.feedbackLeft === false" type="button"  id="right-top-static" @click="$router.push({ path: '/order_feedback'})">Leave feedback</button>
+          <button v-else type="button"  id="right-top-static" disabled @click="toggleTooltip"  data-bs-toggle="tooltip" data-bs-placement="top" title="This is a Tooltip">Leave feedback</button>
+          <button type="button"  id="right-bottom-static"  @click="toggleModal">Finish order</button>
         </div>
       </div>
       <!-- <Footer></Footer> -->
@@ -61,6 +81,8 @@
 
 <script>
 import Footer from '@/components/Footer.vue';
+import store from '@/store';
+
 
 
 export default {
@@ -70,15 +92,40 @@ export default {
 },
   data(){
         return{
-           funMode: true
+            store,
+            funMode: true
         }
   },
 
   methods:{
     toggleFunMode(){
       this.funMode = !this.funMode;
+    },
+
+    toggleModal(){
+            console.log('tuu')
+            //refactor and use refs
+            $("#finishModal").modal("toggle");
+        },
+
+    finishOrder(){
+      //delete localstorage and rest here
+      this.store.feedbackLeft = false;
+
+      this.$router.push({ path: `/finish_order` });
+    },
+
+    toggleTooltip(){
+      $(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip()
+          })
     }
-  }
+  },
+
+   mounted(){
+      //initialize toggle - doesnt work in this view
+      this.toggleTooltip();
+    }
 
 }
 
@@ -135,7 +182,7 @@ iframe {
 
 
 #placed-order-buttons{
-  position:revert;
+  position:inherit;
   bottom: 0.5em;
   left:0;
   width:100%;
@@ -262,16 +309,6 @@ $toggle-control-size: $toggle-height - ($toggle-gutter * 2);
     }
   }
 }
-
-/* Center the control */ //ne znam da li treba uopce
-// body {
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   min-height: 100vh;
-//   background-color: #222229;
-//   color: white;
-// }
 
 
 @media (max-width:1199px){
@@ -503,6 +540,25 @@ $toggle-control-size: $toggle-height - ($toggle-gutter * 2);
     100% { right: 1em}
 }
 
+
+
+//modal
+.modal-footer{
+    color:white; 
+    width:100%;
+}
+
+.modal-footer > .btn{
+    color:white; 
+}
+
+.modal-dialog{
+    top:50vw;
+}
+
+.modal-body > p{
+    margin-bottom: 0;
+}
 
 
 

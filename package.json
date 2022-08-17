@@ -24,8 +24,10 @@
     "vue-croppa": "^1.3.8",
     "vue-glide-js": "^1.3.14",
     "vue-router": "^4.0.3",
+    "vue-star-rating": "^2.1.0",
     "vue3-carousel": "^0.1.40",
-    "vuejs-loading-plugin": "^1.0.51"
+    "vuejs-loading-plugin": "^1.0.51",
+    "vuejs-title": "^1.0.16"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
