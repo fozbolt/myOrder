@@ -1,0 +1,375 @@
+<template>
+    <div id="checkoutContent" >
+    
+        <div class="row">
+            <img id="checkoutGif" src="@\assets\checkoutGIF.gif" alt="">
+            <button @click="this.$router.go(-1)"  id="circle-bottom-checkout">
+                <img id="backIcon-checkout" src="@/assets/backIconBlue.png" />
+            </button>
+        </div>
+        <div class="row" id="headerRow">
+           <h5><b>Checkout</b></h5>
+           <small >{{'Table: 3'}}</small>
+        </div>
+        <div class="row" id="cardsRow">  
+            <span v-if="orderExists">Cart is empty. Choose some items first or check <a href="#" @click="$router.push({path: '/placed_order'})">existing order</a></span> 
+            <span v-else-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
+          
+
+            <CartItem v-else :key="card.id" 
+                v-for="(card, index ) in cartItems" :info="card" 
+                v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
+                v-on:delete-item="deleteItem(index)"
+            /> 
+        </div>
+        <div class="row" id="calculationDiv">
+            <div class="col">
+                <!-- Empty half -->
+            </div>
+            <div class="col-8">
+                <span id="withoutTax" >W/O tax: {{Math.round((totalSum - (totalSum*0.25)) * 100) / 100 || 0}} $</span>
+                <small id="tax">+ tax:  {{Math.round(totalSum*0.25 * 100) / 100 || 0}} $</small>
+                <span id="withTax">
+                    <span>
+                        Total: 
+                        <span id="totalSum"> 
+                        {{totalSum.toFixed(2)}} $
+                        </span> 
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <button @click="toggleCollapsible" class="collapsibleNotes" ref="collapsibleNotes">
+                <span>
+                    <img src="@\assets\NotesIcon.svg" alt="">
+                    <b> Add notes</b>
+                </span>
+            </button>
+            <div  class="contentNotes"><textarea v-model="textualNote" placeholder="Feel free to leave additional request" /></div>
+        </div>
+
+        <div id="buttonsRow">
+            <button  @click="$router.push({ path: '/food_list'})" id="addMealBtn" class="btn btn-primary">ADD MEAL</button>
+            <button  @click="placeOrder" class="btn btn-primary" >PLACE ORDER</button>
+        </div>
+
+        <div v-if="errorMessage" class="row pl-4 pr-4 d-flex" id="errorMessageDiv">
+            <small>{{errorMessage}}</small><br>
+        </div>
+        
+        <Footer style="margin-top:100px;"></Footer>
+    </div>
+</template>
+
+
+<script>
+import CartItem from '@/components/CartItem.vue';
+import store from '@/store.js';
+import { Products } from '@/services';
+import Footer from '@/components/Footer.vue';
+
+export default {
+    name: 'Checkout',
+    props: ['id'],
+
+    components: {
+    CartItem,
+    Footer
+},
+ 
+    data() {
+        return {
+            cartItems: [],
+            textualNote: '',
+            errorMessage: false,
+            orderExists: false,
+            store
+        
+        };
+    },
+    async mounted() {
+        this.cartItems = this.cartItems || [];
+        this.cartItems = JSON.parse(localStorage.getItem('cart'));
+
+        if(Boolean( JSON.parse(localStorage.getItem('orderID') ))){
+            this.orderExists = true;
+        }
+        
+        setTimeout(() => {
+            if(store.type.toLowerCase()==='food'){
+                this.toggleCollapsible()   
+            } 
+        }, 1000)
+
+    },
+
+    computed: {
+            totalSum() {
+                if(this.cartItems!== undefined){
+                    return this.cartItems.reduce((accumulator, object) => {
+                    return accumulator + object.price* object.quantity;
+                    }, 0);
+                }
+            }
+        },
+
+    methods:{
+        toggleCollapsible(){
+            let button = this.$refs['collapsibleNotes']
+            //button.classList.toggle('active')
+            
+            let content = button.nextElementSibling;
+            //console.log(content)
+            if (content.style.maxHeight){
+                content.style.maxHeight = null;
+                } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                } 
+        },
+
+        async placeOrder(){
+            this.cartItems = this.cartItems || [];
+
+            if (this.cartItems.length > 0){
+                let info = {
+                    date: Date.now(),
+                    table: '2', //hardcoded for now
+                    totalAmount: this.totalSum,
+                    note: this.textualNote,
+                    orderStatus: 'ordered/ready to take over' 
+                }
+
+                let bill = {
+                    items: this.cartItems, orderInfo: info 
+                }
+
+
+                let id = await Products.newOrder(bill)
+                
+                if (id) this.getInfo(id);
+                else console.log('place order error - create message for this')
+            
+            }else{
+                this.errorMessage = 'Your cart is empty';
+            }
+        },
+
+        deleteItem (index) {
+            //promijeniti u id
+            this.cartItems.splice(index, 1);
+        },
+
+        async getInfo(id){
+            //timeout needed because operations and triggers in backend don't return orderId immediately 
+            //delete this function in case i dont need orderId and leave only await Products.getOrder(id) in callback  function
+            try{
+               
+                setTimeout(()=>{
+                    (async() => {
+                         let order = await Products.getOrder(id)  
+                         localStorage.setItem('orderID', JSON.stringify(order._id));
+                    })();   
+                  
+                    localStorage.setItem('cart', JSON.stringify([])); 
+                    this.$router.push({ path: '/placed_order'})
+                },2000)
+            }catch(e){
+                console.log(e)
+            }
+            
+      
+        }
+
+     },
+
+
+
+    unmounted(){
+        //save changes when leaving page
+        if (this.$route.path !== '/placed_order'){
+            localStorage.setItem('cart', JSON.stringify(this.cartItems || []));
+        }
+
+    },
+
+    
+    
+};
+</script>
+
+<style scoped>
+
+.row{
+    max-width:100%;
+    margin:auto;
+    flex-shrink: 1;
+}
+
+#checkoutGif{
+    width: 312px;
+    height: 280px;
+}
+
+.collapsibleNotes {
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 18px;
+}
+
+.collapsibleNotes > span{
+    margin-left:30px; 
+    display:flex; 
+    margin-bottom: 5px;
+}
+
+.collapsibleNotes > span > b{
+    padding-left: 5px;
+}
+
+
+.collapsibleNotes:active {
+  color: #0078D4;
+}
+
+
+.contentNotes {
+  padding: 0 5px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+}
+
+.contentNotes > textarea{
+    width: 85%; 
+    min-height: 100px; 
+    border:1px solid #6F6969; 
+    border-radius: 10px;
+    padding:5px;
+}
+
+
+#circle-bottom-checkout {
+  position: absolute;
+  top: 60px;
+  left: 0px;
+  width: 35px;
+  height: 25px;
+  -webkit-border-radius: 0px 20px 2px 0px;
+  -moz-border-radius: 0px 20px 2px;
+  border-radius: 0px 17.5px 0px 0px;
+  border:none;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  line-height: 120%;
+  z-index:1;
+  text-align: center;
+}
+
+
+#backIcon-checkout{
+    position: relative;
+    left:5px;
+    width: 25px;
+    height: 15px;
+}
+
+.modal-footer {
+    justify-content: space-evenly;
+}
+
+#headerRow{
+     text-align:left; 
+     padding-left:15px;
+}
+
+#headerRow > h5 {
+    margin:0px;
+}
+
+#headerRow > small{
+    margin-left:15px;
+}
+
+#cardsRow > span{
+     padding:20px 30px;
+}
+
+#calculationDiv{
+    margin: 0px 20px 10px 20px;
+}
+
+
+#calculationDiv > .col-8{
+    text-align:left; 
+    line-height: 1.2; 
+    text-align: right; 
+    padding-right: 20px;
+}
+
+#withoutTax, #tax{
+     display:inline-block; 
+     width:100%
+}
+
+#withTax{
+    display:inline-block; 
+    border-top:1px solid black;
+}
+
+#withTax > span{
+     font-size:20px;
+     
+}
+
+#totalSum{
+    color:#B8A929;
+    font-size: 25px;
+}
+
+
+#buttonsRow{
+   display: flex; 
+   justify-content: space-around; 
+   margin-top:10px;
+}
+
+#addMealBtn{
+    background-color:#6F6969; 
+    border:none;
+}
+
+#errorMessageDiv{
+    padding:10px 0px;
+}
+
+#errorMessageDiv > small{
+    color:red;
+}
+
+
+#checkoutContent > Footer{
+    margin-top:40px;
+}
+
+
+@media (min-width:900px){
+ #checkoutContent{
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 600px;   
+ }
+}
+
+</style>

@@ -1,20 +1,18 @@
 <template>
-    <div v-if="this.$route.path==='/food_list'" class="col-lg-2 col-6 col-md-3" id="column">
-        <div class="card" >
-            <span v-if="info.discount" class="circle-left">
-                <b>{{info.discount}}</b> 
-                <small>OFF</small>
-            </span>
-            <span class="circle-right">
-                {{info.price}}$
-            </span>
-            <img :src="info.url" class="card-img-top" alt="Meal image">
+    <div class="card" >
+        <span v-if="info.discount" class="circle-left">
+            <b>{{info.discount}}</b> 
+            <small>OFF</small>
+        </span>
+        <span class="circle-right">
+            {{info.price}}$
+        </span>
+        <img :src="info.url" class="card-img-top" alt="Meal image">
 
-            <div class="card-body p-0">
-                <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
-                <h5 class="card-title">{{info.name}}</h5>
-                <!-- <p>{{ userData.test }}</p> -->
-            </div>
+        <div class="card-body p-0">
+            <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
+            <h5 class="card-title">{{info.name}}</h5>
+            <!-- <p>{{ userData.test }}</p> -->
         </div>
     </div>
 </template>
@@ -33,7 +31,7 @@ const loadUserData = async () => {
 }
 
 export default {
-  name: 'Card',
+  name: 'SimilarMealsCard',
   props: ['info'],  //definiramo da card može primiti info odnosno propse
 
   data() { 
@@ -65,25 +63,27 @@ export default {
 }
 
 .card{
-    margin: 5px 0 40px 0;
-    width:150px;
+    margin: 5px 0 0 0;
+    width:130px;
     border:none;
 }
 
 .card-img-top{
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
     border-radius: 7px;
 }
 
 .card-body{
-    width:150px;
+    width: 130px;
     border-radius: 5px;
+    min-height: 45px;
 }
 
 .card-title{
     font-weight: 200;
     margin-top:2px;
+    margin-bottom:0px
 }
 
 
@@ -137,5 +137,10 @@ export default {
 .circle-left > b {
     margin-top: 2px;
     font-size: 18px;
+}
+
+
+.card-body > h5{
+  width:130px;
 }
 </style>

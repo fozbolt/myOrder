@@ -3,13 +3,13 @@ import $router from '@/router'
 import store from '@/store.js';
 
 // instanca axios-a za potrebe myOrder backenda
-let Service = axios.create({
+let Api = axios.create({
     baseURL: 'http://localhost:3000/',
     timeout: 10000, 
 });
 
 
-Service.interceptors.request.use((request) => {
+Api.interceptors.request.use((request) => {
     try {
         request.headers['Authorization'] = 'Bearer ' + Auth.getToken();
     } catch (e) {
@@ -21,12 +21,11 @@ Service.interceptors.request.use((request) => {
 
 
 //Dodan i ovaj interceptor jer se može desiti da dodamo token i token ide prema backendu, backend skuži da je token isteko i vrati 401 grešku, pa da nas rerouta na login
-Service.interceptors.response.use( 
+Api.interceptors.response.use( 
     (response) => {return response},
     (error) => {
         if (error.response.status == 401) {
-            console.log('ka sam stvarno tu')
-            if($router.app.$route.name != "Login") $router.push({ path: '/Login'})
+            if($router.app.$route.name != "Login") $router.push({ path: '/login'})
             Auth.logout();
         }
     }
@@ -36,7 +35,7 @@ Service.interceptors.response.use(
 let Auth = {
     async register(new_user){
         //pass ide preko SSL-a pa ga nije nužno heshirati
-        const response = await Service.post('/register', {new_user});
+        const response = await Api.post('/register', {new_user});
         
         if(!response)
             return false
@@ -47,13 +46,13 @@ let Auth = {
 
 
     async login(login_info){
-        const response = await Service.post('/auth', login_info)
+        const response = await Api.post('/auth', login_info)
         
         if(!response) return false
 
         if(response.data){
             let user = response.data
-            //prvi put put spremamo radi tokena
+            //prvi put spremamo radi tokena
             localStorage.setItem('user', JSON.stringify(user));
 
             return true
@@ -61,10 +60,12 @@ let Auth = {
     },
 
     async changePassword(userData){
-        return await Service.patch('/change_password', userData);
+        return await Api.patch('/change_password', userData);
     },
     logout() {
         localStorage.removeItem('user');
+        this.$router.go(0); //this should be enough
+        //this.$router.push({ path: `/login` });
     },
     isAuthenticated(){
         if(Auth.getToken()) return true;
@@ -103,76 +104,105 @@ let Auth = {
 }
 
 // naš objekt za sve pozive koji se dotiču `Post`ova
-let Posts = {
-    Comments: {
-        async addComment(postId, comment) {
-            await Service.post(`/posts/${postId}/comments/`, comment);
-        },
-        async addReply(postId, comment, commentId) {
-            await Service.patch(`/posts/${postId}/comments/${commentId}`, comment);
-        },
-        async changeComment(postId, comment, commentId) {
-            //quickfix zbog dvije identicne rute je na backendu
-            await Service.patch(`/posts/${postId}/comments/${commentId}`, comment);
-        },
-        async changeReply(postId, comment, commentId, replyId) {
-            await Service.patch(`/posts/${postId}/comments/${commentId}/replies/${replyId}`, comment);
-        },
-        async deleteComment(postId, commentId) {
-            await Service.delete(`/posts/${postId}/comments/${commentId}`);
-        },
-        async deleteReply(postId, commentId, replyId) {
-            await Service.delete(`/posts/${postId}/comments/${commentId}/replies/${replyId}`);
-        },
+let Products = {
+
+    async newOrder(order_info){
+        const response = await Api.post('/new_order', order_info)
+        
+        if(!response) return false
+
+        else if(response.data) return response.data.id
         
     },
-    async validateImage(base64_img) {
-        //prema SO je najbolje koristiti put ?? ako ne prolazi upit povecati axios timeout
-        let resp = await Service.put(`/posts`, {img: base64_img});
+    async saveFeedback(feedback){
+        const response = await Api.post('/leave_feedback', feedback)
+        
+        if(!response) return false
 
-        return resp.data
-    },
-    create(post) {
-        return Service.post('/posts', post);
+        else if(response.data) return true
+        
     },
     async getOne(id) {
-        let response = await Service.get(`/posts/${id}`);
-
+        
+        let response = await Api.get(`/food_list/${id}`);
         let doc = response.data;
-
+    
         return {
+            //ovo premapirati i vidjeti koji podaci jos trebaju za jelo
             id: doc._id,
-            url: doc.source,
-            username: doc.createdBy,
-            title: doc.title,
-            posted_at: Number(doc.postedAt),
-            comments: (doc.comments || []).map((c) => {
-                c.id = c._id;
-                delete c._id;
-                return c;
-            }),
+            name: doc.name,
+            price: doc.price,
+            subCategory: doc.subCategory,
+            category: doc.category,
+            type: doc.type
+            //posted_at: Number(doc.postedAt),
+            
         };
     },
-    async getAll(searchTerm) {
-        let options = {};
+    async getProductTypes() {
+        let response = await Api.get(`/product_types`);
 
+        let doc = response.data;
+        return doc
+        
+    },
+    async getOrder(id) {
+        let response = await Api.get(`/order_info/${id}`);
+
+        let doc = response.data;
+        return doc
+        
+    },
+
+    async updateOrder(order) {
+        let response = await Api.patch(`/orders/${order.id}`, order);
+
+        if(!response) return false
+        else if(response.data) return true
+
+    },
+
+
+    async getAll(searchTerm, type, category, subcategory) {
+        let options = {};
         if (searchTerm) {
             options.params = {
                 _any: searchTerm,
             };
         }
 
-        let response = await Service.get('/posts', options);
+        //sazeti u options.params
+        //   options.categories = {
+        //     type,
+        //     category,
+        //     subCategory: subcategory,
+
+        // }
+
+        let response = await Api.get(`/menu/${type}/${category}/${subcategory}`, options)
         return response.data.map((doc) => {
             return {
                 id: doc._id,
-                url: doc.source,
-                username: doc.createdBy,
-                title: doc.title,
-                posted_at: Number(doc.postedAt),
+                url: doc.url,
+                name: doc.name,
+                price: doc.price,
+                type: doc.type,
+                category: doc.category,
+                subCategory: doc.subCategory,
+                discount: doc.discount
+                //posted_at: Number(doc.postedAt), buduci created at
             };
         });
     },
+
+    async fetchProducts(term) {  
+        term = term || store.searchTerm; 
+        let result = await Products.getAll(term, store.type, store.category, store.selectedSubCategory )
+
+        //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
+        return  _.sortBy( result, 'price' ).reverse();
+  
+    },
 };
 
-export { Service, Posts, Auth }; // exportamo Service za ručne pozive ili Posts za metode.
+export { Api, Products, Auth }; // exportamo Api za ručne pozive ili Products za metode.

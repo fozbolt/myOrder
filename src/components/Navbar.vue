@@ -1,45 +1,73 @@
 <template>
- <nav class="navbar navbar-expand-lg navbar-light">
+ <nav v-if="auth.authenticated" class="navbar navbar-expand-lg navbar-light" :style="{backgroundColor:getColor()}">
       <div class="container-fluid">
-        <button style="outline:none;box-shadow: none;border:none" class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="icon-bar top-bar"></span>
           <span class="icon-bar middle-bar"></span>
           <span class="icon-bar bottom-bar"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown" @focusin="toggleMenu" :style="{backgroundColor:getColor()}">
           <ul class="navbar-nav">
-            <li class="nav-item active" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
-              <a class="nav-link nav-link-ltr" @click="this.$router.push('/')">Order now</a>
+            <li class="nav-item active" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
+              <a @click="this.$router.push('/')"  href="" class="nav-link nav-link-ltr">Order now</a>
             </li>
-            <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
-              <a class="nav-link  nav-link-ltr" href="#">About us</a>
+            <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
+              <a @click="this.$router.push('/')" href=""  class="nav-link nav-link-ltr">My orders</a>
             </li>
-             <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a class="nav-link nav-link-ltr" href="#">Top offers</a>
             </li>
-             <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a class="nav-link nav-link-ltr" href="#">New offers</a>
             </li>
-             <li class="nav-item" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+            <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
+              <a class="nav-link  nav-link-ltr" href="#">About us</a>
+            </li>
+             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a class="nav-link nav-link-ltr" href="#">Subscribe</a>
             </li>
+            <span v-if="auth.authenticated">
+              <a @click="logout" class="btn btn-info my-2 my-sm-0 mr-2 p-1" id="logoutBtn">Logout</a>
+            </span>
           </ul>
         </div>
-        <a class="navbar-brand ms-auto" href="#">
+        <a class="navbar-brand ms-auto" @click="$router.push({ path: `/` });">
           <img id="logoNav" alt="navbar logoNav" src="@/assets/logo-main.svg" />
         </a>
       </div>
-    </nav>
+  </nav>
 </template>
 
 <script>
+import {Auth} from "@/services/index.js";
+
+
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+
+  data(){
+      return{
+        auth: Auth.state,
+      }
+  },
+
+  methods: {
+      logout() {
+          Auth.logout();
+          //refresh
+          this.$router.go();
+      },
+
+      getColor(){
+        if (this.$route.path === '/') return ''
+        else return 'white'
+      },
+
+  },
+
+      
 }
-
-
-//toggle hamburger menu when clicked on some choice
 
 </script>
 
@@ -51,6 +79,7 @@ nav {
   top:0;
   left:0;
   background: rgba(255, 255, 255, 0.6);
+  z-index: 9;
   
 
   a {
@@ -64,6 +93,8 @@ nav {
 }
 .navbar-nav{
   padding-left: 50px;
+  align-items: center;
+  max-width: 200px;
 }
 
 .navbar{
@@ -85,22 +116,33 @@ nav {
     position:absolute;
     //hardcoded to begin after navbar height - not best solution
     left:0;
-    width: 75%;
-    
-
+    width: 80%;
 }
 
 .navbar-nav a {
   color:black;
 }
 
+.navbar-toggler{
+   outline:none; 
+   box-shadow: none !important;
+   border:none !important;
+}
 
-@media (max-width:767px){
+#logoutBtn{
+  margin-left: 5px;
+  border-radius: 10px;
+  background: azure;
+  padding: 0px !important;
+}
+
+
+@media (max-width:991px){
  .navbar-collapse {
     position:absolute;
     top:0;
     left:0;
-    width: 45%;
+    max-width: 200px;
     background: transparent;
     top:40px;
     z-index: 100;
@@ -120,7 +162,7 @@ nav {
 }
 
 
-@media (min-width:768px){
+@media (min-width:992px){
 //Desktop navbar on hover animation 
 
   .nav-link {
@@ -155,7 +197,6 @@ nav {
 }
 
 //animated navbar toggle / hamburger menu
-
 .navbar-toggler span {
   display: block;
   background-color: black;
@@ -169,7 +210,6 @@ nav {
   transition: all 0.35s ease-out;
   transform-origin: center left;
 }
-
 
 
 .navbar-toggler span:nth-child(1) {
@@ -204,8 +244,50 @@ nav {
 
 //remove border from hamburger menu
 .btn:focus {
-outline: none;
-box-shadow: none;
+  outline: none;
+  box-shadow: none;
+  }
+
+
+
+@media (min-width:992px){
+  .navbar-nav a {
+    font-size: 1.25em;
+  }
+.navbar>.container-fluid{
+  height: 50px;
+  }
+  
+  #logoNav{
+    height:32px;
+    width:180px;
+  }
+
+  .navbar-expand-lg .navbar-nav .nav-link {
+    width: max-content;
+    font-size: 24px;
 }
+}
+
+
+@media (min-width:1600px){
+  .navbar-nav a {
+    font-size: 1.5em;
+  }
+.navbar>.container-fluid{
+  height: 50px;
+  }
+  
+  #logoNav{
+    height:50px;
+    width:200px;
+  }
+
+  .navbar-expand-lg .navbar-nav .nav-link {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+}
+
 
 </style>
