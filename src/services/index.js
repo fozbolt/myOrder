@@ -52,7 +52,7 @@ let Auth = {
 
         if(response.data){
             let user = response.data
-            //prvi put put spremamo radi tokena
+            //prvi put spremamo radi tokena
             localStorage.setItem('user', JSON.stringify(user));
 
             return true
@@ -153,6 +153,16 @@ let Products = {
         return doc
         
     },
+
+    async updateOrder(order) {
+        let response = await Api.patch(`/orders/${order.id}`, order);
+
+        if(!response) return false
+        else if(response.data) return true
+
+    },
+
+
     async getAll(searchTerm, type, category, subcategory) {
         let options = {};
         if (searchTerm) {

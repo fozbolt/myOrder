@@ -6,11 +6,11 @@
           <img src="@/assets/pizza_status.gif" alt=""/>
           <div id=loaderStatus>
             <progress-bar
-              :value="65" bar-class="bg-info"
+              :value="statusDict[currStatus]" bar-class="bg-info"
             />
-            <label>{{status}}</label>
+            <label>{{ currStatus }}</label>
           </div>
-          <button @click="this.$router.go(-1)" id="addMealBtn" class="btn btn-primary">Back</button>
+          <button @click="this.$router.go(-1)" id="backBtn" class="btn btn-primary">Back</button>
         </div>
     </div> 
     <Footer></Footer>
@@ -28,7 +28,14 @@ export default {
     data() {
         return {
             //store,
-            status: 'Fetching status...'
+           statusDict : {
+              'ordered/ready to take over': 25, 
+              'accepted/being prepared':50, 
+              'ready/waiting to be served':90, 
+              'served':1, 
+              'paid':1,
+            },
+            currStatus: 'Fetching status...'
         };
     },
     components: { 
@@ -40,15 +47,20 @@ export default {
       async getStatus(){
         let id = JSON.parse(localStorage.getItem('orderID')); 
         let order = await Products.getOrder(id);
-        this.status = order.orderInfo.orderStatus
+        this.currStatus = order.orderInfo.orderStatus
       }
     },
 
     created(){
+      if(!Boolean( JSON.parse(localStorage.getItem('orderID') ))){
+          this.$router.push({path: '/'})
+      }
+
       this.getStatus();
       setInterval(() =>{
         this.getStatus()},30000)
     },
+
 }
 
 </script>
@@ -96,7 +108,7 @@ export default {
   display:block;
 }
 
-#addMealBtn{
+#backBtn{
     display:block;
     position:relative;
     left:1em;
@@ -109,7 +121,7 @@ export default {
     font-family: 'IM FELL French Canon SC';
     font-style: normal;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 1.25rem;
     line-height: 23px;
     display: flex;
     align-items: center;

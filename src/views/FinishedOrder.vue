@@ -5,7 +5,7 @@
                 <label class="brandColor"> you </label>
             </h2>
         </div>
-        <button id="newOrderBtn" class="btn btn-primary feedbackButtons funkyFont">New order</button>
+        <button @click="clearOrder" id="newOrderBtn" class="btn btn-primary feedbackButtons funkyFont">New order</button>
     </div>
 </template>
 
@@ -28,7 +28,17 @@ export default {
         };
     },
     methods:{
+        clearOrder(){
+            localStorage.removeItem('orderID');
 
+            this.$router.push({ path: '/' });
+        }
+    },
+
+    created(){
+        if(!Boolean( JSON.parse(localStorage.getItem('orderID') ))){
+            this.$router.push({path: '/'})
+        }
     }
 }
 </script>

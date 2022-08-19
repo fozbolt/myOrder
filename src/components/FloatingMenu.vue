@@ -72,7 +72,6 @@ export default {
         },
 
     callWaiter(reason){
-      console.log('here goes Api call with reason: ', )
       //show success notification
       let button = this.$refs['basicToast']
       new bootstrap.Toast(button).show();

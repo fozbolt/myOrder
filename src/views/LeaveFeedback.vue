@@ -107,8 +107,16 @@ export default {
       }
     },
 
+
     mounted(){
       this.getStatus();
+    },
+
+
+    created(){
+        if(!Boolean( JSON.parse(localStorage.getItem('orderID') ))){
+          this.$router.push({path: '/'})
+        }
     }
   
 

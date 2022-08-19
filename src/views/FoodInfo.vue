@@ -42,13 +42,13 @@
 
         <button  v-if="store.type.toLowerCase()==='food'" @click="toggleCollapsible" class="collapsible" ref="collapsible">Choose additions</button>
             <div v-if="store.type.toLowerCase()==='food'" class="content">
-                <div v-for="(addition,index) in additions" class="form-check" v-bind:style= "[index===additions.length-1 ? {'border-bottom':'black solid 1px'} : {}]" :key="index" >
+                <div v-for="(value, key, index) in additions" class="form-check" v-bind:style= "[index===additions.length-1 ? {'border-bottom':'black solid 1px'} : {}]" :key="index" >
                     <input :value="index" v-model="checkedPrices" class="form-check-input" type="checkbox" id="flexCheckDefault" >
                     <label class="form-check-label" for="flexCheckDefault">
-                        {{addition}}
+                        {{key}}
                     </label>
                     <small >
-                        {{index}} $
+                        {{value}} $
                     </small>
                 </div>
                 <span >Total: {{ sum }}$</span>
@@ -103,8 +103,8 @@
             </div>
 
             <div id="buttonRow">
-                <button  @click="addToCart" id="addToCartBtn" ref="addToCartBtn" class="btn btn-primary">Add to cart</button>
-                <button  @click="goToCheckout" class="btn btn-primary">Checkout</button>
+                <button  @click="addToCart" id="addToCartBtn" ref="addToCartBtn" class="btn btn-primary funkyFont">Add to cart</button>
+                <button  @click="goToCheckout" class="btn btn-primary funkyFont">Checkout</button>
             </div>
 
             <div id="similarMealsDiv"> <!-- ne prikazuj ovo ako nema bar jedan meal u toj kategoriji - još doraditi -->
@@ -126,8 +126,8 @@ import Card from '@/components/Card.vue';
 import store from '@/store.js';
 import { Products } from '@/services';
 import Slider from '@/components/Slider.vue'
-import * as $ from 'jquery';
 import Footer from '@/components/Footer.vue';
+import _ from 'lodash';
 
 export default {
     props: ['id'],
@@ -142,9 +142,18 @@ export default {
             store,
             card: null,
             cart: [],
-            additions: ['No additions', 'Ketchup', 'Ajvar', 'Majoneza', 'Extra sir', 'Origano', 'Specijalan umak'],
             checkedPrices: [0],
-            button_z_index: 'visible'
+            button_z_index: 'visible',
+            additions: {
+                'No additions': 0, 
+                'Ketchup': 2, 
+                'Ajvar': 3, 
+                'Mayonnaise': 3, 
+                'Extra cheese': 2, 
+                'Oregano': 0.5, 
+                'Special souce': 1
+            },
+            additionsSum: 0
 
         };
     },
@@ -171,11 +180,15 @@ export default {
     methods:{
         addToCart(){
             this.cart = this.cart || [];
-            
-            //check if item already in cart
+            this.card.additions = this.checkedPrices.map(value => Object.keys(this.additions)[value]);
+            this.card.price = this.card.price + this.additionsSum;
+         
+            //check if item already in cart (must have same additions)
             let foundIndex = null
             this.cart.forEach((item,index) => {    
-                if(item.id === this.card.id) foundIndex = index
+                if(item.id === this.card.id && _.isEqual(item.additions.sort(), this.card.additions.sort())){
+                    foundIndex = index
+                } 
             });
 
 
@@ -228,14 +241,18 @@ export default {
 
      computed: {
         sum() {
-            if (this.checkedPrices[this.checkedPrices.length - 1] === 0 && this.checkedPrices.length > 1 ) this.checkedPrices = [0] //if last chosen element is "no additions" -> reset array
-            else if (this.checkedPrices.includes(0) ) this.checkedPrices = this.checkedPrices.filter(price => price != 0) //else fill array with more choices
+            if (this.checkedPrices[this.checkedPrices.length - 1] === 0 && this.checkedPrices.length > 1 ) {
+                this.checkedPrices = [0]           //if last chosen element is "no additions" -> reset array
+            }
+            else if (this.checkedPrices.includes(0) ) {
+                 this.checkedPrices = this.checkedPrices.filter(price => price != 0) //else fill array with more choices
+            }
            
-                       
-            //https://laracasts.com/discuss/channels/vue/vuejs-sum-checked-checkbox-value
-            return this.checkedPrices.reduce(function (a, b) {
-            return parseInt(a) + parseInt(b);
-        }, 0);
+           
+            let filteredPrices = this.checkedPrices.map(value => Object.values(this.additions)[value]);
+            this.additionsSum = filteredPrices.reduce((a, b) => a + b, 0)
+            return this.additionsSum
+           
         }
     },
 
@@ -372,11 +389,12 @@ button {
     font-weight: 100;
     margin-top:4px;
     font-family:'IMFellFrenchCanonSC-Regular';
+    font-size:1.5rem
 }
 
 #ingredients{
     color: gray;
-    font-weight: lighter;
+    // font-weight: lighter;
     font-size: 14px;
     width: 80%;
     margin: auto;
@@ -429,10 +447,11 @@ button {
 
 .form-check{
     text-align: left;
+    border-bottom:0.5px dotted #e5dfdf;
 }
 
 .form-check > label{
-   width: 90%;
+   width: 85%;
 }
 
 
@@ -462,8 +481,12 @@ small{
     color:black;
 }
 
-.form-check-label > small {
-    color:gray;
+.form-check > small {
+    color: gray;
+    text-align: end;
+    padding: 0px 2.5px;
+    width: 40px;
+    display: inline-block;
 }
 
 #details{
@@ -528,6 +551,10 @@ small{
     width: 100%;
     align-items: center;
     margin-top: 50px;
+}
+
+.btn{
+    font-size:1.25rem;
 }
 
 @keyframes example1 {

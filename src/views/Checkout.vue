@@ -4,21 +4,23 @@
         <div class="row">
             <img id="checkoutGif" src="@\assets\checkoutGIF.gif" alt="">
             <button @click="this.$router.go(-1)"  id="circle-bottom-checkout">
-            <img id="backIcon-checkout" src="@/assets/backIconBlue.png" />
-        </button>
+                <img id="backIcon-checkout" src="@/assets/backIconBlue.png" />
+            </button>
         </div>
         <div class="row" id="headerRow">
            <h5><b>Checkout</b></h5>
            <small >{{'Table: 3'}}</small>
         </div>
         <div class="row" id="cardsRow">  
-            <span v-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
+            <span v-if="orderExists">Cart is empty. Choose some items first or check <a href="#" @click="$router.push({path: '/placed_order'})">existing order</a></span> 
+            <span v-else-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
+          
+
             <CartItem v-else :key="card.id" 
                 v-for="(card, index ) in cartItems" :info="card" 
                 v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
                 v-on:delete-item="deleteItem(index)"
             /> 
-              <!-- <FooterTest />  -->
         </div>
         <div class="row" id="calculationDiv">
             <div class="col">
@@ -81,6 +83,7 @@ export default {
             cartItems: [],
             textualNote: '',
             errorMessage: false,
+            orderExists: false,
             store
         
         };
@@ -89,7 +92,11 @@ export default {
         this.cartItems = this.cartItems || [];
         this.cartItems = JSON.parse(localStorage.getItem('cart'));
 
-         setTimeout(() => {
+        if(Boolean( JSON.parse(localStorage.getItem('orderID') ))){
+            this.orderExists = true;
+        }
+        
+        setTimeout(() => {
             if(store.type.toLowerCase()==='food'){
                 this.toggleCollapsible()   
             } 
@@ -130,7 +137,7 @@ export default {
                     table: '2', //hardcoded for now
                     totalAmount: this.totalSum,
                     note: this.textualNote,
-                    orderStatus: 'Ordered' //placeholder for now
+                    orderStatus: 'ordered/ready to take over' 
                 }
 
                 let bill = {
@@ -141,7 +148,7 @@ export default {
                 let id = await Products.newOrder(bill)
                 
                 if (id) this.getInfo(id);
-                else console.log('place order error - creater message for this')
+                else console.log('place order error - create message for this')
             
             }else{
                 this.errorMessage = 'Your cart is empty';
@@ -293,7 +300,7 @@ export default {
 }
 
 #cardsRow > span{
-     padding:20px 0px;
+     padding:20px 30px;
 }
 
 #calculationDiv{
@@ -325,6 +332,7 @@ export default {
 
 #totalSum{
     color:#B8A929;
+    font-size: 25px;
 }
 
 

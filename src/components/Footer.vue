@@ -81,6 +81,12 @@ export default {
     margin:40px 6px 10px 6px;
 }
 
+
+#socialMedia.row{
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .col-sm-3 > h5{
     color:#CF4F4F;
     margin-bottom:0.1rem;

@@ -21,18 +21,18 @@
             <img src="@/assets/foodInfo.jpg"/>
         </div>
         <div id="dataDiv">
-            {{info.name}}
-            <small>garlic, ketchup, salami, nectar, extra cheese</small>
-            <span >{{info.price}}$</span>
+            <label>{{ info.name }}</label>
+            <small>{{ info.additions.join(', ') }}</small>
+            <span >{{ info.price}}$</span>
         </div>
         <div id="quantityDiv">
-            <button @click="increment" id="plusButton">
+            <button @click="increment" id="plusButton" v-if="info.status === 'ordered/ready to take over' || this.$route.path === '/checkout' ">
                 <img src="@/assets/plusIcon.svg" alt=""/>
             </button>
     
             <span id="quantityDisplay" >{{ info.quantity }}</span>
 
-            <button @click="decrement" id="minusButton">
+            <button @click="decrement" id="minusButton" v-if="info.status === 'ordered/ready to take over' || this.$route.path === '/checkout'">
                 <img src="@/assets/minusIcon.svg" alt=""/>
             </button>
         </div>
@@ -118,14 +118,29 @@ small{
     margin: 0px 10px;
     text-align: center;
     font-family: cursive;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 #dataDiv > small{
-    font-size:10px;  line-height: 16px; display:block;
+    font-size:10px;  
+    line-height: 16px; 
+    display:block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#dataDiv > label{
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #dataDiv > span{
    color: #B8A929;
+   font-size: 18px;
 }
 
 
@@ -134,7 +149,9 @@ small{
     height: 80px;
     margin-left: 5px;
     text-align: center;
-    display:grid;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 #quantityDiv > button{

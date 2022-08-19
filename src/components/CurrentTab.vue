@@ -38,8 +38,6 @@ import HorizontalScroller from '@/components/HorizontalScroller.vue'
 import store from '@/store.js'
 import { Products } from '@/services';
 import _ from 'lodash';
-import { watch, ref } from 'vue';
-
 
 export default {
   name: 'CurrentTab',

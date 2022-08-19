@@ -18,11 +18,11 @@
 
 
  <div id="funModeDiv">
-     <div class="slide-left corner-top">
+     <div v-bind:class=" funMode ? 'slide-left corner-top' : 'corner-top funModeBtnStatic'">
        <label id="funModeLabel" v-bind:style=" funMode ? 'color:black' : 'color: white;' ">Fun mode</label>
        <label class="toggle-control">
           <!-- toggler source: https://codepen.io/garetmckinley/pen/YmxYZr -->
-          <input type="checkbox" checked="checked" @click="toggleFunMode">
+          <input type="checkbox"  @click="toggleFunMode">
           <span class="control"></span>
        </label>
      </div>
@@ -42,11 +42,11 @@
       <div class="row" id="placed-order-buttons">
         <div class="col">
           <button type="button" class="slide-right left-top"  @click="$router.push({ path: '/order_status'})" >Order status</button>
-          <button type="button" class="slide-right left-bottom">Order details</button>
+          <button type="button" class="slide-right left-bottom" @click="$router.push({ path: '/order_details'})">Order details</button>
         </div>
         <div class="col">
           <button v-if="store.feedbackLeft === false" type="button" @click="$router.push({ path: '/order_feedback'})" class="slide-left right-top" >Leave feedback</button>
-          <button v-else type="button"  disabled  @click="toggleTooltip"  data-bs-toggle="tooltip" data-bs-placement="top" title="This is a Tooltip" class="slide-left right-top">Leave feedback</button>
+          <button v-else type="button"  disabled  @click="toggleTooltip"  data-bs-toggle="tooltip" data-bs-placement="top" title="Feedback already given" class="slide-left right-top">Leave feedback</button>
           <button type="button" class="slide-left right-bottom" @click="toggleModal">Finish order</button>
         </div>
       </div>
@@ -65,7 +65,6 @@
         <div class="col">
           <button type="button"  id="left-top-static"  @click="$router.push({ path: '/order_status'})" >Order status</button>  
           <button type="button"  id="left-bottom-static" @click="$router.push({ path: '/order_details'})" >Order details</button>
-          <button id="left-bottom-static">Order details</button>
         </div>
         <div class="col">
           <button v-if="store.feedbackLeft === false" type="button"  id="right-top-static" @click="$router.push({ path: '/order_feedback'})">Leave feedback</button>
@@ -93,7 +92,7 @@ export default {
   data(){
         return{
             store,
-            funMode: true
+            funMode: false
         }
   },
 
@@ -103,7 +102,6 @@ export default {
     },
 
     toggleModal(){
-            console.log('tuu')
             //refactor and use refs
             $("#finishModal").modal("toggle");
         },
@@ -122,10 +120,16 @@ export default {
     }
   },
 
-   mounted(){
+  mounted(){
       //initialize toggle - doesnt work in this view
       this.toggleTooltip();
+  },
+
+  created(){
+    if(!Boolean( JSON.parse(localStorage.getItem('orderID') ))){
+      this.$router.push({path: '/'})
     }
+  }
 
 }
 
@@ -241,6 +245,9 @@ iframe {
   bottom:0.1em;
 }
 
+.funModeBtnStatic{
+  right: 1em !important;
+}
 
 
 // toggler source: https://codepen.io/garetmckinley/pen/YmxYZr
