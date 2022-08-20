@@ -12,7 +12,7 @@
           <div class="col-sm"></div>
               <div class="col-sm">
 
-                <form>
+                <form  @submit.prevent="">
                 <div class="email"> 
                     <i class="fa fa-envelope" id="iconEmail" aria-hidden="true"></i>
                     <input v-model="email" type="email" class="form-control placeholderEmail" aria-describedby="emailHelp" placeholder=" e-mail..."  />
@@ -30,17 +30,19 @@
                 <small class="logReg">
                     <span>
                       Dont have an account?
-                        <router-link to = "register" style="padding-left:3px;"> 
+                        <a  @click="permissionWarning" href="#" style="padding-left:3px;"> 
                         Sign up 
-                        </router-link>
+                        </a>
                       !
                     </span>
                 </small>
 
-                <div class="row pl-4 pr-4 d-flex justify-content-center" v-if="errorMessage">
-				          <small style="color: red">{{errorMessage}}</small><br>
+                <div class="row pl-4 pr-4 justify-content-center warningDiv" id="warningRow">
+				          <small style="color: red"  v-if="errorMessage">{{errorMessage}}</small><br>
+                  <small style="color: red" v-if="restrictedMessage" >{{restrictedMessage}}</small>
                 </div>
-                <button type="submit" class="btn btn-primary" @click="login()">Login</button>
+       
+                <button type="submit" preventD class="btn btn-primary" @click="login()">Login</button>
                 </form>
           
               </div>
@@ -62,6 +64,9 @@ export default {
         email: '',
         password: '',
         errorMessage: false,
+        restrictedMessage: false,
+        qrUser: undefined,
+        qrPass: undefined,
         store
       }
     },
@@ -74,6 +79,7 @@ export default {
 			const result = await Auth.login({'username': this.email, 'password': this.password});
 
 			if(result){
+        console.log('tuuu')
 				this.email = null;
 				this.password = null;
         
@@ -81,6 +87,20 @@ export default {
 			}
 			else this.errorMessage = "Neuspjeli pokušaj prijave u sustav, molimo provjerite unesene podatke!";
 		},
+
+    checkForCustomer(){
+      //if query exists then we know its customer - force push login
+      this.qrUser = this.$route.query.username;
+      this.qrPass = this.$route.query.password;
+      this.store.table += this.$route.query.table;
+
+      if(this.qrUser!=null && this.qrPass!=null){
+          this.email = this.qrUser
+          this.password = this.qrPass
+
+          this.login();
+      }
+    },
 
 
     show_password() {
@@ -96,12 +116,22 @@ export default {
         document.getElementsByClassName("fas fa-eye-slash")[0].className = "fas fa-eye";
       } 
       
+    },
+
+    permissionWarning(){
+      this.restrictedMessage = 'Restricted access'
     }
  },
   
   watch:{
-		"errorMessage": _.debounce(function(){this.errorMessage = false}, 10000)
+		"errorMessage": _.debounce(function(){this.errorMessage = false}, 100000),
+    "restrictedMessage": _.debounce(function(){this.restrictedMessage = false}, 2000)
 	},
+
+  mounted(){
+
+    this.checkForCustomer();
+  }
 
   
 }
@@ -132,7 +162,7 @@ export default {
 }
 
 .btn{
-  margin-top:25px;
+  margin-top:7.5px;
   background-color: #00a2ff;
   text-align: center;
   font: Regular 40px/49px Montserrat;
@@ -253,6 +283,11 @@ small{
  
 } */
 
+
+#warningRow{
+  flex-wrap: unset;
+  height: 45px;
+}
 
 /* placement of login content */
 @media (min-width:349px){

@@ -65,7 +65,7 @@ let Auth = {
     },
     logout() {
         localStorage.removeItem('user');
-        this.$router.go(0); //this should be enough
+        $router.go(); //this should be enough
         //this.$router.push({ path: `/login` });
     },
     isAuthenticated(){

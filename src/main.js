@@ -5,17 +5,17 @@ import router from './router'
 import Vue from "vue";
 
 global.jQuery = require('jquery');
-var $ = global.jQuery;
+let $ = global.jQuery;
 window.$ = $;
 
 createApp(App).use(router).mount('#app')
 
-// const app = createApp(App);
-// app.use(router)
-// app.mount("#app");
 
-//Vue.config.productionTip = false;
+// for using Vue.use()
+// Vue.config.productionTip = false
 
 // new Vue({
+//   router,
 //   render: h => h(App)
-// }).$mount("#app");
+// }).$mount('#app')
+

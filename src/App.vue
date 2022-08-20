@@ -49,6 +49,16 @@ export default {
         }
 
       }); 
+    },
+
+    setLoader(){
+        //loader set only on homepage for now
+        setTimeout(()=>{
+          if (this.$route.path!=='/') this.loaded=true
+          else setTimeout(() => { this.loaded=true},  3000000)
+          
+          //set this to bigger timeline if login wont pass
+        },500)
     }
     
   },
@@ -61,14 +71,7 @@ export default {
       },
 
   mounted(){
-        //loader set only on homepage for now
-        setTimeout(()=>{
-          if (this.$route.path!=='/') this.loaded=true
-          else setTimeout(() => { this.loaded=true},  3000)
-          
-          //set this to bigger timeline if login wont pass
-        },500)
-
+        this.setLoader();
 
         //create empty cart if it doesn't exist
         let test = JSON.parse(localStorage.getItem('cart')); 
