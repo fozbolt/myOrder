@@ -4,7 +4,7 @@
     <carousel v-if="filteredCards.length!==0" v-bind="settings" :breakpoints="breakpoints">
         <slide v-for="slide in filteredCards" :key="slide">
           <div class="carousel__item">
-            <SimilarMealsCard  @click="gotoDetails(slide)" :key="slide.id" :info="slide" />
+            <AboutUsCards  @click="gotoDetails(slide)" :key="slide.id" :info="slide" />
           </div>     
         </slide>
 
@@ -20,7 +20,7 @@
 <script>
 
 import store from '@/store.js'
-import SimilarMealsCard from '@/components/SimilarMealsCard.vue'
+import AboutUsCards from '@/components/AboutUsCards.vue'
 import { Products } from '@/services';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';
@@ -33,7 +33,7 @@ export default {
     Slide,
     Pagination,
     Navigation,
-    SimilarMealsCard
+    AboutUsCards
   },
 
   data() { 
@@ -141,12 +141,29 @@ export default {
   padding: 10px;
 }
 
+.carousel__pagination{
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    align-items: center;
+    vertical-align: middle;
+    height: 7.5px;
+}
+
 .carousel__pagination-button{
-  background-color: hsl(206, 41%, 68%);
+    width: 45px;
+    background-color: #C4C4C4;
+    height: 7.5px;
+    margin: 0;
+    padding: 0;
 }
 
 .carousel__pagination-button--active{
-  background-color: #0078D4;
+  background-color: black;
+  height: 7.5px;
+  overflow: visible;
+  padding: 0px 25px;
+  border-radius:0;
 }
 
 ol{
@@ -154,27 +171,15 @@ ol{
 }
 
 .carousel__pagination > li{
-  background-color: #C4C4C4;
-  width:50px;
-  height: 10px;
-  padding:0 !important;
-  margin:0;
+    background-color: #C4C4C4;
+    width: 50px;
+    height: 8px;
+    padding: 0 !important;
+    margin: 0;
+    display: flex;
 }
 
-.carousel__pagination-button{
-  width:45px;
-  background-color: #C4C4C4;
-  height: 12.5px;
-  margin:0;
-  padding:0;
-}
 
-.carousel__pagination-button--active{
-  background-color:black;
-  height: 12.5px;
-  margin:0;
-  padding:0;
-}
 
 
 @media (max-width:900px){

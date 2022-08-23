@@ -92,7 +92,7 @@
 
     <div class="homepageContent" id="sliderDiv">
       <AboutCarousel></AboutCarousel>
-       <img src="@/assets/PancakeMobile2.svg" alt="Pancake image" style="width:100%; height: 100%;">
+       <img src="@/assets/PancakeMobile2.svg" alt="Pancake image" style="width:100%; height: 100%;" >
     </div>
 
     <div class="homepageContent" id="subscribeDiv">
@@ -204,7 +204,8 @@ export default {
               let rect = el.getBoundingClientRect();
 
               return (
-                rect.top >= 0 &&
+                //original: all set to 0
+                rect.top >= -200 &&
                 rect.left >= 0 &&
                 rect.bottom <=
                   (window.innerHeight || document.documentElement.clientHeight) &&

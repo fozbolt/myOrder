@@ -10,19 +10,19 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown" @focusin="toggleMenu" :style="{backgroundColor:getColor()}">
           <ul class="navbar-nav">
             <li class="nav-item active" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
-              <a @click="this.$router.push('/')"  href="" class="nav-link nav-link-ltr">Order now</a>
+              <a @click="this.$router.push('/food_list')"  href="" class="nav-link nav-link-ltr">Order now</a>
             </li>
             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
-              <a @click="this.$router.push('/')" href=""  class="nav-link nav-link-ltr">My orders</a>
+              <a @click="this.$router.push('/checkout')" href=""  class="nav-link nav-link-ltr">My order</a>
             </li>
              <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
-              <a class="nav-link nav-link-ltr" href="#">Top offers</a>
+              <a  @click="goTo('Top offers')" class="nav-link nav-link-ltr" href="#">Top offers</a>
             </li>
              <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
-              <a class="nav-link nav-link-ltr" >New offers</a>
+              <a  @click="goTo('New offers')" class="nav-link nav-link-ltr" >New offers</a>
             </li>
             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
-              <a class="nav-link  nav-link-ltr" href="#">About us</a>
+              <a  class="nav-link  nav-link-ltr">About us</a>
             </li>
              <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a class="nav-link nav-link-ltr" href="#">Subscribe</a>
@@ -41,6 +41,7 @@
 
 <script>
 import {Auth} from "@/services/index.js";
+import store from '@/store.js';
 
 
 export default {
@@ -48,6 +49,7 @@ export default {
 
   data(){
       return{
+        store,
         auth: Auth.state,
       }
   },
@@ -63,6 +65,13 @@ export default {
         if (this.$route.path === '/') return ''
         else return 'white'
       },
+
+      goTo(subcategory){
+        this.store.selectedSubCategory  = subcategory
+        this.store.category = 'MainCourse'
+        this.store.type = 'Food'
+        this.$router.push('/food_list')
+      }
 
   },
 

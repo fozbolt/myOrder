@@ -160,19 +160,17 @@ export default {
     },
 
     async mounted(){
-       //not the best way - refs are not reactive so i cannot go with that option
-       //this.$refs[this.store.category].style.color = '#0078D4';
        document.getElementById(this.store.category).style.color="#0078D4";
+       //tu je  bug s dolazenjem iz top offersa
+       document.getElementById(this.store).style.color="#0078D4";
        document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
 
     },
 
-    umounted(){
-      //check if this works or is useless
-      //reset filter - hardcoded a little bit
+    beforeUnmount(){
       this.store.type='Food'
-      // this.store.category='MainCourse'
-      // this.store.selectSubCategory='All'
+      this.store.category = 'MainCourse'
+      this.store.selectedSubCategory = 'All'
     }
 
 

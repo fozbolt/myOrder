@@ -5,7 +5,19 @@
     <div v-else-if="(auth.authenticated || this.$route.path ==='/login') && loaded===true" class="page-container">
       <div class="content-wrap">
         <Navbar @focusout="handleFocusOut" tabindex="0"/>
-        <router-view :key="$route.fullPath"/> <!--da refresha i podrute-->
+
+        <router-view :key="$route.fullPath"  v-slot="{ Component }"> <!--da refresha i podrute + vslot za sliding animacije-->
+            <transition name="animation" mode="out-in">
+                <component :is="Component"></component>
+            </transition>
+        </router-view>
+
+        <!-- ovo je radilo
+          <transition name="animation" mode="out-in">
+            <router-view :key="$route.fullPath"/>
+        </transition>
+      -->
+
       </div>
         <!-- <Footer class="footer"/> -->
     </div>
@@ -134,4 +146,20 @@ export default {
   justify-content: space-between;
 }
 
+
+/* route transitions source: https://github.com/iamshaunjp/vue-animations/blob/lesson-12/src/App.vue */
+.animation-enter-from {
+  opacity: 0;
+  transform: translateX(100px);
+}
+.animation-enter-active {
+  transition: all 0.3s ease-out; 
+}
+.animation-leave-to {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+.animation-leave-active {
+  transition: all 0.3s ease-in; 
+}
 </style>
