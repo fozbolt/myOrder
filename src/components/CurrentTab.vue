@@ -1,6 +1,5 @@
 <template>
   <Suspense>
-    <!--u bookmarksima se nalaze bolji dizajni pa implementirati to kasnije--> 
     <template #default>
       <div class="dummyDivNeededForSuspenseToWork"> <!--https://qdmana.com/2022/03/202203271244076861.html-->
          <HorizontalScroller/>
@@ -15,6 +14,7 @@
       </div>
     </template>
     
+    <!--Skeleton loader - unfinished-->
     <template #fallback>
       <div class="dummyDivNeededForSuspenseToWork">
         <!-- <HorizontalScroller/> -->
@@ -33,7 +33,6 @@
 
 <script>
 import Card from '@/components/Card.vue'
-import CardSkeleton from '@/components/CardSkeleton.vue'
 import HorizontalScroller from '@/components/HorizontalScroller.vue'
 import store from '@/store.js'
 import { Products } from '@/services';
@@ -43,7 +42,7 @@ export default {
   name: 'CurrentTab',
   props: ['info'],  
 
-  components:{ Card, HorizontalScroller, CardSkeleton },
+  components:{ Card, HorizontalScroller },
 
   data() { 
         return {

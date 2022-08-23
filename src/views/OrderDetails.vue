@@ -1,133 +1,130 @@
 <template>
- <div>
-    <!--toast-->
-    <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="basicToast" ref="basicToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header text-light">
-                <img id="successIcon" src="@/assets/successIcon.png"/>
-                <!-- <i class="fa-regular fa-circle-check fa-bounce"></i> -->
-                <h6 class="my-0">Change saved</h6>
-            </div>
-        </div>  
-    </div>
+    <div id="checkout-background">
+        <!--toast-->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="basicToast" ref="basicToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header text-light">
+                    <img id="successIcon" src="@/assets/successIcon.png"/>
+                    <!-- <i class="fa-regular fa-circle-check fa-bounce"></i> -->
+                    <h6 class="my-0">Change saved</h6>
+                </div>
+            </div>  
+        </div>
 
 
-    <!--INTERFACE: Changeable if order is not accepted-->
-     <div v-if="orderStatus === 'ordered/ready to take over'" id="checkoutContent" >
-        <!-- <div  class="row">
-            <button @click="this.$router.go(-1)"  id="circle-bottom-checkout">
-                <img id="backIcon-checkout" src="@/assets/backIconBlue.png" />
-            </button>
-        </div> -->
-        <div class="row" id="headerRow">
-           <h5><b>Order details</b></h5>
-           <small >Order status:{{orderStatus}}</small>
-           <small >
-                Table: 
-                <input type="text" v-model="table"  id="tableInput"/>
-           </small>
-        </div>
-        <div class="row" id="cardsRow">  
-            <span v-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
-            <CartItem v-else :key="card.id" 
-                v-for="(card, index ) in cartItems" :info="card" 
-                v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
-                v-on:delete-item="deleteItem(index)"
-            /> 
-        </div>
-        <div class="row" id="calculationDiv">
-            <div class="col">
-                <!-- Empty half -->
+        <!--INTERFACE: Changeable if order is not accepted-->
+        <div v-if="orderStatus === 'ordered/ready to take over'" id="checkoutContent" >
+            <!-- <div  class="row">
+                <button @click="this.$router.go(-1)"  id="circle-bottom-checkout">
+                    <img id="backIcon-checkout" src="@/assets/backIconBlue.png" />
+                </button>
+            </div> -->
+            <div class="row" id="headerRow">
+            <h5><b>Order details</b></h5>
+            <small >Order status:{{orderStatus}}</small>
+            <small >
+                    Table: 
+                    <input type="text" v-model="table"  id="tableInput"/>
+            </small>
             </div>
-            <div class="col-8">
-                <span id="withoutTax" >W/O tax: {{Math.round((totalSum - (totalSum*0.25)) * 100) / 100 || 0}} $</span>
-                <small id="tax">+ tax:  {{Math.round(totalSum*0.25 * 100) / 100 || 0}} $</small>
-                <span id="withTax">
-                    <span>
-                        Total: 
-                        <span id="totalSum"> 
-                        {{totalSum.toFixed(2)}} $
-                        </span> 
+            <div class="row" id="cardsRow">  
+                <span v-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
+                <CartItem v-else :key="card.id" 
+                    v-for="(card, index ) in cartItems" :info="card" 
+                    v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
+                    v-on:delete-item="deleteItem(index)"
+                /> 
+            </div>
+            <div class="row" id="calculationDiv">
+                <div class="col">
+                    <!-- Empty half -->
+                </div>
+                <div class="col-8">
+                    <span id="withoutTax" >W/O tax: {{Math.round((totalSum - (totalSum*0.25)) * 100) / 100 || 0}} $</span>
+                    <small id="tax">+ tax:  {{Math.round(totalSum*0.25 * 100) / 100 || 0}} $</small>
+                    <span id="withTax">
+                        <span>
+                            Total: 
+                            <span id="totalSum"> 
+                            {{totalSum.toFixed(2)}} $
+                            </span> 
+                        </span>
                     </span>
-                </span>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <button @click="toggleCollapsible" class="collapsibleNotes" ref="collapsibleNotes">
-                <span>
-                    <img src="@\assets\NotesIcon.svg" alt="">
-                    <b> Notes</b>
-                </span>
-            </button>
-            <div  class="contentNotes"><textarea v-model="textualNote" placeholder="Feel free to leave additional request" /></div>
-        </div>
-
-        <div id="buttonsRow">
-            <!-- <button   @click="toggleTooltip"  data-bs-toggle="tooltip" data-bs-placement="top" title="Make new order if you want to add new meal" id="addMealBtn" class="btn btn-primary">ADD MEAL</button> -->
-            <button  @click="$router.push({ path: '/placed_order'})" id="backBtnAccepted" class="btn btn-primary funkyFont">Back</button>
-            <button  @click="update" class="btn btn-primary funkyFont" >Update</button>
-        </div>
-
-        <div v-if="errorMessage" class="row pl-4 pr-4 d-flex" id="errorMessageDiv">
-            <small>{{errorMessage}}</small><br>
-        </div>
-        
-        <Footer style="margin-top:100px;"></Footer>
-    </div>
-
-
-
-    <!--INTERFACE: Not changeable if order is accepted-->
-     <div v-else id="checkoutContent" >
-        <div class="row" id="headerRow">
-           <h5><b>Order details</b></h5>
-                <small >Order status:{{orderStatus}}</small>
-                <small >Table: {{ table }}</small>
-        </div>
-        <div class="row" id="cardsRow">  
-            <span v-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
-            <CartItem v-else :key="card.id" 
-                v-for="(card, index ) in cartItems" :info="card" 
-                v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
-                v-on:delete-item="deleteItem(index)"
-            /> 
-              <!-- <FooterTest />  -->
-        </div>
-        <div class="row" id="calculationDiv">
-            <div class="col">
-                <!-- Empty half -->
-            </div>
-            <div class="col-8">
-                <span id="withoutTax" >W/O tax: {{Math.round((totalSum - (totalSum*0.25)) * 100) / 100 || 0}} $</span>
-                <small id="tax">+ tax:  {{Math.round(totalSum*0.25 * 100) / 100 || 0}} $</small>
-                <span id="withTax">
+            <div class="row">
+                <button @click="toggleCollapsible" class="collapsibleNotes" ref="collapsibleNotes">
                     <span>
-                        Total: 
-                        <span id="totalSum"> 
-                        {{totalSum.toFixed(2)}} $
-                        </span> 
+                        <img src="@\assets\NotesIcon.svg" alt="">
+                        <b> Notes</b>
                     </span>
-                </span>
+                </button>
+                <div  class="contentNotes"><textarea v-model="textualNote" placeholder="Feel free to leave additional request" /></div>
+            </div>
+
+            <div id="buttonsRow">
+                <!-- <button   @click="toggleTooltip"  data-bs-toggle="tooltip" data-bs-placement="top" title="Make new order if you want to add new meal" id="addMealBtn" class="btn btn-primary">ADD MEAL</button> -->
+                <button  @click="$router.push({ path: '/placed_order'})" id="backBtnAccepted" class="btn btn-primary funkyFont">Back</button>
+                <button  @click="update" class="btn btn-primary funkyFont" >Update</button>
+            </div>
+
+            <div v-if="errorMessage" class="row pl-4 pr-4 d-flex" id="errorMessageDiv">
+                <small>{{errorMessage}}</small><br>
             </div>
         </div>
-        <div class="row">
-            <button @click="toggleCollapsible" class="collapsibleNotes" ref="collapsibleNotes">
-                <span>
-                    <img src="@\assets\NotesIcon.svg" alt="">
-                    <b> Notes</b>
-                </span>
-            </button>
-            <div  class="contentNotes"><textarea v-model="textualNote" disabled placeholder="No additional requests given" /></div>
-        </div>
 
-        <div id="buttonsRowAccepted">
-            <button  @click="$router.push({ path: '/placed_order'})" id="backBtnAccepted" class="btn btn-primary funkyFont">Back</button>
+
+
+        <!--INTERFACE: Not changeable if order is accepted-->
+        <div v-else id="checkoutContent" >
+            <div class="row" id="headerRow">
+            <h5><b>Order details</b></h5>
+                    <small >Order status:{{orderStatus}}</small>
+                    <small >Table: {{ table }}</small>
+            </div>
+            <div class="row" id="cardsRow">  
+                <span v-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
+                <CartItem v-else :key="card.id" 
+                    v-for="(card, index ) in cartItems" :info="card" 
+                    v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
+                    v-on:delete-item="deleteItem(index)"
+                /> 
+            </div>
+            <div class="row" id="calculationDiv">
+                <div class="col">
+                    <!-- Empty half -->
+                </div>
+                <div class="col-8">
+                    <span id="withoutTax" >W/O tax: {{Math.round((totalSum - (totalSum*0.25)) * 100) / 100 || 0}} $</span>
+                    <small id="tax">+ tax:  {{Math.round(totalSum*0.25 * 100) / 100 || 0}} $</small>
+                    <span id="withTax">
+                        <span>
+                            Total: 
+                            <span id="totalSum"> 
+                            {{totalSum.toFixed(2)}} $
+                            </span> 
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <button @click="toggleCollapsible" class="collapsibleNotes" ref="collapsibleNotes">
+                    <span>
+                        <img src="@\assets\NotesIcon.svg" alt="">
+                        <b> Notes</b>
+                    </span>
+                </button>
+                <div  class="contentNotes"><textarea v-model="textualNote" disabled placeholder="No additional requests given" /></div>
+            </div>
+
+            <div id="buttonsRowAccepted">
+                <button  @click="$router.push({ path: '/placed_order'})" id="backBtnAccepted" class="btn btn-primary funkyFont">Back</button>
+            </div>
+            
         </div>
-        
-        <Footer style="margin-top:100px;"></Footer>
+        <Footer></Footer>
+        <FloatingMenu></FloatingMenu>
     </div>
- </div>
-   
 </template>
 
 
@@ -136,6 +133,7 @@ import CartItem from '@/components/CartItem.vue';
 import store from '@/store.js';
 import { Products } from '@/services';
 import Footer from '@/components/Footer.vue';
+import FloatingMenu from '@/components/FloatingMenu.vue';
 
 export default {
     name: 'Checkout',
@@ -143,7 +141,8 @@ export default {
 
     components: {
     CartItem,
-    Footer
+    Footer,
+    FloatingMenu
 },
  
     data() {
@@ -358,7 +357,7 @@ export default {
 }
 
 #headerRow > h5 {
-    margin:20px 0 5px 0;
+    margin:30px 0 5px 0;
 }
 
 #headerRow > small{
@@ -434,20 +433,16 @@ export default {
 }
 
 
-#checkoutContent > Footer{
-    margin-top:40px;
+#checkoutContent{
+    position: relative; 
+    min-height:100vh; 
 }
 
 
-@media (min-width:900px){
- #checkoutContent{
-    position: absolute; 
-    left: 0; 
-    right: 0; 
-    margin-left: auto; 
-    margin-right: auto; 
-    width: 600px;   
- }
+
+
+#checkoutContent > Footer{
+    margin-top:40px;
 }
 
 
@@ -483,7 +478,41 @@ export default {
 
 #tableInput{
     width: 40px;
+    height: 30px;
     padding: 0px 10px;
     text-align: center;
 }
+
+
+
+/* content responsiveness */
+@media (min-width:700px){
+ #checkoutContent{
+    /* position: absolute;  */
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 60vw;
+    min-height: 80vh;
+ }
+}
+
+
+@media (min-width:900px){
+ #checkoutContent{
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 50vw;
+ }
+}
+
+@media (min-width:1200px){
+    #checkoutContent{
+        width: 30vw;
+    }
+}
+
 </style>

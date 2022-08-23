@@ -79,7 +79,6 @@ export default {
 			const result = await Auth.login({'username': this.email, 'password': this.password});
 
 			if(result){
-        console.log('tuuu')
 				this.email = null;
 				this.password = null;
         

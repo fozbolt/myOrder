@@ -1,6 +1,6 @@
 <template>
   <div id="dummyContainer">
-    <div class="container" id=pageContent>
+    <div  id=pageContent>
         <div id="whiteCircle"></div>
         <div id="statusContent">
           <img src="@/assets/pizza_status.gif" alt=""/>
@@ -10,10 +10,11 @@
             />
             <label>{{ currStatus }}</label>
           </div>
-          <button @click="this.$router.go(-1)" id="backBtn" class="btn btn-primary">Back</button>
+          <button @click="this.$router.go(-1)" id="backBtn" class="btn btn-primary funkyFont">Back</button>
         </div>
     </div> 
     <Footer></Footer>
+    <FloatingMenu></FloatingMenu>
   </div>
 </template>
 
@@ -21,6 +22,7 @@
 import Footer from '@/components/Footer.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 import { Products } from '@/services';
+import FloatingMenu from '@/components/FloatingMenu.vue';
 //import store from '@/store';
 
 export default {
@@ -38,10 +40,11 @@ export default {
             currStatus: 'Fetching status...'
         };
     },
-    components: { 
-      Footer, 
-      "progress-bar": ProgressBar 
-    },
+    components: {
+    Footer,
+    "progress-bar": ProgressBar,
+    FloatingMenu
+},
     
     methods: {
       async getStatus(){
@@ -118,7 +121,6 @@ export default {
     width:fit-content;
     height: 30px;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
-    font-family: 'IM FELL French Canon SC';
     font-style: normal;
     font-weight: 400;
     font-size: 1.25rem;
@@ -143,6 +145,10 @@ export default {
 
   #statusContent{
     top: 10vh;
+  }
+
+  #backBtn{
+    left:30%;
   }
 }
 

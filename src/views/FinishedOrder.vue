@@ -1,17 +1,21 @@
 <template>
-    <div class="container" >
+    <div>
+      <div class="container">
         <div class="line">
             <h2 class='lineUp funkyFont'>Thank 
                 <label class="brandColor"> you </label>
             </h2>
         </div>
         <button @click="clearOrder" id="newOrderBtn" class="btn btn-primary feedbackButtons funkyFont">New order</button>
+      </div>
+      <Footer></Footer>
     </div>
 </template>
 
 <script>
 import Footer from '@/components/Footer.vue';
 import store from '@/store';
+
 
 $(function () {
   $('[data-bs-toggle="tooltip"]').tooltip()
@@ -20,7 +24,7 @@ $(function () {
 
 export default {
     name: "FinishedOrder",
-    components: { Footer },
+    components: { Footer, Footer },
 
     data() {
         return {
@@ -45,6 +49,11 @@ export default {
 
 
 <style lang="scss" scoped>
+
+.container{
+  min-height: 100vh;
+  max-width:100%;
+}
 
 //source: https://codepen.io/alvarotrigo/pen/NWvQObB
 .line {

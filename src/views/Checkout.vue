@@ -1,64 +1,65 @@
 <template>
-    <div id="checkoutContent" >
-    
-        <div class="row">
-            <img id="checkoutGif" src="@\assets\checkoutGIF.gif" alt="">
-            <button @click="this.$router.go(-1)"  id="circle-bottom-checkout">
-                <img id="backIcon-checkout" src="@/assets/backIconBlue.png" />
-            </button>
-        </div>
-        <div class="row" id="headerRow">
-           <h5><b>Checkout</b></h5>
-           <small >{{'Table: 3'}}</small>
-        </div>
-        <div class="row" id="cardsRow">  
-            <span v-if="orderExists">Cart is empty. Choose some items first or check <a href="#" @click="$router.push({path: '/placed_order'})">existing order</a></span> 
-            <span v-else-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
-          
-
-            <CartItem v-else :key="card.id" 
-                v-for="(card, index ) in cartItems" :info="card" 
-                v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
-                v-on:delete-item="deleteItem(index)"
-            /> 
-        </div>
-        <div class="row" id="calculationDiv">
-            <div class="col">
-                <!-- Empty half -->
+    <div>
+        <div id="checkoutContent" >
+            <div class="row">
+                <img id="checkoutGif" src="@\assets\checkoutGIF.gif" alt="">
+                <button @click="this.$router.go(-1)"  id="circle-bottom-checkout">
+                    <img id="backIcon-checkout" src="@/assets/backIconBlue.png" />
+                </button>
             </div>
-            <div class="col-8">
-                <span id="withoutTax" >W/O tax: {{Math.round((totalSum - (totalSum*0.25)) * 100) / 100 || 0}} $</span>
-                <small id="tax">+ tax:  {{Math.round(totalSum*0.25 * 100) / 100 || 0}} $</small>
-                <span id="withTax">
-                    <span>
-                        Total: 
-                        <span id="totalSum"> 
-                        {{totalSum.toFixed(2)}} $
-                        </span> 
+            <div class="row" id="headerRow">
+            <h5><b>Checkout</b></h5>
+            <small >{{'Table: 3'}}</small>
+            </div>
+            <div class="row" id="cardsRow">  
+                <span v-if="orderExists && cartItems.length === 0">Cart is empty. Choose some items first or check <a href="#" @click="$router.push({path: '/placed_order'})">existing order</a></span> 
+                <span v-else-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
+            
+
+                <CartItem v-else :key="card.id" 
+                    v-for="(card, index ) in cartItems" :info="card" 
+                    v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
+                    v-on:delete-item="deleteItem(index)"
+                /> 
+            </div>
+            <div class="row" id="calculationDiv">
+                <div class="col">
+                    <!-- Empty half -->
+                </div>
+                <div class="col-8">
+                    <span id="withoutTax" >W/O tax: {{Math.round((totalSum - (totalSum*0.25)) * 100) / 100 || 0}} $</span>
+                    <small id="tax">+ tax:  {{Math.round(totalSum*0.25 * 100) / 100 || 0}} $</small>
+                    <span id="withTax">
+                        <span>
+                            Total: 
+                            <span id="totalSum"> 
+                            {{totalSum.toFixed(2)}} $
+                            </span> 
+                        </span>
                     </span>
-                </span>
+                </div>
+            </div>
+            <div class="row">
+                <button @click="toggleCollapsible" class="collapsibleNotes" ref="collapsibleNotes">
+                    <span>
+                        <img src="@\assets\NotesIcon.svg" alt="">
+                        <b> Add notes</b>
+                    </span>
+                </button>
+                <div  class="contentNotes"><textarea v-model="textualNote" placeholder="Feel free to leave additional request" /></div>
+            </div>
+
+            <div id="buttonsRow">
+                <button  @click="$router.push({ path: '/food_list'})" id="addMealBtn" class="btn btn-primary">ADD MEAL</button>
+                <button  @click="placeOrder" class="btn btn-primary" >PLACE ORDER <span :class="{'spinner-border spinner-border-sm': spinnerOn}"></span></button>
+            </div>
+
+            <div v-if="errorMessage" class="row pl-4 pr-4 d-flex" id="errorMessageDiv">
+                <small>{{errorMessage}}</small><br>
             </div>
         </div>
-        <div class="row">
-            <button @click="toggleCollapsible" class="collapsibleNotes" ref="collapsibleNotes">
-                <span>
-                    <img src="@\assets\NotesIcon.svg" alt="">
-                    <b> Add notes</b>
-                </span>
-            </button>
-            <div  class="contentNotes"><textarea v-model="textualNote" placeholder="Feel free to leave additional request" /></div>
-        </div>
-
-        <div id="buttonsRow">
-            <button  @click="$router.push({ path: '/food_list'})" id="addMealBtn" class="btn btn-primary">ADD MEAL</button>
-            <button  @click="placeOrder" class="btn btn-primary" >PLACE ORDER</button>
-        </div>
-
-        <div v-if="errorMessage" class="row pl-4 pr-4 d-flex" id="errorMessageDiv">
-            <small>{{errorMessage}}</small><br>
-        </div>
-        
         <Footer style="margin-top:100px;"></Footer>
+        <FloatingMenu></FloatingMenu>
     </div>
 </template>
 
@@ -68,6 +69,7 @@ import CartItem from '@/components/CartItem.vue';
 import store from '@/store.js';
 import { Products } from '@/services';
 import Footer from '@/components/Footer.vue';
+import FloatingMenu from '@/components/FloatingMenu.vue';
 
 export default {
     name: 'Checkout',
@@ -75,7 +77,8 @@ export default {
 
     components: {
     CartItem,
-    Footer
+    Footer,
+    FloatingMenu
 },
  
     data() {
@@ -84,6 +87,7 @@ export default {
             textualNote: '',
             errorMessage: false,
             orderExists: false,
+            spinnerOn: false,
             store
         
         };
@@ -128,7 +132,16 @@ export default {
                 } 
         },
 
+        toggleSpinner(){
+            this.spinnerOn = true;
+            setTimeout(()=>{
+                this.spinnerOn = false;
+            },5000)
+        },
+
         async placeOrder(){
+            this.toggleSpinner();
+
             this.cartItems = this.cartItems || [];
 
             if (this.cartItems.length > 0){
@@ -361,14 +374,38 @@ export default {
 }
 
 
-@media (min-width:900px){
+@media (min-width:700px){
  #checkoutContent{
-    position: absolute; 
+    /* position: absolute;  */
     left: 0; 
     right: 0; 
     margin-left: auto; 
     margin-right: auto; 
-    width: 600px;   
+    width: 60vw;
+    min-height: 80vh;
+ }
+
+ #circle-bottom-checkout{
+    top:80px;
+    left:25%;
+ }
+}
+
+
+@media (min-width:900px){
+ #checkoutContent{
+    width: 50vw;
+ }
+}
+
+@media (min-width:1200px){
+ #checkoutContent{
+    width: 30vw;
+ }
+
+ #circle-bottom-checkout{
+    top:80px;
+    left:35%;
  }
 }
 

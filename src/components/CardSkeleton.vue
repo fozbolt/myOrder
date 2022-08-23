@@ -21,7 +21,7 @@
 <script>
 export default {
   name: 'Card',
-  props: ['info'],  //definiramo da card može primiti info odnosno propse
+  props: ['info'], 
 
   methods:{
     

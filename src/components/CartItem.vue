@@ -69,7 +69,7 @@ export default {
             if (value === 'returnItem') this.increment();
             else if (value === 'removeItem') this.$emit('delete-item')
 
-            //refactor and use refs
+            //refactor and use refs - here we close through js, else replace add data-dismiss with data-bs-dismiss (Boostrap 5)
             $("#staticBackdrop").modal("toggle");
         }
  
@@ -176,6 +176,8 @@ small{
   
 }
 
+
+// Modal
 .modal-footer{
     color:white; 
     width:100%;

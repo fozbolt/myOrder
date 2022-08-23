@@ -1,44 +1,45 @@
 <template>
   <div>
-        <div id="search-field">
-          <input 
-                v-model="store.searchText" 
-                type="text"  
-                id="header-search" 
-                />
-          <svg id="search-icon" class="search-icon" viewBox="0 0 24 24">
-            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            <path d="M0 0h24v24H0z" fill="none"/>
-          </svg>
-        </div>
-        <div id="filter">
-            <div id="type" >
-              <button id="food" @click="selectType($event)" v-bind:class="{ foodActive: store.isFood }" class="square">
-                <h5 class="type-item">FOOD</h5>
-              </button>
-              <button id="drink" @click="selectType($event)" v-bind:class="{ drinkActive: store.isDrink }" class="square">
-                <h5 class="type-item">DRINK</h5>
-              </button>
+      <div id="food-list-content">
+            <div id="search-field">
+              <input 
+                    v-model="store.searchText" 
+                    type="text"  
+                    id="header-search" 
+                    />
+              <svg id="search-icon" class="search-icon" viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                <path d="M0 0h24v24H0z" fill="none"/>
+              </svg>
             </div>
+            <div id="filter" class="funkyFont">
+                <div id="type" >
+                  <button id="food" @click="selectType($event)" v-bind:class="{ foodActive: store.isFood }" class="square">
+                    <h5 class="type-item">Food</h5>
+                  </button>
+                  <button id="drink" @click="selectType($event)" v-bind:class="{ drinkActive: store.isDrink }" class="square">
+                    <h5 class="type-item">Drink</h5>
+                  </button>
+                </div>
 
-            <div class="category">
-              <button 
-                @click="selectCategory($event)"
-                v-bind="getDataAttr(category)"   
-                v-for="(value, category, index) in store.productTypes[0][store.type]"
-                :key="index"
-                class="category-item"
-                >
-                 {{ category }}
-              </button>
+                <div class="category funkyFont">
+                  <button 
+                    @click="selectCategory($event)"
+                    v-bind="getDataAttr(category)"   
+                    v-for="(value, category, index) in store.productTypes[0][store.type]"
+                    :key="index"
+                    class="category-item"
+                    >
+                    {{ category }}
+                  </button>
+                </div>
+
+                <CurrentTab/>   
+                <FloatingMenu></FloatingMenu>
             </div>
-
-            <CurrentTab/>   
-            <FloatingMenu></FloatingMenu>
-
-            <!-- <div style="background-color:blueviolet; width:100%; height:400px;">Test div is it in the bottom</div> -->
-             <Footer></Footer>
-        </div>
+          
+      </div>
+      <Footer></Footer>
   </div>
 </template>
 
@@ -135,23 +136,6 @@ export default {
           }
         },
 
-
-      typeAnimation(){
-        //type animation - refactor and name source: 
-        var square = document.querySelector(".square");
-        square.addEventListener("click", function(e) {
-        e.preventDefault;
-
-        square.classList.remove("animated");
-
-        void square.offsetWidth;
-
-        square.classList.add("animated");
-        
-        navigator.vibrate(100);
-    }, false);
-      }
-
     
     },
      watch: {
@@ -197,7 +181,11 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
+
+#food-list-content{
+  min-height: 100vh;
+}
 
 .row*{
   margin-left:0px; 
@@ -238,7 +226,6 @@ export default {
 #filter{
    width: 100%; 
    height: 150px;
-   font-family: 'IM FELL French Canon SC';
 }
 
 
@@ -257,7 +244,7 @@ export default {
   padding:5px 5px 0px 5px;
   display: inline-block; /*when inline you can use text-align on parent */
   font-weight: 400;
-  font-size: 22px;
+  font-size: 25px;
   line-height: 26px;
   display: flex;
   align-items: center;
@@ -301,24 +288,13 @@ export default {
 
 }
 
-//fora simulira klik - koristiti drugdje
-// #food:active {
-//   border: none;
-//   color: #0078D4 !important;
-//   background: transparent;
-// }
+//fora simulira malo klik
+#food:active {
+  border: none;
+  color: #0078D4 !important;
+  background: transparent;
+}
 
-//a ovo na webu
-// #food:hover {
-//   border: none;
-//   color: #0078D4 !important;
-//   background: transparent;
-// }
-
-
-// .i-am-active {
-//   color: #0078D4;
-// }
 
 
 #type > button, .category > button{
@@ -343,23 +319,9 @@ export default {
 }
 
 
-//animation: https://codepen.io/klebinhopk/details/OGMdOY
-.square {
-    cursor: pointer;
-    
-    &.animated {
-        animation: pulse 0.7s;
-    }
+@media(max-width:500px){
+  #food-list-content{
+  min-height: 150vh
+  }
 }
-
-@keyframes pulse {
-    0% {
-        box-shadow: 0px 0px 0px 0px rgba(35, 130, 220,1);
-    }
-    100% {
-        box-shadow: 0px 0px 0px 2px rgba(35, 130, 220,0);
-    }
-}
-
-
 </style>

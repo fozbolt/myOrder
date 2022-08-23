@@ -1,123 +1,126 @@
 <template > 
-    <div v-if="card" id="contentHolder">
-
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="basicToast" ref="basicToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header text-light">
-                    <img id="successIcon" src="@/assets/successIcon.png"/>
-                    <!-- <i class="fa-regular fa-circle-check fa-bounce"></i> -->
-                    <h6 class="my-0">{{this.card.name}} added to cart</h6>
-                </div>
-                <!-- <div class="toast-body">
-                I'll leave this body if needed later
-                </div> -->
-            </div>  
-        </div>
-
-        <div id="imageZoomableDiv">
-            <span id="circle-left">
-                    <small><b>40%</b><br/>OFF</small>
-            </span>
-            <span id="circle-right">
-                {{this.card.price}}$
-            </span>
+    <div>
+        <div v-if="card" id="contentHolder">
+            <div class="toast-container position-fixed top-0 end-0 p-3">
+                <div id="basicToast" ref="basicToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header text-light">
+                        <img id="successIcon" src="@/assets/successIcon.png"/>
+                        <!-- <i class="fa-regular fa-circle-check fa-bounce"></i> -->
+                        <h6 class="my-0">{{this.card.name}} Added to cart</h6>
+                    </div>
+                </div>  
+            </div>
+            <div id="imageZoomableDiv" oncontextmenu="return false;">
+                <span id="circle-left" class="funkyFont">
+                        <b>40%</b>
+                        <small>OFF</small>
+                </span>
+                <span id="circle-right" class="funkyFont">
+                    {{this.card.price}}$
+                </span>
+                
+                <img @mousedown="button_z_index = 'hidden'" @mouseup="button_z_index = 'visible'" id="mainFoodImg" src="@/assets/foodInfo.jpg" alt="foodInfoImage"/>
+            </div>
             <button @click="$router.push({ path: '/food_list' })" :style="{ 'visibility': button_z_index }" id="circle-bottom">
-                <img id="backIcon" src="@/assets/backIcon.png" />
+                    <img id="backIcon" src="@/assets/backIcon.png" />
             </button>
-            <img @mousedown="button_z_index = 'hidden'" @mouseup="button_z_index = 'visible'" id="mainFoodImg" src="@/assets/foodInfo.jpg" alt="foodInfoImage"/>
-        </div>
-        <div id="positionDiv">
-            <div id="contentInfoDiv">
-            <div id="titleDiv">
-                <h5>
-                    <!-- A LA MEAL IN A SOUSAGE PARLOR -->
-                    {{this.card.name}}
-                </h5>
-            </div>
-            <div id="ingredients">tomatoes, cheese, ham, mushrooms, artichokes, capers, garlic, olives, oregano</div>
-            <div id="clockDiv">
-                <img src="@/assets/clockIcon.svg" alt="">
-                <small ><b> 25-35 min</b></small>
-            </div>
 
-        <button  v-if="store.type.toLowerCase()==='food'" @click="toggleCollapsible" class="collapsible" ref="collapsible">Choose additions</button>
-            <div v-if="store.type.toLowerCase()==='food'" class="content">
-                <div v-for="(value, key, index) in additions" class="form-check" v-bind:style= "[index===additions.length-1 ? {'border-bottom':'black solid 1px'} : {}]" :key="index" >
-                    <input :value="index" v-model="checkedPrices" class="form-check-input" type="checkbox" id="flexCheckDefault" >
-                    <label class="form-check-label" for="flexCheckDefault">
-                        {{key}}
-                    </label>
-                    <small >
-                        {{value}} $
-                    </small>
+            <div id="positionDiv">
+                <div id="contentInfoDiv">
+                <div id="titleDiv">
+                    <h5>
+                        <!-- A LA MEAL IN A SOUSAGE PARLOR -->
+                        {{this.card.name}}
+                    </h5>
                 </div>
-                <span >Total: {{ sum }}$</span>
-            </div>
-
-            <div id="details" >
-                <h4>Description</h4>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore 
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco 
-                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                </p>
-
-                <h4>Nutrition Facts</h4>
-                <div id="nutritionDiv">
-                    <table>
-                        <tr>
-                            <th>Energy value</th>
-                            <th>1000 kcal</th>
-                        </tr>
-                        <tr>
-                            <td>Carbohydrates</td>
-                            <td>100 g</td>
-                        </tr>
-                        <tr>
-                            <td>Protein</td>
-                            <td>20 g</td>
-                        </tr>
-                        <tr>
-                            <td>Fat</td>
-                            <td>30 g</td>
-                        </tr>
-                        <tr>
-                            <td>Vitamin A</td>
-                            <td>1230 mg</td>
-                        </tr>
-                        <tr>
-                            <td>Vitamin C</td>
-                            <td>220 mg</td>
-                        </tr>
-                        <tr>
-                            <td>Calcium</td>
-                            <td>20 mg</td>
-                        </tr>
-                        <tr>
-                            <td>Zinc</td>
-                            <td>30 mg</td>
-                        </tr>
-                    </table>
+                <div id="ingredients">tomatoes, cheese, ham, mushrooms, artichokes, capers, garlic, olives, oregano</div>
+                <div id="clockDiv">
+                    <img src="@/assets/clockIcon.svg" alt="">
+                    <small ><b> 25-35 min</b></small>
                 </div>
 
-            </div>
+            <button  v-if="store.type.toLowerCase()==='food'" @click="toggleCollapsible" class="collapsible" ref="collapsible">Choose additions</button>
+                <div v-if="store.type.toLowerCase()==='food'" class="content">
+                    <div v-for="(value, key, index) in additions" class="form-check" v-bind:style= "[index===additions.length-1 ? {'border-bottom':'black solid 1px'} : {}]" :key="index" >
+                        <input :value="index" v-model="checkedPrices" class="form-check-input" type="checkbox" id="flexCheckDefault" >
+                        <label class="form-check-label" for="flexCheckDefault">
+                            {{key}}
+                        </label>
+                        <small >
+                            {{value}} $
+                        </small>
+                    </div>
+                    <span >Total: {{ sum }}$</span>
+                </div>
 
-            <div id="buttonRow">
-                <button  @click="addToCart" id="addToCartBtn" ref="addToCartBtn" class="btn btn-primary funkyFont">Add to cart</button>
-                <button  @click="goToCheckout" class="btn btn-primary funkyFont">Checkout</button>
-            </div>
+                <div id="details" >
+                    <h4>Description</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore 
+                        et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco 
+                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                    </p>
 
-            <div id="similarMealsDiv"> <!-- ne prikazuj ovo ako nema bar jedan meal u toj kategoriji - još doraditi -->
-                <h4 v-if="store.type.toLowerCase() === 'food'">Similar meals</h4>
-                <h4 v-else>Similar driks</h4>
-                <Slider/> 
-            </div>
+                    <h4>Nutrition Facts</h4>
+                    <div id="nutritionDiv">
+                        <table>
+                            <tr>
+                                <th>Energy value</th>
+                                <th>1000 kcal</th>
+                            </tr>
+                            <tr>
+                                <td>Carbohydrates</td>
+                                <td>100 g</td>
+                            </tr>
+                            <tr>
+                                <td>Protein</td>
+                                <td>20 g</td>
+                            </tr>
+                            <tr>
+                                <td>Fat</td>
+                                <td>30 g</td>
+                            </tr>
+                            <tr>
+                                <td>Vitamin A</td>
+                                <td>1230 mg</td>
+                            </tr>
+                            <tr>
+                                <td>Vitamin C</td>
+                                <td>220 mg</td>
+                            </tr>
+                            <tr>
+                                <td>Calcium</td>
+                                <td>20 mg</td>
+                            </tr>
+                            <tr>
+                                <td>Zinc</td>
+                                <td>30 mg</td>
+                            </tr>
+                        </table>
+                    </div>
 
-            <!-- <div style="background-color:blueviolet; width:100%; height:400px;">Test div is it in the bottom</div> -->
-            <Footer></Footer>
-            
+                </div>
+
+                <div id="buttonRow">
+                    <button  @click="addToCart" id="addToCartBtn" ref="addToCartBtn" class="btn btn-primary funkyFont">Add to cart</button>
+                    <button  @click="goToCheckout" class="btn btn-primary funkyFont">Checkout</button>
+                </div>
+
+                <div id="similarMealsDiv"> <!-- ne prikazuj ovo ako nema bar jedan meal u toj kategoriji - još doraditi -->
+                    <h4 v-if="store.type.toLowerCase() === 'food'">Similar meals</h4>
+                    <h4 v-else>Similar driks</h4>
+                    <Slider/> 
+                </div>
+
+             </div>
+            </div>
         </div>
+        
+        <div v-else>
+            Couldn't load item info.
         </div>
+        <Footer></Footer>
+        <FloatingMenu></FloatingMenu>
     </div>
 </template>
 
@@ -128,6 +131,8 @@ import { Products } from '@/services';
 import Slider from '@/components/Slider.vue'
 import Footer from '@/components/Footer.vue';
 import _ from 'lodash';
+import FloatingMenu from '@/components/FloatingMenu.vue';
+
 
 export default {
     props: ['id'],
@@ -135,7 +140,8 @@ export default {
     components: {
     Card,
     Slider,
-    Footer
+    Footer,
+    FloatingMenu
 },
     data() {
         return {
@@ -276,9 +282,12 @@ button {
 
 
 
-#imageDiv:active{
-     z-index: 3 !important;
+#imageZoomableDiv:active{
+     z-index: 10 !important;
 
+     #circle-bottom{
+        display:none;
+     }
 }
 
 
@@ -299,12 +308,21 @@ button {
     top:250px;
 }
 
+#circle-left > b{
+    font-size:20px;
+}
+
+#circle-left > small {
+    font-size:12px;
+}
+
 
 #circle-right {
   position: absolute;
   right: 0px;
   width: 70px;
   height: 40px;
+  font-size:22px;
   -webkit-border-radius: 25px;
   -moz-border-radius: 25px;
   border-radius: 0 0 0 20px;
@@ -334,7 +352,7 @@ button {
 
 #circle-bottom {
   position: absolute;
-  top: 175px;
+  top: 220px;
   left: 0px;
   width: 45px;
   height: 35px;
@@ -483,7 +501,7 @@ small{
 
 .form-check > small {
     color: gray;
-    text-align: end;
+    text-align: flex-end;
     padding: 0px 2.5px;
     width: 40px;
     display: inline-block;
@@ -517,6 +535,7 @@ small{
 #similarMealsDiv{
     text-align:center; 
     margin-top:100px;
+    margin-bottom:100px;
 }
 
 
@@ -567,15 +586,31 @@ small{
 }
 
 
+#contentHolder{
+    position:relative;
+}
+
+@media (max-width:899px){
+    #contentHolder{
+        // useless with current page height because its same as Deskop view
+        min-height:2000px;
+    }
+}
+
+
 @media (min-width:900px){
- #contentHolder{
-  position: absolute; 
+ #contentHolder{ 
   left: 0; 
   right: 0; 
   margin-left: auto; 
   margin-right: auto; 
   width: 600px;
+  min-height:2000px;
  }
+
+//  #circle-bottom{
+//     top:220px;
+//  }
 
 }
 

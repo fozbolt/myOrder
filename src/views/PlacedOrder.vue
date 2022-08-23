@@ -1,80 +1,82 @@
 <template>
-<div>
-    <!-- Modal -->
-         <div class="modal fade" id="finishModal" data-bs-backdrop="true" data-bs-keyboard="false" tabindex="0" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <p>If you finish order you won't be able to see order status or access order again. Proceed?</p>
-                    </div>
-                    <div class="modal-footer" >
-                        <button @click="finishOrder" type="button" class="btn btn-default" data-bs-dismiss="modal" >Yes</button>
-                        <button type="button" class="btn btn-default" data-bs-dismiss="modal" >No</button>
-                    </div>
-                </div>   
-            </div>
+  <div>
+    <div id="placed-order-content">
+      <!-- Modal -->
+          <div class="modal fade" id="finishModal" data-bs-backdrop="true" data-bs-keyboard="false" tabindex="0" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                      <div class="modal-body">
+                          <p>If you finish order you won't be able to see order status or access order again. Proceed?</p>
+                      </div>
+                      <div class="modal-footer" >
+                          <button @click="finishOrder" type="button" class="btn btn-default" data-bs-dismiss="modal" >Yes</button>
+                          <button type="button" class="btn btn-default" data-bs-dismiss="modal" >No</button>
+                      </div>
+                  </div>   
+              </div>
+          </div>
+
+
+  <div id="funModeDiv">
+      <div v-bind:class=" funMode ? 'slide-left corner-top' : 'corner-top funModeBtnStatic'">
+        <label id="funModeLabel" v-bind:style=" funMode ? 'color:black' : 'color: white;' ">Fun mode</label>
+        <label class="toggle-control">
+            <!-- toggler source: https://codepen.io/garetmckinley/pen/YmxYZr -->
+            <input type="checkbox"  @click="toggleFunMode">
+            <span class="control"></span>
+        </label>
+      </div>
+    </div>
+
+    <div v-if="funMode" class="container">
+        <div class="sketchfab-embed-wrapper"> 
+          <!--model source: https://sketchfab.com/3d-models/classic-dinner-1ad30e0585f545229e5f8ffdb715f92f-->
+          <iframe id="placedOrderFrame" title="Classic Dinner"  mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/1ad30e0585f545229e5f8ffdb715f92f/embed?autostart=1"> </iframe> 
         </div>
+        <div id="placed-order-text">
+          <p>
+            Your order is finished. Hope you had a great time :)
+          </p>
+        </div>
+        <div class="row" id="placed-order-buttons">
+          <div class="col">
+            <button type="button" class="slide-right left-top"  @click="$router.push({ path: '/order_status'})" >Order status</button>
+            <button type="button" class="slide-right left-bottom" @click="$router.push({ path: '/order_details'})">Order details</button>
+          </div>
+          <div class="col">
+            <button v-if="store.feedbackLeft === false" type="button" @click="$router.push({ path: '/order_feedback'})" class="slide-left right-top" >Leave feedback</button>
+            <button v-else type="button"  disabled  @click="toggleTooltip"  data-bs-toggle="tooltip" data-bs-placement="top" title="Feedback already given" class="slide-left right-top">Leave feedback</button>
+            <button type="button" class="slide-left right-bottom" @click="toggleModal">Finish order</button>
+          </div>
+        </div>
+    </div>
 
-
- <div id="funModeDiv">
-     <div v-bind:class=" funMode ? 'slide-left corner-top' : 'corner-top funModeBtnStatic'">
-       <label id="funModeLabel" v-bind:style=" funMode ? 'color:black' : 'color: white;' ">Fun mode</label>
-       <label class="toggle-control">
-          <!-- toggler source: https://codepen.io/garetmckinley/pen/YmxYZr -->
-          <input type="checkbox"  @click="toggleFunMode">
-          <span class="control"></span>
-       </label>
-     </div>
-   
+    <div v-else class="container">
+        <div  class="sketchfab-embed-wrapper"> 
+        <img src="@/assets/funModeOff.jpg" alt="" style="width:100%; height:100vh;">
+        </div>
+        <div id="placed-order-text">
+          <p>
+            Your order is on the way. Hope you are having a great time :))
+          </p>
+        </div>
+        <div class="row" id="placed-order-buttons">
+          <div class="col">
+            <button type="button"  id="left-top-static"  @click="$router.push({ path: '/order_status'})" >Order status</button>  
+            <button type="button"  id="left-bottom-static" @click="$router.push({ path: '/order_details'})" >Order details</button>
+          </div>
+          <div class="col">
+            <button v-if="store.feedbackLeft === false" type="button"  id="right-top-static" @click="$router.push({ path: '/order_feedback'})">Leave feedback</button>
+            <button v-else type="button"  id="right-top-static" disabled @click="toggleTooltip"  data-bs-toggle="tooltip" data-bs-placement="top" title="This is a Tooltip">Leave feedback</button>
+            <button type="button"  id="right-bottom-static"  @click="toggleModal">Finish order</button>
+          </div>
+        </div> 
+    </div>
+    
+    </div>
+    <Footer v-if="!funMode"/>
   </div>
-
-  <div v-if="funMode" class="container">
-      <div class="sketchfab-embed-wrapper"> 
-        <!--model source: https://sketchfab.com/3d-models/classic-dinner-1ad30e0585f545229e5f8ffdb715f92f-->
-        <iframe id="placedOrderFrame" title="Classic Dinner"  mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/1ad30e0585f545229e5f8ffdb715f92f/embed?autostart=1"> </iframe> 
-      </div>
-      <div id="placed-order-text">
-        <p>
-          Your order is finished. Hope you had a great time :)
-        </p>
-      </div>
-      <div class="row" id="placed-order-buttons">
-        <div class="col">
-          <button type="button" class="slide-right left-top"  @click="$router.push({ path: '/order_status'})" >Order status</button>
-          <button type="button" class="slide-right left-bottom" @click="$router.push({ path: '/order_details'})">Order details</button>
-        </div>
-        <div class="col">
-          <button v-if="store.feedbackLeft === false" type="button" @click="$router.push({ path: '/order_feedback'})" class="slide-left right-top" >Leave feedback</button>
-          <button v-else type="button"  disabled  @click="toggleTooltip"  data-bs-toggle="tooltip" data-bs-placement="top" title="Feedback already given" class="slide-left right-top">Leave feedback</button>
-          <button type="button" class="slide-left right-bottom" @click="toggleModal">Finish order</button>
-        </div>
-      </div>
-  </div>
-
-  <div v-else class="container">
-      <div  class="sketchfab-embed-wrapper"> 
-       <img src="@/assets/funModeOff.jpg" alt="" style="width:100%; height:100vh;">
-      </div>
-      <div id="placed-order-text">
-        <p>
-          Your order is on the way. Hope you are having a great time :))
-        </p>
-      </div>
-      <div class="row" id="placed-order-buttons">
-        <div class="col">
-          <button type="button"  id="left-top-static"  @click="$router.push({ path: '/order_status'})" >Order status</button>  
-          <button type="button"  id="left-bottom-static" @click="$router.push({ path: '/order_details'})" >Order details</button>
-        </div>
-        <div class="col">
-          <button v-if="store.feedbackLeft === false" type="button"  id="right-top-static" @click="$router.push({ path: '/order_feedback'})">Leave feedback</button>
-          <button v-else type="button"  id="right-top-static" disabled @click="toggleTooltip"  data-bs-toggle="tooltip" data-bs-placement="top" title="This is a Tooltip">Leave feedback</button>
-          <button type="button"  id="right-bottom-static"  @click="toggleModal">Finish order</button>
-        </div>
-      </div>
-      <!-- <Footer></Footer> -->
-  </div>
- </div>
 </template>
 
 
@@ -566,6 +568,14 @@ $toggle-control-size: $toggle-height - ($toggle-gutter * 2);
 .modal-body > p{
     margin-bottom: 0;
 }
+
+
+#placed-order-content{
+    min-width: 100vw;
+    background: #1c1414;
+    min-height: 100vh;
+}
+
 
 
 

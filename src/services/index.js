@@ -4,8 +4,8 @@ import store from '@/store.js';
 
 // instanca axios-a za potrebe myOrder backenda
 let Api = axios.create({
-    //baseURL: 'http://localhost:3000/',
-    baseURL: 'https://my-order.herokuapp.com/',
+    baseURL: 'http://localhost:5000/',
+    // baseURL: 'https://my-order.herokuapp.com/',
     timeout: 10000, 
 });
 
@@ -117,6 +117,15 @@ let Products = {
     },
     async saveFeedback(feedback){
         const response = await Api.post('/leave_feedback', feedback)
+        
+        if(!response) return false
+
+        else if(response.data) return true
+        
+    },
+
+    async addSubscriber(email){
+        const response = await Api.post('/subscribe', email)
         
         if(!response) return false
 

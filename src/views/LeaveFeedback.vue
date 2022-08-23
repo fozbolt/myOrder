@@ -48,7 +48,7 @@
            <button @click="submitFeedback" id="submitBtn" class="btn btn-primary feedbackButtons funkyFont">Submit</button>
         </div>      
        </div>
-       <!-- <Footer></Footer> -->
+       <FloatingMenu></FloatingMenu>
   </div>
 </template>
 
@@ -57,10 +57,11 @@ import Footer from '@/components/Footer.vue';
 import StarRating from 'vue-star-rating'
 import store from '@/store';
 import { Products } from '@/services';
+import FloatingMenu from '@/components/FloatingMenu.vue';
 
 export default {
     name: "Navbar",
-    components: { Footer,  StarRating },
+    components: { Footer, StarRating, FloatingMenu },
 
     data() {
         return {
@@ -201,7 +202,6 @@ export default {
     width: fit-content;
     height: 30px;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
-    font-family: "IM FELL French Canon SC";
     font-style: normal;
     font-weight: 400;
     font-size: 20px;
@@ -311,6 +311,7 @@ export default {
 
   .questionText{
     font-size:1.5rem;
+    line-height: 22px;
   }
 
   #header{

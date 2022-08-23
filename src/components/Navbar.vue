@@ -19,7 +19,7 @@
               <a class="nav-link nav-link-ltr" href="#">Top offers</a>
             </li>
              <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
-              <a class="nav-link nav-link-ltr" href="#">New offers</a>
+              <a class="nav-link nav-link-ltr" >New offers</a>
             </li>
             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a class="nav-link  nav-link-ltr" href="#">About us</a>
@@ -79,7 +79,7 @@ nav {
   top:0;
   left:0;
   background: rgba(255, 255, 255, 0.6);
-  z-index: 9;
+  z-index: 13;
   
 
   a {
@@ -145,7 +145,7 @@ nav {
     max-width: 200px;
     background: transparent;
     top:40px;
-    z-index: 100;
+    z-index: 13;
     border-radius: 0 0 10px 0;
 }
 
@@ -288,6 +288,9 @@ nav {
     padding-left: 20px;
 }
 }
+
+
+//loading indicator source: https://codepen.io/sethdavis512/pen/vJxNdq
 
 
 </style>

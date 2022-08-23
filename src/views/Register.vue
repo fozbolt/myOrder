@@ -141,9 +141,6 @@ export default {
     
   },
 
-  created(){
-    console.log('tu')
-  }
 };
 </script>
 

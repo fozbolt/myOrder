@@ -13,7 +13,6 @@
             <div class="card-body p-0">
                 <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
                 <h5 class="card-title">{{info.name}}</h5>
-                <!-- <p>{{ userData.test }}</p> -->
             </div>
         </div>
     </div>
@@ -21,16 +20,6 @@
 
 <script>
 import { ref } from 'vue'
-const loadUserData = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        test: 'this is a test message'
-      })
-      //hardcodiraj skeleton loading bar na 1000ms
-    }, 10)
-  })
-}
 
 export default {
   name: 'Card',
@@ -45,12 +34,6 @@ export default {
   methods:{
 
   },
-    async setup() {
-    const userData = ref(await loadUserData())
-    return {
-      userData,
-    }
-  }
 
 }
  
@@ -58,7 +41,7 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 #column{
     justify-content: center;
     display: flex;
@@ -83,7 +66,8 @@ export default {
 
 .card-title{
     font-weight: 200;
-    margin-top:2px;
+    margin-top:5px;
+    width:100%;
 }
 
 
@@ -101,6 +85,8 @@ export default {
   justify-content: center;
   align-content: center;
   flex-direction: column;
+  font-family: cursive !important;
+  font-size:14px;
 }
 
 .circle-left {
@@ -132,6 +118,7 @@ export default {
 .circle-left >small{
     font-size:10px;
     margin-top: -4px;
+    color:black;
 }
 
 .circle-left > b {

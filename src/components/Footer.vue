@@ -18,19 +18,19 @@
                             <h6>DMMDM oara</h6>
                 </div>
                 <div class="col-sm-3 col-6 m-auto" @click="scrollToTop()" alt="">
-                    <h5>My account</h5>
+                    <h5>FAQ</h5>
                             <h6>AbcDe</h6>
                             <h6>Evgdgijk</h6>
                             <h6>DMMDM oara</h6>
                 </div>
                 <div class="col-sm-3 col-6 m-auto" @click="scrollToTop()" alt="">
-                    <h5>My account</h5>
+                    <h5>General rules</h5>
                             <h6>AbcDe</h6>
                             <h6>Evgdgijk</h6>
                             <h6>DMMDM oara</h6>
                 </div>
                 <div class="col-sm-3 col-6 m-auto" @click="scrollToTop()" alt="">
-                    <h5>My account</h5>
+                    <h5>About us</h5>
                             <h6>AbcDe</h6>
                             <h6>Evgdgijk</h6>
                             <h6>DMMDM oara</h6>
@@ -71,7 +71,7 @@ export default {
     min-height: 225px;// ovo ce morati biti dinamicki
     width: 100%;
     background-size:cover;
-    margin-top: 100px;
+    // margin-top: 100px;
 }
 
 #socialMedia > img{
@@ -108,7 +108,7 @@ export default {
 }
 
 #linkRow{
-    margin: 20px 0px;
+    margin: 20px 0 0 0;
 }
 
 #backgroundDiv > .col-sm-3, .col-6 {
@@ -118,6 +118,18 @@ export default {
 @media (max-width:480px){
     #backgroundDiv{
         min-height: 315px;
+    }
+}
+
+
+@media (min-width:1024px){
+    .col-sm-3 > h5{
+        font-size:1.5rem;
+    }
+
+    .col-6 > h6{
+        margin-bottom: 0px;
+        font-size:1.25rem;
     }
 }
 
