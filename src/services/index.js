@@ -4,8 +4,8 @@ import store from '@/store.js';
 
 // instanca axios-a za potrebe myOrder backenda
 let Api = axios.create({
-    baseURL: 'http://localhost:5000/',
-    // baseURL: 'https://my-order.herokuapp.com/',
+    // baseURL: 'http://localhost:5000/',
+    baseURL: 'https://my-order.herokuapp.com/',
     timeout: 10000, 
 });
 
