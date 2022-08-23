@@ -12,23 +12,13 @@
         <div class="card-body p-0">
             <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
             <h5 class="card-title">{{info.name}}</h5>
-            <!-- <p>{{ userData.test }}</p> -->
         </div>
     </div>
 </template>
 
 <script>
 import { ref } from 'vue'
-const loadUserData = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        test: 'this is a test message'
-      })
-      //hardcodiraj skeleton loading bar na 1000ms
-    }, 10)
-  })
-}
+
 
 export default {
   name: 'SimilarMealsCard',
@@ -43,13 +33,7 @@ export default {
   methods:{
 
   },
-    async setup() {
-    const userData = ref(await loadUserData())
-    return {
-      userData,
-    }
-  }
-
+  
 }
  
 

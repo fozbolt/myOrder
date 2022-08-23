@@ -1,5 +1,5 @@
 <template>
-   <div id="loadingDiv" >
+   <div id="loadingDiv">
       <img id="loadingGif" src="@/assets/PizzaSlowPurple.gif" alt="">
       <img id="logoMain" src="@/assets/logo-main.svg" alt="">
   </div>
@@ -30,22 +30,39 @@ export default {
 <style lang="scss">
 
 #loadingDiv{
-  position:relative;
-  width: 100%;
-  height: 100%;
-  margin:35% 0px;
+  width: 100vw;
+  height: 100vh;
+  background-color: #543570 !important;
+  display: grid;
+  align-content: center;
+  align-items: center;
+  justify-items: center;
 }
 
 #loadingGif  {
- width: 100%;
+ width: 60%;
+ max-width:360px;
+ display:block;
+ margin-bottom:60px;
+//  margin-left: auto;
+//  margin-right: auto;
 }
 
 #logoMain{
-  width:150px;
-  position: absolute;
+  width:200px;
+  position: relative;
   z-index: 999;
-  top:50%;
-  left:25%
+  display:block;
+  // margin-left: auto;
+  // margin-right: auto;
+
+}
+
+
+@media (min-width: 768px){
+  #logoMain{
+    width:400px;
+  }
 }
 
 </style>

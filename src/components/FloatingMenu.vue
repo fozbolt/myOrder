@@ -1,6 +1,6 @@
 <!-- source: https://www.cssscript.com/material-design-style-radial-fab-menu-pure-css/ -->
 <template>
-  <div class="wrapper">
+  <div class="wrapper" ref="target" @click="showFloatingMenu">
 
     <!--toast-->
     <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -38,17 +38,31 @@
     </div>
   </div>
     
-  <input id="triggerButton" class="triggerButton" type="checkbox"   /> <!--@blur="toggleFloatingMenu($event,e)"--> 
-  <label for="triggerButton"></label>
-  <div class="one fa-solid fa-clipboard-question"  @click="$router.push({ path: `/order_status` })"></div>
-  <div class="two fa fa-solid fa-cart-plus" @click="$router.push({ path: `/checkout` })"></div>
-  <div class="three fa fa-phone" type="button" data-bs-toggle="modal" data-bs-target="#myModal" style="">
-    
+  <input id="triggerButton" class="triggerButton" type="checkbox"/>
+  <label for="triggerButton"  ref="label" id="menuLabel"></label>
+
+  <div class="one fa-solid fa-clipboard-question"  
+      @click="$router.push({ path: `/order_status` })" 
+      :style="$route.path === '/food_list' ? 'background-color:#2b2e6e' : 'background-color:#74CF55'">
+  </div>
+  <div class="two fa fa-solid fa-cart-plus" 
+      @click="$router.push({ path: `/checkout` })" 
+      :style="$route.path === '/food_list' ? 'background-color:#2b2e6e' : 'background-color:#74CF55'">
+  </div>
+  <div class="three fa fa-phone" 
+      type="button" 
+      data-bs-toggle="modal" 
+      data-bs-target="#myModal" 
+      :style="$route.path === '/food_list' ? 'background-color:#2b2e6e' : 'background-color:#74CF55'">
   </div>
 </div>
 
 </template>
 <script>
+
+import { onClickOutside } from '@vueuse/core'
+import { ref } from 'vue'
+
 export default {
   name: 'FloatingMenu',
   data(){
@@ -58,26 +72,39 @@ export default {
   },
 
   methods:{
-    toggleFloatingMenu(e,d){
-      console.log('tuu')
-         if (e.target.checked == true) e.target.checked=false
-         else e.target.checked=true
-
-    },
 
     toggleModal(){
-      console.log('tuu')
             //refactor and use refs
             $("#myWaiterModal").modal("toggle");
-        },
+    },
 
     callWaiter(reason){
       //show success notification
       let button = this.$refs['basicToast']
       new bootstrap.Toast(button).show();
+    },
+
+    showFloatingMenu(){
+       //to create effect that is behind landingImageDiv
+      document.getElementsByClassName("wrapper")[0].style.zIndex = "20"
     }
  
-  }
+  },
+
+  mounted(){
+    //change color when on this route to stand out more
+    if (this.$route.path === '/food_list') this.$refs.label.style.backgroundColor= '#2b2e6e';
+  },
+
+  setup() {
+      const target = ref(null)
+      onClickOutside(target, (event) => {
+         //this is loaded before methods so I cant put this in hideFloatingMenu method
+         document.getElementById("triggerButton").checked = false
+         document.getElementsByClassName("wrapper")[0].style.zIndex = "10"
+      })
+      return { target }
+  },
 
 }
 
@@ -96,6 +123,7 @@ body {
     position: fixed;
     right: 1em;
     bottom: 1em;
+    z-index:10;
 }
 
 
@@ -103,12 +131,16 @@ body {
     display: none;
 }
 
+#menuLabel{
+  background-color:  #74CF55;
+}
+
 .triggerButton + label {
   cursor: pointer;
   position: absolute;
   right: 0;
   bottom: 0;
-  background-color:  #74CF55;
+  /* background-color:  #74CF55; */
   height: var(--l);
   width: var(--l);
   border-radius: 50%;
@@ -166,6 +198,7 @@ body {
     display: inline-flex;
     justify-content: center;
     align-items: center;
+    background-color: #74CF55;
 }
 
 .one{
@@ -186,19 +219,16 @@ body {
 .triggerButton:checked ~ .one, .triggerButton:checked ~ .two, .triggerButton:checked ~ .three { opacity: 1; }
 
 .triggerButton:checked ~ .one {
-  background-color: #74CF55;
   transform: translateX(-5em);
   transition-delay: .2s;
 }
 
 .triggerButton:checked ~ .two {
-  background-color: #74CF55;
   transform: translateX(-3.5em) translateY(-3.5em);
   transition-delay: .1s;
 }
 
 .triggerButton:checked ~ .three {
-  background-color:  #74CF55;
   transform: translateY(-5em);
 }
 

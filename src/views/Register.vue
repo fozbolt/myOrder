@@ -96,6 +96,8 @@
 import { Auth } from "@/services";
 
 export default {
+  name:'Register',
+  
   data() {
     return {
       name: "",
@@ -136,7 +138,9 @@ export default {
   mounted(){
     $('#successAlert').hide();
     $('#warningAlert').hide();
-  }
+    
+  },
+
 };
 </script>
 

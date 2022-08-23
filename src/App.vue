@@ -1,12 +1,25 @@
 <template>
-    <LoadingScreen v-if="loaded===false && this.$route.path==='/'"></LoadingScreen>
+
+    <LoadingScreen v-if="!loaded && this.$route.path==='/'"></LoadingScreen>
 
     <div v-else-if="(auth.authenticated || this.$route.path ==='/login') && loaded===true" class="page-container">
-    <div class="content-wrap">
-      <Navbar @focusout="handleFocusOut" tabindex="0"/>
-      <router-view :key="$route.fullPath"/> <!--da refresha i podrute-->
-    </div>
-      <!-- <Footer class="footer"/> -->
+      <div class="content-wrap">
+        <Navbar @focusout="handleFocusOut" tabindex="0"/>
+
+        <router-view :key="$route.fullPath"  v-slot="{ Component }"> <!--da refresha i podrute + vslot za sliding animacije-->
+            <transition name="animation" mode="out-in">
+                <component :is="Component"></component>
+            </transition>
+        </router-view>
+
+        <!-- ovo je radilo
+          <transition name="animation" mode="out-in">
+            <router-view :key="$route.fullPath"/>
+        </transition>
+      -->
+
+      </div>
+        <!-- <Footer class="footer"/> -->
     </div>
 </template>
 
@@ -33,7 +46,7 @@ export default {
           password: '',
           store,
           auth: Auth.state,
-          loaded: false,
+          loaded: true,
           
         }
   },
@@ -49,6 +62,12 @@ export default {
         }
 
       }); 
+    },
+
+    setLoader(){
+        setTimeout(()=>{
+          this.loaded=true
+        },3000)
     }
     
   },
@@ -61,14 +80,7 @@ export default {
       },
 
   mounted(){
-        //loader set only on homepage for now
-        setTimeout(()=>{
-          if (this.$route.path!=='/') this.loaded=true
-          else setTimeout(() => { this.loaded=true},  3000)
-          
-          //set this to bigger timeline if login wont pass
-        },500)
-
+        this.setLoader();
 
         //create empty cart if it doesn't exist
         let test = JSON.parse(localStorage.getItem('cart')); 
@@ -115,37 +127,7 @@ export default {
   color: #0078D4 !important;
 }
 
-// .page-container {
-//   position: relative;
-//   min-height: 100vh;
-// }
 
-// .content-wrap {
-//   padding-bottom: 2.5rem;    /* Footer height */
-// }
-
-// .footer {
-//   position: absolute;
-//   // bottom:0;
-//   // left:0;
-//   width: 100%;
-//   height: 2.5rem;            /* Footer height */
-//   z-index: 999999;
-// }
-
-// #loadingDiv{
-//   display: table;
-//   width: 100%;
-//   height: 100%;
-
-  
-// }
-
-// #loadingDiv > img{
-//  width: 100%;
-//   display: table-cell; vertical-align: middle;
-  
-// }
 
 .overflow-hidden {
   overflow: hidden;
@@ -164,4 +146,20 @@ export default {
   justify-content: space-between;
 }
 
+
+/* route transitions source: https://github.com/iamshaunjp/vue-animations/blob/lesson-12/src/App.vue */
+.animation-enter-from {
+  opacity: 0;
+  transform: translateX(100px);
+}
+.animation-enter-active {
+  transition: all 0.3s ease-out; 
+}
+.animation-leave-to {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+.animation-leave-active {
+  transition: all 0.3s ease-in; 
+}
 </style>

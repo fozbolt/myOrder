@@ -1,9 +1,8 @@
 <template>
-    <!--u bookmarksima se nalaze bolji dizajni pa implementirati to kasnije--> 
     <div class="container">
         <nav class="nav nav-tabs list mt-2" id="myTab" role="tablist">
             <ul  class="nav nav-tabs" @click="selectValue($event)" :class="{ navTabsAlign: store.type.toLowerCase() === 'drink'}">
-                <li v-for="(subcategory, index) in currentSubCategories" >
+                <li v-for="(subcategory, index) in currentSubCategories" :key="index">
                     <a  
                       v-bind="getDataAttr(index, subcategory)" 
                       class="nav-item nav-link pointer"  
@@ -118,6 +117,7 @@ export default {
 .nav-tabs {
   display: inline-flex;
   width: 100%;
+  z-index: 0;
   overflow-x: auto;
   -ms-overflow-style: none; /*// IE 10+*/
   overflow: -moz-scrollbars-none;/*// Firefox*/
