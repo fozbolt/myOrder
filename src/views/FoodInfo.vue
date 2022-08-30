@@ -109,7 +109,7 @@
                 <div id="similarMealsDiv"> <!-- ne prikazuj ovo ako nema bar jedan meal u toj kategoriji - još doraditi -->
                     <h4 v-if="store.type.toLowerCase() === 'food'">Similar meals</h4>
                     <h4 v-else>Similar driks</h4>
-                    <Slider/> 
+                    <Slider :productInfo ="card"/> 
                 </div>
 
              </div>
@@ -306,6 +306,7 @@ button {
 #positionDiv{
     position:absolute;
     top:250px;
+    width:100%;
 }
 
 #circle-left > b{

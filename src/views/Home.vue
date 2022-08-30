@@ -75,8 +75,8 @@
       </div> 
     </div>
      
-    <div class="homepageContent" id="abouthomepageContent" style="color:white; font-weight: 300;">
-      <div class="header" style="width:85%; align-items: center; position: relative; bottom: 20%;">
+    <div class="homepageContent" id="abouthomepageContent">
+      <div class="header" id="descHeader">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo
         <ul>
           <li> d tempor incididunt ut labore et dolore magna aliqua. </li>
@@ -90,12 +90,37 @@
        <img src="@/assets/bulletMobile.svg" alt="About us image">
     </div>
 
-    <div class="homepageContent" id="sliderDiv">
+    <div class="homepageContent" id="sliderDiv"  ref="aboutSection">
       <AboutCarousel></AboutCarousel>
-       <img src="@/assets/PancakeMobile2.svg" alt="Pancake image" style="width:100%; height: 100%;" >
+      <!--collapsible-->
+      <div id="checkOffersDiv" type="button" @click="toggleCollapsible()" aria-expanded="false" aria-controls="collapseExample" ref="checkOffers">
+          <h5>Check out our top offers</h5>
+          <img v-if="!collapsibleOpen" src="@/assets/seeMoreArrowDown.svg" alt="see more arrow">
+          <img v-else src="@/assets/seeMoreArrowUp.svg" alt="see less arrow">
+      </div>
+      <div class="collapse" id="collapseExample">
+          <div class="card card-body" id="cardBody">
+            <div id="contentHolder">
+              <div class="topOffers" @click="goTo('Top offers')">
+                  <img src="@/assets/discount.png" class="seeOffersIcon" alt="see offers icon">
+                  <h5>Top offers</h5>
+              </div>
+              <div class="topOffers" @click="goTo('New offers')">
+                  <img src="@/assets/newIcon.png" class="seeOffersIcon" alt="see offers icon">
+                  <h5>New offers</h5>
+              </div>
+              <div class="topOffers" @click="goTo('Top offers')"> <!--not implemented yet-->
+                  <img src="@/assets/happyHours.svg" class="seeOffersIcon" alt="see offers icon">
+                  <h5>Our happy hours</h5>   
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <img src="@/assets/PancakeMobile2.svg" alt="Pancake image" id="pancakeImg" >
     </div>
 
-    <div class="homepageContent" id="subscribeDiv">
+    <div class="homepageContent" id="subscribeDiv" ref="subscribeSection">
         <div id="subscribeContent" class="header">
             <h1>500</h1>
             <h5>Subscribers in our first month</h5>
@@ -122,7 +147,8 @@ import store from '@/store.js';
 import Footer from '@/components/Footer.vue';
 import FloatingMenu from '@/components/FloatingMenu.vue';
 import { Products } from '@/services';
-import AboutCarousel from '../components/AboutCarousel.vue';
+import AboutCarousel from '../components/InfoSlider.vue';
+import {emitter} from '@/main.js'
 
 export default {
     name: "Home",
@@ -135,7 +161,8 @@ export default {
             prevScrollPosition:0,
             subscriberEmail: '',
             invalidInput: false,
-            toastMessage: ''
+            toastMessage: '',
+            collapsibleOpen: false
         };
     },
     methods: {
@@ -216,12 +243,40 @@ export default {
 
             addEventListeners(){
               if (window.addEventListener) {
-                window.addEventListener('scroll',this.updateScroll ); //Homepage text animations
-                window.addEventListener("DOMContentLoaded", this.checkForVisibility, false); //About and subscribe section text animations
-                window.addEventListener("load", this.checkForVisibility, false); //About and subscribe section text animations
-                document.addEventListener("scroll", this.checkForVisibility, false); //About and subscribe section text animations
+                window.addEventListener('scroll',this.updateScroll, { passive: true} ); //Homepage text animations
+                window.addEventListener("DOMContentLoaded", this.checkForVisibility, false, { passive: true}); //About and subscribe section text animations
+                window.addEventListener("load", this.checkForVisibility, false, { passive: true}); //About and subscribe section text animations
+                document.addEventListener("scroll", this.checkForVisibility, false, { passive: true}); //About and subscribe section text animations
               }
+            },
+
+            removeEventListeners(){
+              window.removeEventListener('scroll', this.updateScroll)
+              window.removeEventListener('scroll', this.checkForVisibility)
+              window.removeEventListener('DOMContentLoaded', this.checkForVisibility)
+              window.removeEventListener('load', this.checkForVisibility)
+            },
+
+            goTo(subcategory){
+              this.store.selectedSubCategory  = subcategory
+              this.store.category = 'MainCourse'
+              this.store.type = 'Food'
+              this.$router.push('/food_list')
+            },
+
+            toggleCollapsible(){
+              //source: https://getbootstrap.com/docs/5.0/components/collapse/
+              let collapseElementList = [].slice.call(document.querySelectorAll('.collapse'))
+              collapseElementList.map(function (collapseEl) {
+                return new bootstrap.Collapse(collapseEl)
+              })
+              
+              this.collapsibleOpen = !this.collapsibleOpen;
+
+              if(this.collapsibleOpen) this.$refs.checkOffers.style.top = '500px';
+              else this.$refs.checkOffers.style.top = '330px';
             }
+
 
     },
 
@@ -230,13 +285,14 @@ export default {
     },
 
     unmounted(){
-      window.removeEventListener('scroll', this.updateScroll)
-      window.removeEventListener('scroll', this.checkForVisibility)
-      window.removeEventListener('DOMContentLoaded', this.checkForVisibility)
-      window.removeEventListener('load', this.checkForVisibility)
+      this.removeEventListeners();
     },
 
-
+    created() {
+      emitter.on("section-clicked", (section) => {
+        this.$refs[section].scrollIntoView()
+      });
+    },
 
 }
 </script>
@@ -250,6 +306,7 @@ export default {
 .homepageContent {
     height: 100vh;
     width: 100%;
+    background-color: #262a2b;
     /* to hide strange border alike behavior - nije bas neki fiks - popraviti */
     top:3px; 
 }
@@ -293,6 +350,8 @@ picture img {
 }
 
 #abouthomepageContent{
+  color:white; 
+  font-weight: 300;
   background-color: #262a2b;
   display:flex;
   justify-content: flex-end;
@@ -314,6 +373,16 @@ picture img {
 
 #sliderDiv{
   height: auto;
+  background-color: #222624fc;
+  z-index:1;
+}
+
+
+#pancakeImg{
+  width:100%;
+  height: 100%;
+  position: relative;
+  z-index: 0;
 }
 
 
@@ -515,6 +584,79 @@ line-height: 27px;
     border:none; 
 }
 
+
+
+
+#descHeader{
+  width:85%; 
+  align-items: center; 
+  position: relative; 
+  bottom: 20%;
+  text-align: left;
+}
+
+#descHeader > ul {
+  margin-top: 1rem;
+  line-height: 25px;
+}
+
+#checkOffersDiv{
+  position:relative;
+  top:330px;
+  z-index:2;
+  color:white;
+  text-align:center;
+}
+
+#checkOffersDiv > h5{
+  font-weight:300;
+  font-size: 25px;
+  backdrop-filter: blur(2px);
+  width: fit-content;
+  margin-left: auto;
+  margin-right:auto;
+}
+
+
+.topOffers{
+  z-index:2;
+  color:white;
+  text-align: left;
+  margin-right: auto;
+  margin-left: 25%;
+}
+
+.topOffers > h5{
+  font-weight:300;
+  font-size: 20px;
+  backdrop-filter: blur(2px);
+  width: fit-content;
+  margin-left: auto;
+  margin-right:auto;
+  display:inline-block;
+  margin: 10px 0;
+}
+
+#cardBody{
+  width: 100%;
+  position: relative;
+}
+
+#contentHolder{
+  width:100%; 
+  height: 500px; 
+  position:relative; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.seeOffersIcon{
+  height: 30px;
+  width: 30px;
+  margin-right: 5px;
+}
 
 
 

@@ -2,10 +2,11 @@ import axios from 'axios';
 import $router from '@/router'
 import store from '@/store.js';
 
+
 // instanca axios-a za potrebe myOrder backenda
 let Api = axios.create({
-    // baseURL: 'http://localhost:5000/',
-    baseURL: 'https://my-order.herokuapp.com/',
+    baseURL: 'http://localhost:5000/',
+    //baseURL: 'https://my-order.herokuapp.com/',
     timeout: 10000, 
 });
 
@@ -205,14 +206,24 @@ let Products = {
         });
     },
 
-    async fetchProducts(term) {  
+    //product_category - optional parameter used for fetching similar meals and drinks
+    async fetchProducts(term, product_category = undefined) {  
         term = term || store.searchTerm; 
-        let result = await Products.getAll(term, store.type, store.category, store.selectedSubCategory )
+        let result = await Products.getAll(term, store.type, product_category || store.category, store.selectedSubCategory )
 
         //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
         return  _.sortBy( result, 'price' ).reverse();
   
     },
+
+
+    async fetchInfoCards() {  
+        let result = await Api.get('/about_info')
+      
+        return  _.sortBy( result.data, 'publish_date' );
+    },
+
+
 };
 
 export { Api, Products, Auth }; // exportamo Api za ručne pozive ili Products za metode.

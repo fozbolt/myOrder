@@ -9,16 +9,14 @@
         </span>
         <img :src="info.url" class="card-img-top" alt="Meal image">
 
-        <div class="card-body p-0">
+        <div class="card-body p-0" id="cardBdy">
             <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
-            <h5 class="card-title">{{info.name}}</h5>
+            <h5 class="card-title funkyFont" id="cardHeader">{{info.name}}</h5>
         </div>
     </div>
 </template>
 
 <script>
-import { ref } from 'vue'
-
 
 export default {
   name: 'SimilarMealsCard',
@@ -40,7 +38,7 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 #column{
     justify-content: center;
     display: flex;
@@ -124,7 +122,23 @@ export default {
 }
 
 
-.card-body > h5{
-  width:130px;
+#cardBdy> h5{
+    max-width:143px;
+    white-space: pre-line;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    padding-left:0;
+}
+
+.card-title{
+    font-weight: 200;
+    margin-top:5px;
+    width:100%;
+}
+
+#cardHeader{
+    //because of intererance
+    color:black;
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
     <Suspense>
     <!--source: https://ismail9k.github.io/vue3-carousel/getting-started.html#basic-using-->
-    <carousel v-if="filteredCards.length!==0" v-bind="settings" :breakpoints="breakpoints">
-        <slide v-for="slide in filteredCards" :key="slide">
+    <carousel v-if="cards.length!==0" v-bind="settings" :breakpoints="breakpoints" id="slider">
+        <slide v-for="slide in cards" :key="slide">
           <div class="carousel__item">
-            <SimilarMealsCard  @click="gotoDetails(slide)" :key="slide.id" :info="slide" />
+            <AboutUsCards :key="slide.id" :info="slide" />
           </div>     
         </slide>
 
@@ -20,20 +20,20 @@
 <script>
 
 import store from '@/store.js'
-import SimilarMealsCard from '@/components/SimilarMealsCard.vue'
+import AboutUsCards from '@/components/AboutUsCards.vue'
 import { Products } from '@/services';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';
 
 export default {
   name: 'Slider',
-  props: ['productInfo'],
+  props: ['info'],
   components: {
     Carousel,
     Slide,
     Pagination,
     Navigation,
-    SimilarMealsCard
+    AboutUsCards
   },
 
   data() { 
@@ -44,12 +44,12 @@ export default {
             settings:{
                 //"items-to-show": 3,
                 "wrap-around": true,
-                "autoplay": 4000
+                // "autoplay": 4000
             },
              breakpoints: {
                 // 350px and up
                 350: {
-                  itemsToShow: 2,
+                  itemsToShow: 1.5,
                   snapAlign: 'center',
                 },
                 700: {
@@ -73,9 +73,7 @@ export default {
   },
 
   async mounted(){
-    this.cards = await Products.fetchProducts('', this.productInfo.category);
-
-    this.filteredCards = this.cards.filter(item =>  item.id !== this.$route.params.id )
+    this.cards = await Products.fetchInfoCards();
   }
  
 }
@@ -83,11 +81,23 @@ export default {
 
 </script>
 
+<style lang="scss">
+
+ #slider{
+  //  margin-top:40px;
+   position: relative;
+   top:210px;
+   z-index:1;
+}
+
+</style>
+
 
 <style lang="scss" scoped>
-::v-deep{ 
-  .carousel{
-    margin-bottom:40px;
+::v-deep{
+
+  ol{
+    margin-top:10px;
   }
 
   .carousel__next, .carousel__prev{
@@ -104,6 +114,7 @@ export default {
 
   .carousel__slide {
     padding: 10px;
+    // width: 60% !important;
   }
 
 
@@ -124,6 +135,7 @@ export default {
     opacity: 1;
     transform: rotateY(0);
     padding: 10px;
+    width: fit-content;
   }
   .carousel__slide--next > .carousel__item {
     transform: scale(0.9) translate(-10px);
@@ -138,16 +150,42 @@ export default {
     padding: 10px;
   }
 
+  .carousel__pagination{
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      align-items: center;
+      vertical-align: middle;
+      height: 7.5px;
+  }
+
   .carousel__pagination-button{
-    background-color: hsl(206, 41%, 68%);
+      width: 45px;
+      background-color: #C4C4C4;
+      height: 7.5px;
+      margin: 0;
+      padding: 0;
   }
 
   .carousel__pagination-button--active{
-    background-color: #0078D4;
+    background-color: black;
+    height: 8.5px;
+    overflow: visible;
+    padding: 0px 25px;
+    border-radius:0;
   }
 
   ol{
     padding-inline-start: 0px;
+  }
+
+  .carousel__pagination > li{
+      background-color: #C4C4C4;
+      width: 50px;
+      height: 8px;
+      padding: 0 !important;
+      margin: 0;
+      display: flex;
   }
 
 
@@ -155,6 +193,7 @@ export default {
   @media (max-width:900px){
   .carousel{
       max-width: 100vw;
+      
     }
   }
 
@@ -174,5 +213,6 @@ export default {
 
   }
 }
+
 
 </style>

@@ -43,17 +43,17 @@
 
   <div class="one fa-solid fa-clipboard-question"  
       @click="$router.push({ path: `/order_status` })" 
-      :style="$route.path === '/food_list' ? 'background-color:#2b2e6e' : 'background-color:#74CF55'">
+      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
   </div>
   <div class="two fa fa-solid fa-cart-plus" 
       @click="$router.push({ path: `/checkout` })" 
-      :style="$route.path === '/food_list' ? 'background-color:#2b2e6e' : 'background-color:#74CF55'">
+      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
   </div>
   <div class="three fa fa-phone" 
       type="button" 
       data-bs-toggle="modal" 
       data-bs-target="#myModal" 
-      :style="$route.path === '/food_list' ? 'background-color:#2b2e6e' : 'background-color:#74CF55'">
+      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
   </div>
 </div>
 
@@ -92,8 +92,8 @@ export default {
   },
 
   mounted(){
-    //change color when on this route to stand out more
-    if (this.$route.path === '/food_list') this.$refs.label.style.backgroundColor= '#2b2e6e';
+    //change color when on this route to stand out more - can be done with inline style binding too
+    if (this.$route.path === '/food_list') this.$refs.label.style.backgroundColor= '#5A5EB9';
   },
 
   setup() {

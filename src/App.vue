@@ -6,18 +6,15 @@
       <div class="content-wrap">
         <Navbar @focusout="handleFocusOut" tabindex="0"/>
 
-        <router-view :key="$route.fullPath"  v-slot="{ Component }"> <!--da refresha i podrute + vslot za sliding animacije-->
+        <router-view v-slot="{ Component, route }"> 
             <transition name="animation" mode="out-in">
+              <!--da refresha i podrute -->
+              <div :key="route.fullPath">                  
                 <component :is="Component"></component>
+              </div>
             </transition>
         </router-view>
-
-        <!-- ovo je radilo
-          <transition name="animation" mode="out-in">
-            <router-view :key="$route.fullPath"/>
-        </transition>
-      -->
-
+        
       </div>
         <!-- <Footer class="footer"/> -->
     </div>

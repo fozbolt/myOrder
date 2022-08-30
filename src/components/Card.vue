@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.$route.path==='/food_list'" class="col-lg-2 col-6 col-md-3" id="column">
+    <div v-if="this.$route.path==='/food_list'" class="col-xl-1 col-lg-2 col-md-3 col-6" id="column">
         <div class="card" >
             <span v-if="info.discount" class="circle-left">
                 <b>{{info.discount}}</b> 
@@ -12,14 +12,13 @@
 
             <div class="card-body p-0">
                 <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
-                <h5 class="card-title">{{info.name}}</h5>
+                <h5 class="card-title" id="cardHeader">{{info.name}}</h5>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { ref } from 'vue'
 
 export default {
   name: 'Card',
@@ -68,6 +67,11 @@ export default {
     font-weight: 200;
     margin-top:5px;
     width:100%;
+}
+
+#cardHeader{
+    //because of intererance
+    color:black;
 }
 
 

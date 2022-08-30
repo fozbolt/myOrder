@@ -1,12 +1,16 @@
 <template>
     <div class="container">
         <nav class="nav nav-tabs list mt-2" id="myTab" role="tablist">
-            <ul  class="nav nav-tabs" @click="selectValue($event)" :class="{ navTabsAlign: store.type.toLowerCase() === 'drink'}">
+            <ul  
+              class="nav nav-tabs" 
+              @click="selectValue($event)" 
+              :class="{ navTabsAlign: store.type.toLowerCase() === 'drink'}"
+              >
                 <li v-for="(subcategory, index) in currentSubCategories" :key="index">
                     <a  
                       v-bind="getDataAttr(index, subcategory)" 
                       class="nav-item nav-link pointer"  
-                      :class="{ active: subcategory.toLowerCase() === 'all'}"
+                      :class="{ active: subcategory.toLowerCase() === store.selectedSubCategory.toLowerCase()}"
                       role="tab"   data-bs-toggle="tab" aria-controls="public" aria-expanded="true"
                       >
                       {{subcategory}}
@@ -22,7 +26,6 @@
 
 import _ from 'lodash';
 import store from '@/store.js'
-import { Products } from '@/services';
 
 export default {
     name: 'HorizontalScroller',
@@ -92,9 +95,17 @@ export default {
 
 
     async mounted(){
-        //refactorati sve ovo sutra jer sam sada skuzio da direkt dohvaanje radi pa mi ostatak ne treba ako ima viska
-        //this.store.productTypes= await Products.getProductTypes()
-        this.currentSubCategories= this.store.productTypes[0][this.store.type][this.store.category] 
+        let tempCategories = this.store.productTypes[0][this.store.type][this.store.category] 
+        let currCategories = tempCategories
+
+        //set scroller in position that top offers and new offers subcategories are in focus - slice for escaping of modifying of original array
+        if (this.store.selectedSubCategory === 'Top offers' || this.store.selectedSubCategory === 'New offers'){
+          currCategories = tempCategories.slice().reverse() 
+        }
+        
+        
+        this.currentSubCategories = currCategories
+
     }
 
    
@@ -154,7 +165,7 @@ export default {
 .nav-tabs>li.active>a,
 .nav-tabs>li>a:hover {
   border: none;
-  color: #0078D4 !important;
+  // color: #0078D4 !important; // ovo samo smeta posto imamo programski rjeseno
   background: transparent;
 }
 .nav-tabs>li>a::after {
@@ -219,5 +230,20 @@ export default {
   justify-content: center;
 
  }
+}
+
+
+@media(min-width: 1200px){
+  .nav-item{
+    font-size:1vw;
+  }
+
+  ul{
+    width:90% !important;
+  }
+
+  .list{
+    width:70%;
+  }
 }
 </style>

@@ -100,7 +100,7 @@ export default {
 <style lang="scss">
 
 .row{
-  justify-content: center;
+  justify-content: space-evenly;
   display:flex;
 }
 
@@ -116,5 +116,12 @@ export default {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+
+@media(min-width:1200px){
+  .tab-content{
+    padding-top: 50px;
+  }
 }
 </style>

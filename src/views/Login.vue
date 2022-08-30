@@ -72,9 +72,7 @@ export default {
     },
   
 
-  //povecati tab space nazad na duplo od ovog
   methods: {
-    //kod logina se refresha login page ako je krivi login --popraviti
     async login(){
 			const result = await Auth.login({'username': this.email, 'password': this.password});
 
@@ -261,7 +259,7 @@ small{
 }
 
 #iconPassword{
-  margin-left: -15px;
+  margin-left: 0px;
   
 }
 
@@ -272,7 +270,7 @@ small{
 }
 
 #password_eye {
-  display: none;
+  /* display: none; */
 }
 
 
