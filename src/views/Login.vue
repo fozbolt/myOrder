@@ -323,6 +323,29 @@ small{
 }
 
 
+@media(min-width:1400px){
+  .email, .password{
+    width:350px;
+  }
 
+  input{
+    width:300px;
+    font-size: 20px;
+  }
+
+  #loginIcon{
+    max-width: 400px;
+    max-height: 400px;
+  }
+
+  .logo{
+    max-width: 400px;
+  }
+  
+  form > .btn{
+    font-size:20px;
+  }
+
+}
 
 </style>

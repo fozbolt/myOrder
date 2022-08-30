@@ -6,12 +6,9 @@
       <div class="content-wrap">
         <Navbar @focusout="handleFocusOut" tabindex="0"/>
 
-        <router-view v-slot="{ Component, route }"> 
-            <transition name="animation" mode="out-in">
-              <!--da refresha i podrute -->
-              <div :key="route.fullPath">                  
-                <component :is="Component"></component>
-              </div>
+        <router-view v-slot="{ Component, route }" class="child-view"> 
+            <transition :name="transitionName" class="transition">                 
+                <component :is="Component" :key="route.fullPath"></component>
             </transition>
         </router-view>
         
@@ -44,6 +41,7 @@ export default {
           store,
           auth: Auth.state,
           loaded: true,
+          transitionName: 'animation'
           
         }
   },
@@ -87,6 +85,18 @@ export default {
         }
 
         
+  },
+
+  watch: {
+    ['$route'](to, from) {
+      let toDepth = to.fullPath.split('/').length;
+      let fromDepth = from.fullPath.split('/').length;
+      if (from.fullPath === '/') fromDepth = 1 //custom rules for homepage
+      else if (to.fullPath === '/') toDepth = 1 //custom rules for homepage
+      
+      //if lengths are same and we dont have parent/child relationship then resolve  this with meta tags?
+      this.transitionName = toDepth < fromDepth ? 'animation-right' : 'animation-left';
+    }
   }
 
 }
@@ -145,18 +155,35 @@ export default {
 
 
 /* route transitions source: https://github.com/iamshaunjp/vue-animations/blob/lesson-12/src/App.vue */
-.animation-enter-from {
+/* can be refactored greately */
+.animation-left-enter-from {
   opacity: 0;
   transform: translateX(100px);
 }
-.animation-enter-active {
+.animation-leftenter-active {
   transition: all 0.3s ease-out; 
 }
-.animation-leave-to {
+.animation-left-leave-to {
   opacity: 0;
   transform: translateX(-100px);
 }
-.animation-leave-active {
+.animation-left-leave-active {
+  transition: all 0.3s ease-in; 
+}
+
+
+.animation-right-enter-from {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+.animation-right--enter-active {
+  transition: all 0.3s ease-out; 
+}
+.animation-right-leave-to {
+  opacity: 0;
+  transform: translateX(100px);
+}
+.animation-right-leave-active {
   transition: all 0.3s ease-in; 
 }
 </style>
