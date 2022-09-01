@@ -26,7 +26,7 @@
         <div class="modal-body" id="modal-body">
           <!--https://stackoverflow.com/questions/3486110/make-a-list-item-clickable-html-css-->
           <div id="leftsideMenu">
-            <ul style="list-style-type:none">
+            <ul style="list-style-type:none; width:100% !important;">
               <li v-for="reason in callReasons" :key="reason" @click="callWaiter(reason)" data-bs-dismiss="modal"><a>{{reason}}</a></li>
             </ul>
           </div>
@@ -123,7 +123,7 @@ body {
     position: fixed;
     right: 1em;
     bottom: 1em;
-    z-index:10;
+    z-index:12;
 }
 
 
@@ -311,7 +311,11 @@ body {
      margin-right: 10px;
 }
 
-
+@media(min-width: 1200px){
+  #modal-dialog{
+    top:15vw;
+  }
+}
 
 </style>
 

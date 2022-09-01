@@ -6,8 +6,8 @@
       <div class="content-wrap">
         <Navbar @focusout="handleFocusOut" tabindex="0"/>
 
-        <router-view v-slot="{ Component, route }" class="child-view"> 
-            <transition :name="transitionName" class="transition">                 
+        <router-view v-slot="{ Component, route }"> 
+            <transition :name="transitionName" class="transition" mode="out-in">                 
                 <component :is="Component" :key="route.fullPath"></component>
             </transition>
         </router-view>
@@ -26,6 +26,7 @@ import { Products } from '@/services';
 import Footer from '@/components/Footer.vue'
 import * as $ from 'jquery';
 import LoadingScreen from '@/components/LoadingScreen.vue'
+
 
 export default {
   name: 'App',

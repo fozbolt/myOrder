@@ -96,7 +96,7 @@ nav {
   top:0;
   left:0;
   background: rgba(255, 255, 255, 0.6);
-  z-index: 13;
+  z-index: 14;
   
 
   a {
@@ -302,8 +302,8 @@ nav {
   }
 
   .navbar-expand-lg .navbar-nav .nav-link {
-    padding-right: 20px;
-    padding-left: 20px;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 }
 

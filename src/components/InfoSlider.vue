@@ -43,12 +43,12 @@ export default {
             filteredCards: [],
             settings:{
                 //"items-to-show": 3,
-                "wrap-around": true,
+                "wrapAround": true,
                 // "autoplay": 4000
             },
              breakpoints: {
-                // 350px and up
-                350: {
+                // 320px and up: https://worship.agency/mobile-screen-sizes-for-2021
+                320: {
                   itemsToShow: 1.5,
                   snapAlign: 'center',
                 },
@@ -197,6 +197,8 @@ export default {
     }
   }
 
+  
+
   @media (min-width:900px){
   #contentHolder{
     position: absolute; 
@@ -214,5 +216,14 @@ export default {
   }
 }
 
+@media(min-width:1024px){
+  #slider{
+   top:350px;
+
+  .carousel__pagination{
+    margin-top: 4vh
+  }
+}
+}
 
 </style>
