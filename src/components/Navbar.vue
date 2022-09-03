@@ -1,5 +1,5 @@
 <template>
- <nav v-if="$route.path!== '/login' && $route.path!== '/register'" class="navbar navbar-expand-lg navbar-light" :style="{backgroundColor:getColor()}">
+ <nav v-if="$route.path!== '/login' && $route.path!== '/register' && store.userType !== 'manager'" class="navbar navbar-expand-lg navbar-light" :style="{backgroundColor:getColor()}">
       <div class="container-fluid">
         <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
           aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -7,7 +7,7 @@
           <span class="icon-bar middle-bar"></span>
           <span class="icon-bar bottom-bar"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown" @focusin="toggleMenu" :style="{backgroundColor:getColor()}">
+        <div v-if="store.userType !== 'manager'" class="collapse navbar-collapse" id="navbarNavDropdown" @focusin="toggleMenu" :style="{backgroundColor:getColor()}">
           <ul class="navbar-nav">
             <li class="nav-item active" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a @click="this.$router.push('/food_list')"  href="" class="nav-link nav-link-ltr">Order now</a>
@@ -63,7 +63,8 @@ export default {
       },
 
       getColor(){
-        if (this.$route.path === '/') return ''
+        if (this.$route.path === '/' && this.store.userType !== 'manager') return ''
+        else if (this.store.userType === 'manager') return '#e9ecef'
         else return 'white'
       },
 

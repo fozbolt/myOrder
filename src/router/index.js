@@ -11,15 +11,32 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: Home,
+    children: [
+      {
+        path: 'statistics',
+        name: 'statistics',
+        component: () => import('@/components/manager/Statistics.vue'),
+        meta: {title: 'Statistics'}
+      },
+      {
+        path: 'products',
+        name: 'products',
+        component: () => import('@/components/manager/Products.vue'),
+        meta: {title: 'Products'}
+      },
+      {
+        path: 'employees',
+        name: 'employees',
+        component: () => import('@/components/manager/Employees.vue'),
+        meta: {title: 'Employees'}
+      },
+      
+    ]
   },
   {
     path: '/login',
     name: 'login',
-    // route level code-splitting
-    // this generates a separate chunk (login.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    // iskoristiti ovaj lazy loading ili maknuti, ali za login ne treba LL
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
   },
   {
@@ -33,7 +50,7 @@ const routes = [
     component: FoodList,
     // children: [
     //   {
-    //     path: '/:id',
+    //     path: ':id',
     //     props: true,
     //     name: 'FoodInfo',
     //     component: () => import(/* webpackChunkName: "FoodInfo" */ '../views/FoodInfo.vue')
@@ -99,23 +116,32 @@ const router = createRouter({
 
 
 
-// izvrši prije svake rute
+
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const publicPages = ['/login', '/register']; // '/register' excluded for logic of this app
+  const managerPages = ['/statistics', '/products', '/employees']
   const authRequired = !publicPages.includes(to.path);
-  const user = Auth.getUser();
- 
+  const user = Auth.getUser();  
+
   // ako korisnik nije ulogiran i stranica nije whitelistana
   if (authRequired && !user) {
-
     return next('/login');
   }
   //ako jer korisnik ulogiran ne dopusti na /login i /register
   if (user && !authRequired) {
-
+    console.log('tu')
     return next('/');
   }
+
+  //forbid manager sites to regular users
+  if(user?.type !== 'manager' && managerPages.includes(to.path)){
+    return next('/');
+  }
+
+  //allow only to customer
+  //write this logic or not?
+
   next();
 });
 

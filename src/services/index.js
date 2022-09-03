@@ -56,7 +56,8 @@ let Auth = {
             let user = response.data
             //prvi put spremamo radi tokena
             localStorage.setItem('user', JSON.stringify(user));
-
+            store.userType = user.type
+            
             return true
         }
     },
@@ -65,6 +66,7 @@ let Auth = {
         return await Api.patch('/change_password', userData);
     },
     logout() {
+        localStorage.removeItem('orderID');
         localStorage.removeItem('user');
         $router.go(); //this should be enough
         //this.$router.push({ path: `/login` });

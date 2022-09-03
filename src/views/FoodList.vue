@@ -1,5 +1,6 @@
+
 <template>
-  <div>
+    <div>
       <div id="food-list-content">
             <div id="search-field">
               <input 
@@ -17,7 +18,7 @@
                   <button id="food" @click="selectType($event)" v-bind:class="{ foodActive: store.isFood }" class="square">
                     <h5 class="type-item">Food</h5>
                   </button>
-                  <button id="drink" @click="selectType($event)" v-bind:class="{ drinkActive: store.isDrink }" class="square">
+                  <button id="drink" @click="selectType($event)" v-bind:class="{ drinkActive: store.isDrink }" class="square" >
                     <h5 class="type-item">Drink</h5>
                   </button>
                 </div>
@@ -168,7 +169,8 @@ export default {
       this.store.type='Food'
       this.store.category = 'MainCourse'
       this.store.selectedSubCategory = 'All'
-    }
+    },
+   
 
 
 

@@ -5,12 +5,13 @@
     <div v-else-if="(auth.authenticated || this.$route.path ==='/login') && loaded===true" class="page-container">
       <div class="content-wrap">
         <Navbar @focusout="handleFocusOut" tabindex="0"/>
-
-        <router-view v-slot="{ Component, route }"> 
+  
+        <router-view v-if="store.userType === 'customer'" v-slot="{ Component, route }"> 
             <transition :name="transitionName" class="transition" mode="out-in">                 
                 <component :is="Component" :key="route.fullPath"></component>
             </transition>
         </router-view>
+        <router-view v-else />
         
       </div>
         <!-- <Footer class="footer"/> -->
@@ -34,7 +35,8 @@ export default {
     Navbar,
     Footer,
     LoadingScreen,
-},
+  },
+
   data(){
         return{
           email: '',
@@ -42,8 +44,7 @@ export default {
           store,
           auth: Auth.state,
           loaded: true,
-          transitionName: 'animation'
-          
+          transitionName: 'animation-right',
         }
   },
 
@@ -52,7 +53,7 @@ export default {
     handleFocusOut() {
         $(document).click(function (event) {
 
-        /// If *navbar-collapse* is not among targets of event
+        // If *navbar-collapse* is not among targets of event
         if (!$(event.target).is('.navbar-collapse *')) {
           $('.navbar-collapse').collapse('hide');
         }
@@ -64,7 +65,17 @@ export default {
         setTimeout(()=>{
           this.loaded=true
         },3000)
-    }
+    },
+
+
+    createCart(){
+      //create empty cart if it doesn't exist
+      let test = JSON.parse(localStorage.getItem('cart')); 
+
+      if (!Array.isArray(test)){
+        localStorage.setItem('cart', JSON.stringify([]));
+      }
+    },
     
   },
 
@@ -78,14 +89,7 @@ export default {
   mounted(){
         this.setLoader();
 
-        //create empty cart if it doesn't exist
-        let test = JSON.parse(localStorage.getItem('cart')); 
-
-        if (!Array.isArray(test)){
-          localStorage.setItem('cart', JSON.stringify([]));
-        }
-
-        
+        this.createCart();
   },
 
   watch: {
@@ -94,7 +98,7 @@ export default {
       let fromDepth = from.fullPath.split('/').length;
       if (from.fullPath === '/') fromDepth = 1 //custom rules for homepage
       else if (to.fullPath === '/') toDepth = 1 //custom rules for homepage
-      
+
       //if lengths are same and we dont have parent/child relationship then resolve  this with meta tags?
       this.transitionName = toDepth < fromDepth ? 'animation-right' : 'animation-left';
     }

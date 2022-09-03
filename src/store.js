@@ -2,6 +2,7 @@ export default {
     //user
     userId: 'your_id',
     username: null,
+    userType: 'manager',
     
     //functionality
     searchText: '',
