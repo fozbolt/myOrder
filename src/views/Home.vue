@@ -28,7 +28,6 @@ export default {
     },
 
     mounted() {
-      console.log(this.store.userType)
       this.$nextTick(() => {
         window.addEventListener('resize', this.onResize);
       })

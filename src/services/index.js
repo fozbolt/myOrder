@@ -190,6 +190,10 @@ let Products = {
 
     },
 
+    
+    async deleteProduct(id) {
+        return await Api.delete(`/products/${id}`);
+    },
 
     async getAll(searchTerm, type, category, subcategory) {
         let options = {};
@@ -208,19 +212,10 @@ let Products = {
         // }
 
         let response = await Api.get(`/menu/${type}/${category}/${subcategory}`, options)
-        return response.data.map((doc) => {
-            return {
-                id: doc._id,
-                url: doc.url,
-                name: doc.name,
-                price: doc.price,
-                type: doc.type,
-                category: doc.category,
-                subCategory: doc.subCategory,
-                discount: doc.discount
-                //posted_at: Number(doc.postedAt), buduci created at
-            };
-        });
+        response.data.id = response.data._id
+        delete response.data._id
+
+        return response.data
     },
 
     //product_category - optional parameter used for fetching similar meals and drinks + manager filter

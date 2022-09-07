@@ -33,13 +33,13 @@
                         {{this.card.name}}
                     </h5>
                 </div>
-                <div id="ingredients">tomatoes, cheese, ham, mushrooms, artichokes, capers, garlic, olives, oregano</div>
+                <div id="ingredients"> {{ card.ingredients || defaultIngredients}}</div>
                 <div id="clockDiv">
                     <img src="@/assets/clockIcon.svg" alt="">
-                    <small ><b> 25-35 min</b></small>
+                    <small ><b> {{card.cookingTime || defaultCookingTime}}</b></small>
                 </div>
 
-            <button  v-if="store.type.toLowerCase()==='food'" @click="toggleCollapsible" class="collapsible" ref="collapsible">Choose additions</button>
+                <button  v-if="store.type.toLowerCase()==='food'" @click="toggleCollapsible" class="collapsible" ref="collapsible">Choose additions</button>
                 <div v-if="store.type.toLowerCase()==='food'" class="content">
                     <div v-for="(value, key, index) in additions" class="form-check" v-bind:style= "[index===additions.length-1 ? {'border-bottom':'black solid 1px'} : {}]" :key="index" >
                         <input :value="index" v-model="checkedPrices" class="form-check-input" type="checkbox" id="flexCheckDefault" >
@@ -56,9 +56,7 @@
                 <div id="details" >
                     <h4>Description</h4>
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore 
-                        et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco 
-                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                        {{card.description || defaultDescription}}
                     </p>
 
                     <h4>Nutrition Facts</h4>
@@ -159,7 +157,10 @@ export default {
                 'Oregano': 0.5, 
                 'Special souce': 1
             },
-            additionsSum: 0
+            additionsSum: 0,
+            defaultIngredients: 'tomatoes, cheese, ham, mushrooms, artichokes, capers, garlic, olives, oregano',
+            defaultCookingTime: '25-35 min',
+            defaultDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate'
 
         };
     },

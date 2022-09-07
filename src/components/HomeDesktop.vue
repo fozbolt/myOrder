@@ -46,7 +46,7 @@
         <div id="landingText">
           <div>
           <div id="mainText" :class="{'blackText': scrollPosition < 200, 'whiteText': scrollPosition > 200}">
-            <b>Future was here!</b> Be part of a revolution and order from our <i id="italicText">futuristic</i> app
+            <b>Future is here!</b> Be part of a revolution and order from our <i id="italicText">futuristic</i> app
           </div>
           <div id="subText"  ref="subText">
           <!--animation source: https://codepen.io/alvarotrigo/pen/ExvqdNa-->
@@ -711,63 +711,63 @@
   }
   
   span:nth-child(1) {
-    animation: fade-in 1.8s 0.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 0.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(2) {
-    animation: fade-in 1.8s 0.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 0.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(3) {
-    animation: fade-in 1.8s 0.3s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 0.3s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(4) {
-    animation: fade-in 1.8s 0.4s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 0.4s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(5) {
-    animation: fade-in 1.8s 0.5s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 0.5s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(6) {
-    animation: fade-in 1.8s 0.6s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 0.6s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(7) {
-    animation: fade-in 1.8s 0.7s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 0.7s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(8) {
-    animation: fade-in 1.8s 0.8s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 0.8s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(9) {
-    animation: fade-in 1.8s 0.9s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 0.9s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(10) {
-    animation: fade-in 1.8s 1s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 1s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(11) {
-    animation: fade-in 1.8s 1.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 1.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(12) {
-    animation: fade-in 1.8s 1.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 1.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(13) {
-    animation: fade-in 1.8s 1.3s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 1.3s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(14) {
-    animation: fade-in 0.8s 1.4s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 1.4s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(15) {
-    animation: fade-in 0.8s 1.5s forwards cubic-bezier(0.11, 0, 0.5, 0);
+    animation: fade-in 3.8s 1.5s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
   span:nth-child(16) {

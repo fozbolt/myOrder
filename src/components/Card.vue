@@ -29,9 +29,7 @@ export default {
             
         }
   },  
-  mounted(){
-    console.log('aloo')
-  }
+
 
 }
  

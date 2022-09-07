@@ -10,42 +10,102 @@
                         <button type="button" class="btn-close" @click="closeProduct" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                            <div v-if="currCard" class="row" id="deleteButtonRow">
+                                <button  @click="deleteProduct" type="button" class="btn btn-outline-danger">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                                    </svg>
+                                    Delete
+                                </button>
+                            </div>
                             <UploadComponent @blob="getBlob" :info="currCard"></UploadComponent>
-                            <div>
+                            <div id="textualDataDiv">
                                 <p v-if="errorMessage" style="color:red;">
                                     {{ errorMessage }}
                                 </p>
+
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="floatingInput" v-model="name">
+                                    <input type="text" class="form-control" id="floatingInput" v-model="name" placeholder="Name">
                                     <label for="floatingInput">Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="floatingInput" v-model="price">
+                                    <input type="text" class="form-control" id="floatingInput" v-model="price" placeholder="Price">
                                     <label for="floatingInput">Price (w/o $)</label>
                                 </div>
-                                <div class="form-floating">
-                                    <select v-model="currType" class="form-select form-select-lg mb-3" id="floatingSelect">
+                                <div class="form-floating mb-3">
+                                    <select v-model="currType" class="form-select" id="floatingSelect" placeholder="Name">
                                         <option>Food</option>
                                         <option>Drink</option>
                                     </select>
                                     <label for="floatingSelect">Type</label>
                                 </div>
-                                <div class="form-floating">
-                                    <select v-model="category" class="form-select form-select-lg mb-3" id="floatingSelect">
+                                <div class="form-floating  mb-3">
+                                    <select v-model="category" class="form-select" id="floatingSelect">
                                         <option v-for="(value, category, index) in categories" :value="category" :key="index">{{category}}</option>
                                     </select>
                                     <label for="floatingSelect">Category</label>
                                 </div>
-                                <div class="form-floating">
-                                    <select v-model="subCategory" class="form-select form-select-lg mb-3" id="floatingSelect">
+                                <div class="form-floating  mb-3">
+                                    <select v-model="subCategory" class="form-select" id="floatingSelect">
                                         <option v-for="(value, subCat, index) in subCategories" :value="value" :key="index">{{value}}</option>
                                     </select>
                                     <label for="floatingSelect">Subcategory</label>
                                 </div>
-                                <div class="form-floating">
-                                    <textarea v-model="description" class="form-control" id="floatingTextarea"></textarea>
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="floatingInput" v-model="cookingTime" placeholder="Cooking time">
+                                    <label for="floatingInput">Cooking time (ex. 25-35 min)</label>
+                                </div>
+                                <div class="form-floating  mb-3">
+                                    <textarea v-model="ingredients" class="form-control floatingTextarea" placeholder="Ingredients" ></textarea>
+                                    <label for="floatingTextarea">Ingredients</label>
+                                </div>
+                                <div class="form-floating  mb-3">
+                                    <textarea v-model="description" class="form-control floatingTextarea" placeholder="Description"></textarea>
                                     <label for="floatingTextarea">Description</label>
                                 </div>
+                                <div class="nutritionDiv">
+                                    <h3>Nutrition facts</h3>
+                                    <table>
+                                        <tr>
+                                            <td>Energy value</td>
+                                            <td><input  v-model="energy_value"> kcal</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Carbohydrates</td>
+                                            <td><input  v-model="carbohydrates"> g</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Protein</td>
+                                            <td><input  v-model="protein"> g</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fat</td>
+                                            <td><input  v-model="fat"> g</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vitamin A</td>
+                                            <td><input  v-model="vitamin_a"> mg</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vitamin C</td>
+                                            <td><input  v-model="vitamin_c"> mg</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Calcium</td>
+                                            <td><input  v-model="calcium"> mg</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Zinc</td>
+                                            <td><input  v-model="zinc"> mg</td>
+                                        </tr>
+                                    </table>
+
+                                    <p v-if="errorMessage" style="color:red;">
+                                    {{ errorMessage }}
+                                    </p>
+                                </div>
+
                             </div>
                     </div>
     
@@ -137,12 +197,24 @@ export default {
             subCategories: undefined,
 
             //product info
-            name: '',
+            name: undefined,
             price: '',
             currType: '',
             category: '',
             subCategory: '',
+            cookingTime: '',
             description: '',
+            ingredients: '',
+
+            //nutrition data
+            energy_value: '',
+            carbohydrates: '',
+            protein: '',
+            fat: '',
+            vitamin_a: '',
+            vitamin_c: '',
+            calcium: '',
+            zinc: '',
 
             //search parameters
             currSearchType: '',
@@ -166,22 +238,48 @@ export default {
                 type: this.currType,
                 category: this.category,
                 subCategory: this.subCategory,
-                description: this.description
+                cookingTime: this.cookingTime,
+                description: this.description,
+                ingredients: this.ingredients,
+
+                //nutrition data
+                energy_value: this.energy_value,
+                carbohydrates: this.carbohydrates,
+                protein: this.protein,
+                fat: this.fat,
+                vitamin_a: this.vitamin_a,
+                vitamin_c: this.vitamin_c,
+                calcium: this.calcium,
+                zinc: this.zinc,
             }
-            
-            const isEmpty = !Object.values(obj).some(x => x !== null && x !== '');
+  
+            const isEmpty = Object.values(obj).some(x => x === null || x === '' || x === undefined);
+      
             return !isEmpty
         },
 
         openProduct(card) {
             //for UploadComponent
             this.currCard = card
+
             this.name = card.name
             this.price = card.price,
             this.currType = card.type,
             this.category= card.category,
             this.subCategory= card.subCategory,
-            this.description= card.description
+            this.cookingTime= card.cookingTime,
+            this.description= card.description,
+            this.ingredients = card.ingredients
+
+            //nutrition data
+            this.energy_value= card.energy_value,
+            this.carbohydrates= card.carbohydrates,
+            this.protein= card.protein,
+            this.fat= card.fat,
+            this.vitamin_a= card.vitamin_a,
+            this.vitamin_c= card.vitamin_c,
+            this.calcium= card.calcium,
+            this.zinc= card.zinc
 
             this.toggleModal();
             
@@ -198,8 +296,19 @@ export default {
             this.currType ='',
             this.category= '',
             this.subCategory= '',
-            this.description= ''
+            this.cookingTime= '',
+            this.description= '',
+            this.ingredients= ''
             
+            //nutrition data
+            this.energy_value=  '',
+            this.carbohydrates=  '',
+            this.protein= '',
+            this.fat= '',
+            this.vitamin_a=  '',
+            this.vitamin_c=  '',
+            this.calcium=  '',
+            this.zinc=  '',
 
             this.toggleModal();
         },
@@ -221,7 +330,8 @@ export default {
 
         async changeProduct() {
             //firebase storage
-            if(this.imageBlob != null){
+            console.log(this.imageBlob)
+            if(this.imageBlob){
                 let imageName =  'meal/' + Date.now() + '.png';
                 let result = await storage.ref(imageName).put(this.imageBlob);
                 this.productUrl = await result.ref.getDownloadURL();
@@ -231,16 +341,29 @@ export default {
 
             //mongo storage when we get firabase storage url
             let product = {
-                id: this.currCard.id, 
+                id: this.currCard?._id, 
                 name: this.name,
                 price: this.price,
                 type: this.currType,
                 category: this.category,
                 subCategory: this.subCategory,
+                cookingTime: this.cookingTime,
+                description: this.description,
+                ingredients: this.ingredients,
                 createdBy: this.currCard?.createdBy || Auth.getUser().username,
                 createdAt: this.currCard?.createdAt || Date.now(),
                 updatetAt: this.currCard?.updatedAt || Date.now(),
-                url: this.productUrl
+                url: this.productUrl,
+
+                //nutrition data
+                energy_value: this.energy_value,
+                carbohydrates: this.carbohydrates,
+                protein: this.protein,
+                fat: this.fat,
+                vitamin_a: this.vitamin_a,
+                vitamin_c: this.vitamin_c,
+                calcium: this.calcium,
+                zinc: this.zinc,
 
             };
 
@@ -251,12 +374,20 @@ export default {
 
             this.closeProduct();
             this.$router.go();
-            },
+        },
+
+
+        async deleteProduct(){
+            let result = await Products.deleteProduct(this.currCard._id);
+             // if(result) console.log('Product deleted successfully')
+
+            this.closeProduct();
+            this.$router.go();
+           
+        }
     },
 
     async mounted(){
-        
-
         this.productTypes = this.store.productTypes
 
         //to trigger watch events
@@ -265,7 +396,7 @@ export default {
         this.currSearchSubCategory = 'All'
 
 
-        this.cards = await Products.fetchProducts('', this.currSearchType,  this.currSearchCategory,  this.currSearchSubCategory);
+        this.cards = await Products.fetchProducts('', this.currSearchType || 'Food',  this.currSearchCategory ||'MainCourse',  this.currSearchSubCategory || 'All');
         if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
     },
 
@@ -343,9 +474,9 @@ export default {
 
 #buttonRow{
     text-align: right;
-    align-items: end;
+    align-items: flex-end;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 #buttonRow > button{
@@ -398,7 +529,7 @@ export default {
 }
 
 
-#floatingTextarea{
+.floatingTextarea{
     height: 100px;
 }
 
@@ -420,28 +551,84 @@ option{
     border-color: #0078D4;
 }
 
-
-@media(max-width:500px){
-#search-field > input{
-    width: 80%;
-}
-
-.container{
+.form-floating:nth-last-child(2){
     margin-top:10px;
 }
 
-#productsHeader{
-    margin-bottom:20px;
+
+//nutrition table
+.nutritionDiv> h3{
+        font-style: normal;
+        font-weight: normal;
+        font-size: 20px;
+        text-align: left;
+        margin-top: 20px;
+    }
+    /*--------------------*/
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    tr:nth-child(even) {
+        background-color: #f5f5f5;
+    }
+    /*--------------------*/
+    *:focus{
+        outline: none;
+    }
+    td > input{
+        height: 40px;
+        width: 80%;
+        padding-left: 5px;
+        font-size: 20px;
+        color: black;
+        border-radius: 5px;
+        border: 1px #0078d459 solid;
+        background: #f3f0f0;
+    }
+
+
+.btn-outline-danger{
+    background-color:white;
+    width: fit-content;
 }
 
-#addIcon{
-    width:35px;
-    margin-right:10px;
+#deleteButtonRow{
+    display: flex;
+    justify-content: flex-end;
 }
 
-h3 > label{
-    display:none;
+
+.form-floating > label{
+    color:gray;
 }
+
+@media(max-width:500px){
+    #search-field > input{
+        width: 80%;
+    }
+
+    .container{
+        margin-top:10px;
+    }
+
+    #productsHeader{
+        margin-bottom:20px;
+    }
+
+    #addIcon{
+        width:35px;
+        margin-right:10px;
+    }
+
+    h3 > label{
+        display:none;
+    }
 
 }
  

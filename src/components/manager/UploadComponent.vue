@@ -13,17 +13,18 @@
             </div>
             <div class="text-center p-2">
                 <file-upload
-                extensions="gif,jpg,jpeg,png,webp"
-                accept="image/png,image/gif,image/jpeg,image/webp"
-                name="avatar"
-                class="btn btn-primary"
-                post-action="/upload/post"
-                :drop="!edit"
-                v-model="files"
-                @input-filter="inputFilter"
-                @input-file="inputFile"
-                ref="upload">
-                Upload avatar
+                    extensions="gif,jpg,jpeg,png,webp"
+                    accept="image/png,image/gif,image/jpeg,image/webp"
+                    name="avatar"
+                    class="btn btn-primary"
+                    post-action="/upload/post"
+                    :drop="!edit"
+                    v-model="files"
+                    @input-filter="inputFilter"
+                    @input-file="inputFile"
+                    ref="upload"
+                    >
+                    Upload avatar
                 </file-upload>
             </div>
         </div>
@@ -46,8 +47,10 @@ export default {
     watch: {
         async edit(value) {
             if(this.edit) {
-                //this.info.url =  this.files[0].url
+                this.info.url =  this.files[0].url
                 this.$emit('blob', await this.getImageBlob()); //w/o $parent it sends to parent component, with it sends to grandparent
+                
+                this.files = [];
                 this.edit = false //close avatar upload when image is successfully uploaded
             }
         }
