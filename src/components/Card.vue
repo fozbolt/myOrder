@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.$route.path==='/food_list'" class="col-xl-1 col-lg-2 col-md-3 col-6" id="column">
+    <div v-if="this.$route.path==='/products' " class="col-xl-3 col-lg-3 col-md-3 col-6" id="column">
         <div class="card" >
             <span v-if="info.discount" class="circle-left">
                 <b>{{info.discount}}</b> 
@@ -26,13 +26,12 @@ export default {
 
   data() { 
         return {
-            cards: [],
+            
         }
   },  
-
-  methods:{
-
-  },
+  mounted(){
+    console.log('aloo')
+  }
 
 }
  

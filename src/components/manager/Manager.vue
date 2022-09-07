@@ -1,13 +1,7 @@
 <template>
     <div>
         <Sidebar/>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2">
-                    <router-view ></router-view>
-                </div>
-            </div>
-        </div>
+        <router-view/>
     </div>
 </template>
 

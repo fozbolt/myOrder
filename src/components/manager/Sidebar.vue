@@ -10,12 +10,10 @@
                         <img id="logoSidebar" src="@/assets/logo-main.svg" alt="" >
                     </div>
                 </div>
-                <!-- <li><a href="#home">Home</a></li> -->
-                <li><a> Meals</a></li> 
-                <li><a  @click="this.$router.push({name: 'products'})">Products</a></li> <!--ikonice su vezane na hrafove  href="#services" -->
-                <li><a  @click="this.$router.push({name: 'employees'})">Employees</a></li> <!--ikonice su vezane na hrafove  href="#services" -->
-                <li><a  @click="this.$router.push({name: 'statistics'})">Statistics</a></li>
-                <li><a @click="logout" >Log out</a></li>
+                <li><a  @click="this.$router.push({name: 'products'})" aria-current="#products">Products</a></li>
+                <li><a  @click="this.$router.push({name: 'employees'})"  aria-current="#employees">Employees</a></li> 
+                <li><a  @click="this.$router.push({name: 'statistics'})" >Statistics</a></li>
+                <li><a @click="logout" aria-current="#logout" >Log out</a></li>
             </ul>
         </nav>
         <!-- /#sidebar-wrapper -->
@@ -289,42 +287,25 @@ html { height: 100%;}
     display: inline-block;
     padding-right: 5px;
 }
-a[href*="#home"]::before {
-  content: "\f015" !important;
-}
-a[href*="#about"]::before {
-  content: "\f129" !important;
-}
-a[href*="#events"]::before {
-  content: "\f073" !important;
-}
-a[href*="#events"]::before {
-  content: "\f073" !important;
-}
-a[href*="#team"]::before {
-  content: "\f0c0" !important;
-}
-a[href*="#works"]::before {
-  content: "\f0b1" !important;
-}
-a[href*="#pictures"]::before {
-  content: "\f03e" !important;
-}
-a[href*="#videos"]::before {
-  content: "\f03d" !important;
-}
-a[href*="#books"]::before {
+
+a[aria-current="#products"]::before {
   content: "\f02d" !important;
 }
-a[href*="#art"]::before {
-  content: "\f1fc" !important;
+
+a[aria-current="#employees"]::before {
+  content: "\f508" !important;
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
 }
-a[href*="#awards"]::before {
-  content: "\f02e" !important;
+
+a[aria-current="#logout"]::before {
+  content: "\f2f5" !important;
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
 }
-a[href*="#services"]::before {
-  content: "\f013" !important;
-}
+
 
 /*-------------------------------*/
 /*       Hamburger-Cross         */

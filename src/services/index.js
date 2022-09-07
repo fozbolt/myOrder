@@ -7,7 +7,7 @@ import store from '@/store.js';
 let Api = axios.create({
     baseURL: 'http://localhost:5000/',
     //baseURL: 'https://my-order.herokuapp.com/',
-    timeout: 10000, 
+    timeout: 20000, 
 });
 
 
@@ -122,7 +122,22 @@ let Products = {
         const response = await Api.post('/leave_feedback', feedback)
         
         if(!response) return false
+        else if(response.data) return true
+        
+    },
 
+    async addProduct(data){
+        const response = await Api.post('/add_product', data)
+        
+        if(!response) return false
+        else if(response.data) return true
+        
+    },
+
+    async updateProduct(data){
+        const response = await Api.patch('/update_product', data)
+        
+        if(!response) return false
         else if(response.data) return true
         
     },
@@ -208,10 +223,10 @@ let Products = {
         });
     },
 
-    //product_category - optional parameter used for fetching similar meals and drinks
-    async fetchProducts(term, product_category = undefined) {  
+    //product_category - optional parameter used for fetching similar meals and drinks + manager filter
+    async fetchProducts(term, product_type = undefined, product_category = undefined, product_subcategory = undefined) {  
         term = term || store.searchTerm; 
-        let result = await Products.getAll(term, store.type, product_category || store.category, store.selectedSubCategory )
+        let result = await Products.getAll(term, product_type || store.type, product_category || store.category, product_subcategory || store.selectedSubCategory )
 
         //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
         return  _.sortBy( result, 'price' ).reverse();

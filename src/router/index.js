@@ -3,9 +3,6 @@ import Home from '@/views/Home.vue'
 import FoodList from '@/views/FoodList.vue'
 import {Auth} from "@/services/index.js";
 
-global.jQuery = require('jquery');
-var $ = global.jQuery;
-window.$ = $;
 
 const routes = [
   {
