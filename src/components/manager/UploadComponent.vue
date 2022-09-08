@@ -36,7 +36,7 @@ import FileUpload from 'vue-upload-component';
 
 export default {
     components: {FileUpload},
-    props: ['info'],
+    props: ['info', 'isModalOpened'],
 
     data() {
         return {
@@ -47,11 +47,18 @@ export default {
     watch: {
         async edit(value) {
             if(this.edit) {
-                this.info.url =  this.files[0].url
+                if (this.info) this.info.url =  this.files[0].url //replace existing image projection with new during update
                 this.$emit('blob', await this.getImageBlob()); //w/o $parent it sends to parent component, with it sends to grandparent
-                
-                this.files = [];
+
                 this.edit = false //close avatar upload when image is successfully uploaded
+            }
+        },
+
+        isModalOpened: {
+            // erase img when modal is closed
+            // immediate: true, 
+            handler (val, oldVal) {
+                if (val === false) this.files = []
             }
         }
     },
@@ -91,7 +98,9 @@ export default {
             }
         },
 
-    }
+    },
+
+    
 }
 </script>
 

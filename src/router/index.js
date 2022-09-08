@@ -116,8 +116,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/login', '/register']; // '/register' excluded for logic of this app
+  const publicPages = ['/login']; // '/register' excluded for logic of this app
   const managerPages = ['/statistics', '/products', '/employees']
+  const customerAndWaiterPages = ['/checkout', '/finished_order', '/placed_order', 'order_status', 'order_feedback', 'order_details']
   const authRequired = !publicPages.includes(to.path);
   const user = Auth.getUser();  
 
@@ -136,8 +137,10 @@ router.beforeEach((to, from, next) => {
     return next('/');
   }
 
-  //allow only to customer
-  //write this logic or not?
+  //allow only to customer, and waiter
+  if((user?.type !== 'waiter' || user?.type !== 'customer')  && customerAndWaiterPages.includes(to.path)){
+    return next('/');
+  }
 
   next();
 });

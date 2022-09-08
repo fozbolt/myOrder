@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import Card from '@/components/Card.vue'
+import Card from '@/components/ProductCard.vue'
 import HorizontalScroller from '@/components/HorizontalScroller.vue'
 import store from '@/store.js'
 import { Products } from '@/services';

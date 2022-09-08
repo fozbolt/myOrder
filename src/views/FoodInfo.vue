@@ -123,7 +123,7 @@
 </template>
 
 <script>
-import Card from '@/components/Card.vue';
+import Card from '@/components/ProductCard.vue';
 import store from '@/store.js';
 import { Products } from '@/services';
 import Slider from '@/components/Slider.vue'

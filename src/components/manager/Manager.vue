@@ -19,7 +19,7 @@ export default {
 
     created(){
         //redirect to child route as soon as we arrive to '/'
-        this.$router.push({name: 'products'})
+        if(this.$route.path === '/') this.$router.push({name: 'products'})
     }
 }
   

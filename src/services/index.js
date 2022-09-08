@@ -238,4 +238,67 @@ let Products = {
 
 };
 
-export { Api, Products, Auth }; // exportamo Api za ručne pozive ili Products za metode.
+
+let Employees = {
+
+    async getEmployeeTypes() {
+        let response = await Api.get(`/employee_types`);
+
+        let doc = response.data;
+        return doc
+        
+    },
+
+    async getAll(searchTerm, type) {
+        let options = {};
+        if (searchTerm) {
+            options.params = {
+                _any: searchTerm,
+            };
+        }
+
+        let response = await Api.get(`/employees/${type}`, options)
+
+        if(response){
+            response.data.id = response.data._id
+            delete response.data._id
+            return response.data
+        }
+        else return false;
+    },
+
+
+    //employee_type- optional parameter used for fetching similar meals and drinks + manager filter
+    async fetchEmployees(term, employee_type = '') {  
+        term = term || store.searchTerm; 
+        let result = await Employees.getAll(term, employee_type )
+
+        //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
+        return  _.sortBy( result, 'fullName' ).reverse();
+  
+    },
+
+
+    async deleteEmployee(id) {
+        return await Api.delete(`/employees/${id}`);
+    },
+
+
+    async addEmployee(data){
+        const response = await Api.post('/add_employee', data)
+        
+        if(!response) return false
+        else if(response.data) return true
+        
+    },
+
+    async updateEmployee(data){
+        const response = await Api.patch('/update_employee', data)
+
+        if(!response) return false
+        else if(response.data) return true
+        
+    },
+}
+
+export { Api, Products, Auth, Employees }; // exportamo Api za ručne pozive ili Products za metode.

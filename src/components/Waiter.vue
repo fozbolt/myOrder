@@ -1,5 +1,5 @@
 <template>
-    
+   <div>tu konobar</div>
 </template>
 
 <script>

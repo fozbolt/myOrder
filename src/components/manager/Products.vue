@@ -19,7 +19,7 @@
                                     Delete
                                 </button>
                             </div>
-                            <UploadComponent @blob="getBlob" :info="currCard"></UploadComponent>
+                            <UploadComponent @blob="getBlob" :info="currCard" :isModalOpened="isModalOpened"></UploadComponent>
                             <div id="textualDataDiv">
                                 <p v-if="errorMessage" style="color:red;">
                                     {{ errorMessage }}
@@ -175,7 +175,7 @@
 <script>
 import store from '@/store.js'
 import { Products, Auth } from '@/services';
-import Card from '../Card.vue';
+import Card from '../ProductCard.vue';
 import UploadComponent from './UploadComponent.vue';
 
 
@@ -195,6 +195,7 @@ export default {
             errorMessage: false,
             categories: undefined,
             subCategories: undefined,
+            isModalOpened: false,
 
             //product info
             name: undefined,
@@ -229,6 +230,7 @@ export default {
         toggleModal(){
             //refactor and use refs
               $("#editModal").modal("toggle");
+              this.isModalOpened = !this.isModalOpened;
         },
 
         validate(){
@@ -330,7 +332,6 @@ export default {
 
         async changeProduct() {
             //firebase storage
-            console.log(this.imageBlob)
             if(this.imageBlob){
                 let imageName =  'meal/' + Date.now() + '.png';
                 let result = await storage.ref(imageName).put(this.imageBlob);
@@ -352,7 +353,7 @@ export default {
                 ingredients: this.ingredients,
                 createdBy: this.currCard?.createdBy || Auth.getUser().username,
                 createdAt: this.currCard?.createdAt || Date.now(),
-                updatetAt: this.currCard?.updatedAt || Date.now(),
+                updatedAt: this.currCard?.updatedAt || Date.now(),
                 url: this.productUrl,
 
                 //nutrition data
@@ -395,9 +396,8 @@ export default {
         this.currSearchCategory= 'MainCourse';
         this.currSearchSubCategory = 'All'
 
-
-        this.cards = await Products.fetchProducts('', this.currSearchType || 'Food',  this.currSearchCategory ||'MainCourse',  this.currSearchSubCategory || 'All');
-        if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
+        //if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 3000) below temporarely solves the bug of infinite loading when we have empty data in db (empty cards)
+        if (true)  setTimeout(() => { this.loaded=true}, 3000)
     },
 
     watch: {
@@ -415,7 +415,8 @@ export default {
         handler: async function(newValue) {
         //so modalClose doesn't affect it
         try{
-            this.subCategories = this.productTypes[0][this.currType][this.category] || ''
+            let subCats = this.productTypes[0][this.currType][this.category] || ''
+            this.subCategories = subCats.filter(value => value != 'All')
         }catch{}
          
       }
@@ -537,6 +538,8 @@ option{
     overflow:hidden;
 }
 
+
+
 .filter{
     display:inline-block;
     display:flex;
@@ -549,6 +552,7 @@ option{
     min-width:110px;
     // color: #0078D4;
     border-color: #0078D4;
+    border-radius: 7px;
 }
 
 .form-floating:nth-last-child(2){
