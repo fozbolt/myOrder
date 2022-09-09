@@ -12,7 +12,17 @@
                 </div>
                 <li><a  @click="this.$router.push({name: 'products'})" aria-current="#products">Products</a></li>
                 <li><a  @click="this.$router.push({name: 'employees'})"  aria-current="#employees">Employees</a></li> 
-                <li><a  @click="this.$router.push({name: 'statistics'})" >Statistics</a></li>
+                <!--nested menu-->
+                <li class="dropdown">
+                  <a  class="dropdown-toggle"  data-bs-toggle="dropdown">Statistics<span class="caret"></span></a>
+                  <ul class="dropdown-menu animated fadeInLeft" role="menu">
+                    <li><a  @click="this.$router.push({name: 'statistics', params: { chartName: 'firstChart' } })">First chart</a></li>
+                    <li><a @click="this.$router.push({name: 'statistics', params: { chartName: 'secondChart' } })">2nd chart</a></li>
+                    <li><a href="#books">Books</a></li>
+                    <li><a href="#art">Art</a></li>
+                    <li><a href="#awards">Awards</a></li>
+                  </ul>
+                </li>
                 <li><a @click="logout" aria-current="#logout" >Log out</a></li>
             </ul>
         </nav>

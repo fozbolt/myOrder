@@ -11,8 +11,9 @@ const routes = [
     component: Home,
     children: [
       {
-        path: 'statistics',
+        path: 'statistics/:chartName',
         name: 'statistics',
+        props: true,
         component: () => import('@/components/manager/Statistics.vue'),
         meta: {title: 'Statistics'}
       },

@@ -84,7 +84,7 @@ export default {
           let user = JSON.parse(localStorage.getItem('user')); 
           this.store.userType = user.type
         }
-        },500)
+        },1000)
     }
 
 
