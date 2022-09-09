@@ -26,7 +26,7 @@
         <div class="modal-body" id="modal-body">
           <!--https://stackoverflow.com/questions/3486110/make-a-list-item-clickable-html-css-->
           <div id="leftsideMenu">
-            <ul style="list-style-type:none">
+            <ul style="list-style-type:none; width:100% !important;">
               <li v-for="reason in callReasons" :key="reason" @click="callWaiter(reason)" data-bs-dismiss="modal"><a>{{reason}}</a></li>
             </ul>
           </div>
@@ -43,17 +43,17 @@
 
   <div class="one fa-solid fa-clipboard-question"  
       @click="$router.push({ path: `/order_status` })" 
-      :style="$route.path === '/food_list' ? 'background-color:#2b2e6e' : 'background-color:#74CF55'">
+      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
   </div>
   <div class="two fa fa-solid fa-cart-plus" 
       @click="$router.push({ path: `/checkout` })" 
-      :style="$route.path === '/food_list' ? 'background-color:#2b2e6e' : 'background-color:#74CF55'">
+      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
   </div>
   <div class="three fa fa-phone" 
       type="button" 
       data-bs-toggle="modal" 
       data-bs-target="#myModal" 
-      :style="$route.path === '/food_list' ? 'background-color:#2b2e6e' : 'background-color:#74CF55'">
+      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
   </div>
 </div>
 
@@ -92,8 +92,8 @@ export default {
   },
 
   mounted(){
-    //change color when on this route to stand out more
-    if (this.$route.path === '/food_list') this.$refs.label.style.backgroundColor= '#2b2e6e';
+    //change color when on this route to stand out more - can be done with inline style binding too
+    if (this.$route.path === '/food_list') this.$refs.label.style.backgroundColor= '#5A5EB9';
   },
 
   setup() {
@@ -123,7 +123,7 @@ body {
     position: fixed;
     right: 1em;
     bottom: 1em;
-    z-index:10;
+    z-index:12;
 }
 
 
@@ -311,7 +311,11 @@ body {
      margin-right: 10px;
 }
 
-
+@media(min-width: 1200px){
+  #modal-dialog{
+    top:15vw;
+  }
+}
 
 </style>
 

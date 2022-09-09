@@ -1,5 +1,6 @@
+
 <template>
-  <div>
+    <div>
       <div id="food-list-content">
             <div id="search-field">
               <input 
@@ -17,7 +18,7 @@
                   <button id="food" @click="selectType($event)" v-bind:class="{ foodActive: store.isFood }" class="square">
                     <h5 class="type-item">Food</h5>
                   </button>
-                  <button id="drink" @click="selectType($event)" v-bind:class="{ drinkActive: store.isDrink }" class="square">
+                  <button id="drink" @click="selectType($event)" v-bind:class="{ drinkActive: store.isDrink }" class="square" >
                     <h5 class="type-item">Drink</h5>
                   </button>
                 </div>
@@ -48,7 +49,6 @@
 
 import CurrentTab from '@/components/CurrentTab';
 import store from '@/store.js'
-import { Products } from '@/services';
 import FloatingMenu from '../components/FloatingMenu.vue';
 import Footer from '@/components/Footer.vue';
 
@@ -161,8 +161,6 @@ export default {
 
     async mounted(){
        document.getElementById(this.store.category).style.color="#0078D4";
-       //tu je  bug s dolazenjem iz top offersa
-       document.getElementById(this.store).style.color="#0078D4";
        document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
 
     },
@@ -171,7 +169,8 @@ export default {
       this.store.type='Food'
       this.store.category = 'MainCourse'
       this.store.selectedSubCategory = 'All'
-    }
+    },
+   
 
 
 
@@ -320,6 +319,26 @@ export default {
 @media(max-width:500px){
   #food-list-content{
   min-height: 150vh
+  }
+}
+
+
+@media(min-width: 1200px){
+
+  .type-item{
+    font-size: 2vw;
+  }
+
+  .category-item{
+    font-size: 1.25vw;
+  }
+
+  .category{
+    height: 3.5vh;
+  }
+
+  #type{
+    margin-top: 20px;
   }
 }
 </style>

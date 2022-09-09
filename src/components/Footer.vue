@@ -85,6 +85,7 @@ export default {
 #socialMedia.row{
     margin-left: 0;
     margin-right: 0;
+    justify-content: center;
 }
 
 .col-sm-3 > h5{

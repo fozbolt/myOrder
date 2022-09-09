@@ -54,6 +54,18 @@
               />
             </div>
 
+            <div class="userType">
+              <i class="fas fa-user"></i>
+              <input
+                type="text"
+                v-model="type"
+                class="form-control placeholderEmail"
+                aria-describedby="tip korisnika"
+                placeholder="tip korisnika..."
+                required
+              />
+            </div>
+
             <div class="password">
               <i class="fas fa-key"></i>
               <input
@@ -103,6 +115,7 @@ export default {
       name: "",
       surname: "",
       email: "",
+      type: "",
       password: "",
       confirmPassword: "",
       registration_failed: null
@@ -116,7 +129,8 @@ export default {
         
             if(response){
                 this.username = {};
-                this.password  =undefined;
+                this.password = undefined;
+                this.type = undefined;
                 this.confirmPassword = undefined;
                 this.registration_failed = null;
 

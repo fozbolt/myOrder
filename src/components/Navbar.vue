@@ -1,5 +1,5 @@
 <template>
- <nav v-if="$route.path!== '/login' || $route.path!== '/register'" class="navbar navbar-expand-lg navbar-light" :style="{backgroundColor:getColor()}">
+ <nav v-if="$route.path!== '/login' && $route.path!== '/register' && store.userType !== 'manager'" class="navbar navbar-expand-lg navbar-light" :style="{backgroundColor:getColor()}">
       <div class="container-fluid">
         <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
           aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -7,7 +7,7 @@
           <span class="icon-bar middle-bar"></span>
           <span class="icon-bar bottom-bar"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown" @focusin="toggleMenu" :style="{backgroundColor:getColor()}">
+        <div v-if="store.userType !== 'manager'" class="collapse navbar-collapse" id="navbarNavDropdown" @focusin="toggleMenu" :style="{backgroundColor:getColor()}">
           <ul class="navbar-nav">
             <li class="nav-item active" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a @click="this.$router.push('/food_list')"  href="" class="nav-link nav-link-ltr">Order now</a>
@@ -22,10 +22,10 @@
               <a  @click="goTo('New offers')" class="nav-link nav-link-ltr" >New offers</a>
             </li>
             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
-              <a  class="nav-link  nav-link-ltr">About us</a>
+              <a @click="scrollTo('aboutSection')" class="nav-link  nav-link-ltr">About us</a>
             </li>
              <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
-              <a class="nav-link nav-link-ltr" href="#">Subscribe</a>
+              <a @click="scrollTo('subscribeSection')" class="nav-link nav-link-ltr" href="#">Subscribe</a>
             </li>
             <span v-if="auth.authenticated">
               <a @click="logout" class="btn btn-info my-2 my-sm-0 mr-2 p-1" id="logoutBtn">Logout</a>
@@ -42,6 +42,7 @@
 <script>
 import {Auth} from "@/services/index.js";
 import store from '@/store.js';
+import {emitter} from '@/main.js'
 
 
 export default {
@@ -62,7 +63,8 @@ export default {
       },
 
       getColor(){
-        if (this.$route.path === '/') return ''
+        if (this.$route.path === '/' && this.store.userType !== 'manager') return ''
+        else if (this.store.userType === 'manager') return '#e9ecef'
         else return 'white'
       },
 
@@ -71,10 +73,17 @@ export default {
         this.store.category = 'MainCourse'
         this.store.type = 'Food'
         this.$router.push('/food_list')
+      },
+
+      scrollTo(section){
+        //temporary solution because it can't scroll to section if we arent at needed view, for now
+        if(this.$route.path !== '/') this.$router.push('/')
+
+
+        emitter.emit("section-clicked", section);
       }
 
   },
-
       
 }
 
@@ -88,7 +97,7 @@ nav {
   top:0;
   left:0;
   background: rgba(255, 255, 255, 0.6);
-  z-index: 13;
+  z-index: 14;
   
 
   a {
@@ -104,6 +113,7 @@ nav {
   padding-left: 50px;
   align-items: center;
   max-width: 200px;
+  backdrop-filter: blur(2px);
 }
 
 .navbar{
@@ -274,7 +284,7 @@ nav {
 
   .navbar-expand-lg .navbar-nav .nav-link {
     width: max-content;
-    font-size: 24px;
+    font-size: 22px;
 }
 }
 
@@ -293,8 +303,8 @@ nav {
   }
 
   .navbar-expand-lg .navbar-nav .nav-link {
-    padding-right: 20px;
-    padding-left: 20px;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 }
 

@@ -3,23 +3,56 @@ import Home from '@/views/Home.vue'
 import FoodList from '@/views/FoodList.vue'
 import {Auth} from "@/services/index.js";
 
-global.jQuery = require('jquery');
-var $ = global.jQuery;
-window.$ = $;
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: Home,
+    children: [
+      {
+        path: 'statistics/:chartName',
+        name: 'statistics',
+        props: true,
+        component: () => import('@/components/manager/Statistics.vue'),
+        meta: {title: 'Statistics'}
+      },
+      {
+        path: 'products',
+        name: 'products',
+        component: () => import('@/components/manager/Products.vue'),
+        meta: {title: 'Products'}
+      },
+      {
+        path: 'employees',
+        name: 'employees',
+        component: () => import('@/components/manager/Employees.vue'),
+        meta: {title: 'Employees'}
+      },
+      {
+        path: 'newsletter',
+        name: 'newsletter',
+        component: () => import('@/components/manager/Newsletter.vue'),
+        meta: {title: 'Newsletter'}
+      },
+      {
+        path: 'feedback',
+        name: 'feedback',
+        component: () => import('@/components/manager/Feedback.vue'),
+        meta: {title: 'Feedback'}
+      },
+      {
+        path: 'special_offers',
+        name: 'specialOffers',
+        component: () => import('@/components/manager/SpecialOffers.vue'),
+        meta: {title: 'SpecialOffers'}
+      },
+      
+    ]
   },
   {
     path: '/login',
     name: 'login',
-    // route level code-splitting
-    // this generates a separate chunk (login.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    // iskoristiti ovaj lazy loading ili maknuti, ali za login ne treba LL
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
   },
   {
@@ -33,7 +66,7 @@ const routes = [
     component: FoodList,
     // children: [
     //   {
-    //     path: '/:id',
+    //     path: ':id',
     //     props: true,
     //     name: 'FoodInfo',
     //     component: () => import(/* webpackChunkName: "FoodInfo" */ '../views/FoodInfo.vue')
@@ -99,23 +132,35 @@ const router = createRouter({
 
 
 
-// izvrši prije svake rute
+
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/login', '/register']; // '/register' excluded for logic of this app
+  const publicPages = ['/login']; // '/register' excluded for logic of this app
+  const managerPages = ['/statistics', '/products', '/employees', '/newsletter', '/feedback', '/special_offers']
+  const customerAndWaiterPages = ['/checkout', '/finished_order', '/placed_order', 'order_status', 'order_feedback', 'order_details']
   const authRequired = !publicPages.includes(to.path);
-  const user = Auth.getUser();
- 
+  const user = Auth.getUser();  
+
   // ako korisnik nije ulogiran i stranica nije whitelistana
   if (authRequired && !user) {
-
     return next('/login');
   }
   //ako jer korisnik ulogiran ne dopusti na /login i /register
   if (user && !authRequired) {
-
+    console.log('tu')
     return next('/');
   }
+
+  //forbid manager sites to regular users
+  if(user?.type !== 'manager' && managerPages.includes(to.path)){
+    return next('/');
+  }
+
+  //allow only to customer, and waiter
+  if((user?.type !== 'waiter' || user?.type !== 'customer')  && customerAndWaiterPages.includes(to.path)){
+    return next('/');
+  }
+
   next();
 });
 

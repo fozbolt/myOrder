@@ -72,9 +72,7 @@ export default {
     },
   
 
-  //povecati tab space nazad na duplo od ovog
   methods: {
-    //kod logina se refresha login page ako je krivi login --popraviti
     async login(){
 			const result = await Auth.login({'username': this.email, 'password': this.password});
 
@@ -123,7 +121,7 @@ export default {
  },
   
   watch:{
-		"errorMessage": _.debounce(function(){this.errorMessage = false}, 100000),
+		"errorMessage": _.debounce(function(){this.errorMessage = false}, 10000),
     "restrictedMessage": _.debounce(function(){this.restrictedMessage = false}, 2000)
 	},
 
@@ -261,7 +259,7 @@ small{
 }
 
 #iconPassword{
-  margin-left: -15px;
+  margin-left: 0px;
   
 }
 
@@ -272,7 +270,7 @@ small{
 }
 
 #password_eye {
-  display: none;
+  /* display: none; */
 }
 
 
@@ -325,6 +323,29 @@ small{
 }
 
 
+@media(min-width:1400px){
+  .email, .password{
+    width:350px;
+  }
 
+  input{
+    width:300px;
+    font-size: 20px;
+  }
+
+  #loginIcon{
+    max-width: 400px;
+    max-height: 400px;
+  }
+
+  .logo{
+    max-width: 400px;
+  }
+  
+  form > .btn{
+    font-size:20px;
+  }
+
+}
 
 </style>

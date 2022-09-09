@@ -2,11 +2,12 @@ import axios from 'axios';
 import $router from '@/router'
 import store from '@/store.js';
 
+
 // instanca axios-a za potrebe myOrder backenda
 let Api = axios.create({
-    // baseURL: 'http://localhost:5000/',
-    baseURL: 'https://my-order.herokuapp.com/',
-    timeout: 10000, 
+    baseURL: 'http://localhost:5000/',
+    //baseURL: 'https://my-order.herokuapp.com/',
+    timeout: 20000, 
 });
 
 
@@ -55,7 +56,8 @@ let Auth = {
             let user = response.data
             //prvi put spremamo radi tokena
             localStorage.setItem('user', JSON.stringify(user));
-
+            store.userType = user.type
+            
             return true
         }
     },
@@ -64,6 +66,7 @@ let Auth = {
         return await Api.patch('/change_password', userData);
     },
     logout() {
+        localStorage.removeItem('orderID');
         localStorage.removeItem('user');
         $router.go(); //this should be enough
         //this.$router.push({ path: `/login` });
@@ -119,7 +122,22 @@ let Products = {
         const response = await Api.post('/leave_feedback', feedback)
         
         if(!response) return false
+        else if(response.data) return true
+        
+    },
 
+    async addProduct(data){
+        const response = await Api.post('/add_product', data)
+        
+        if(!response) return false
+        else if(response.data) return true
+        
+    },
+
+    async updateProduct(data){
+        const response = await Api.patch('/update_product', data)
+        
+        if(!response) return false
         else if(response.data) return true
         
     },
@@ -172,6 +190,10 @@ let Products = {
 
     },
 
+    
+    async deleteProduct(id) {
+        return await Api.delete(`/products/${id}`);
+    },
 
     async getAll(searchTerm, type, category, subcategory) {
         let options = {};
@@ -190,29 +212,104 @@ let Products = {
         // }
 
         let response = await Api.get(`/menu/${type}/${category}/${subcategory}`, options)
-        return response.data.map((doc) => {
-            return {
-                id: doc._id,
-                url: doc.url,
-                name: doc.name,
-                price: doc.price,
-                type: doc.type,
-                category: doc.category,
-                subCategory: doc.subCategory,
-                discount: doc.discount
-                //posted_at: Number(doc.postedAt), buduci created at
-            };
-        });
+        response.data.id = response.data._id
+        delete response.data._id
+
+        return response.data
     },
 
-    async fetchProducts(term) {  
+    //product_category - optional parameter used for fetching similar meals and drinks + manager filter
+    async fetchProducts(term, product_type = undefined, product_category = undefined, product_subcategory = undefined) {  
         term = term || store.searchTerm; 
-        let result = await Products.getAll(term, store.type, store.category, store.selectedSubCategory )
+        let result = await Products.getAll(term, product_type || store.type, product_category || store.category, product_subcategory || store.selectedSubCategory )
 
         //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
         return  _.sortBy( result, 'price' ).reverse();
   
     },
+
+
+    async fetchInfoCards() {  
+        let result = await Api.get('/about_info')
+      
+        return  _.sortBy( result.data, 'publish_date' );
+    },
+
+    async fetchSubscribers() {  
+        let result = await Api.get('/get_subscribers')
+      
+        return  result.data
+    },
+
+    async fetchFeedbacks() {  
+        let result = await Api.get('/get_feedbacks')
+      
+        return  result.data
+    },
+
 };
 
-export { Api, Products, Auth }; // exportamo Api za ručne pozive ili Products za metode.
+
+let Employees = {
+
+    async getEmployeeTypes() {
+        let response = await Api.get(`/employee_types`);
+
+        let doc = response.data;
+        return doc
+        
+    },
+
+    async getAll(searchTerm, type) {
+        let options = {};
+        if (searchTerm) {
+            options.params = {
+                _any: searchTerm,
+            };
+        }
+
+        let response = await Api.get(`/employees/${type}`, options)
+
+        if(response){
+            response.data.id = response.data._id
+            delete response.data._id
+            return response.data
+        }
+        else return false;
+    },
+
+
+    //employee_type- optional parameter used for fetching similar meals and drinks + manager filter
+    async fetchEmployees(term, employee_type = '') {  
+        term = term || store.searchTerm; 
+        let result = await Employees.getAll(term, employee_type )
+
+        //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
+        return  _.sortBy( result, 'fullName' ).reverse();
+  
+    },
+
+
+    async deleteEmployee(id) {
+        return await Api.delete(`/employees/${id}`);
+    },
+
+
+    async addEmployee(data){
+        const response = await Api.post('/add_employee', data)
+        
+        if(!response) return false
+        else if(response.data) return true
+        
+    },
+
+    async updateEmployee(data){
+        const response = await Api.patch('/update_employee', data)
+
+        if(!response) return false
+        else if(response.data) return true
+        
+    },
+}
+
+export { Api, Products, Auth, Employees }; // exportamo Api za ručne pozive ili Products za metode.

@@ -1,17 +1,12 @@
 <template>
-    <div class="card" >
-        <span v-if="info.discount" class="circle-left">
-            <b>{{info.discount}}</b> 
-            <small>OFF</small>
-        </span>
-        <span class="circle-right">
-            {{info.price}}$
-        </span>
-        <img :src="info.url" class="card-img-top" alt="Meal image">
-
-        <div class="card-body p-0" id="cardBdy">
-            <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
-            <h5 class="card-title funkyFont" id="cardHeader">{{info.name}}</h5>
+    <!--condition is probably unecessary - check later-->
+    <div v-if="this.$route.path==='/employees' " class="col-xl-3 col-lg-3 col-md-3 col-6" id="column">
+        <div class="card" >
+            <img :src="info.url" class="card-img-top" alt="Meal image">
+            <div class="card-body p-0">
+                <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
+                <h5 class="card-title" id="cardHeader">{{info.fullName}}</h5>
+            </div>
         </div>
     </div>
 </template>
@@ -19,19 +14,15 @@
 <script>
 
 export default {
-  name: 'SimilarMealsCard',
+  name: 'EmployeeCard',
   props: ['info'],  //definiramo da card može primiti info odnosno propse
 
   data() { 
         return {
-            cards: [],
+            
         }
   },  
 
-  methods:{
-
-  },
-  
 }
  
 
@@ -45,27 +36,31 @@ export default {
 }
 
 .card{
-    margin: 5px 0 0 0;
-    width:130px;
+    margin: 5px 0 40px 0;
+    width:150px;
     border:none;
 }
 
 .card-img-top{
-    width: 130px;
-    height: 130px;
+    width: 150px;
+    height: 150px;
     border-radius: 7px;
 }
 
 .card-body{
-    width: 130px;
+    width:150px;
     border-radius: 5px;
-    min-height: 45px;
 }
 
 .card-title{
     font-weight: 200;
-    margin-top:2px;
-    margin-bottom:0px
+    margin-top:5px;
+    width:100%;
+}
+
+#cardHeader{
+    //because of intererance
+    color:black;
 }
 
 
@@ -83,6 +78,8 @@ export default {
   justify-content: center;
   align-content: center;
   flex-direction: column;
+  font-family: cursive !important;
+  font-size:14px;
 }
 
 .circle-left {
@@ -114,31 +111,11 @@ export default {
 .circle-left >small{
     font-size:10px;
     margin-top: -4px;
+    color:black;
 }
 
 .circle-left > b {
     margin-top: 2px;
     font-size: 18px;
-}
-
-
-#cardBdy> h5{
-    max-width:143px;
-    white-space: pre-line;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
-    padding-left:0;
-}
-
-.card-title{
-    font-weight: 200;
-    margin-top:5px;
-    width:100%;
-}
-
-#cardHeader{
-    //because of intererance
-    color:black;
 }
 </style>
