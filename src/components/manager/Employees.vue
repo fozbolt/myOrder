@@ -59,7 +59,7 @@
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" id="wage" v-model="wage" placeholder="Wage">
-                                    <label for="wage">Wage (monthly, brutto)</label>
+                                    <label for="wage">Salary in $ (monthly, brutto)</label>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="password" class="form-control" id="password" v-model="password" placeholder="Password">
@@ -278,7 +278,7 @@ export default {
                 this.employeeImgUrl = await result.ref.getDownloadURL();
             }
             else if (this.currCard) this.employeeImgUrl = this.currCard.url
-            else this.employeeImgUrl = "https://source.unsplash.com/random/400x400/?food"
+            else this.employeeImgUrl = "https://source.unsplash.com/random/400x400/?person"
 
             //mongo storage when we get firabase storage url
             let employee = {
@@ -311,6 +311,8 @@ export default {
             else await Employees.addEmployee(employee);
 
             this.closeEmployee();
+            if(this.store.username === employee.id) Auth.logout(); //if we update our own account
+
             this.$router.go();
         },
 

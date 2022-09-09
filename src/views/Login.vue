@@ -121,7 +121,7 @@ export default {
  },
   
   watch:{
-		"errorMessage": _.debounce(function(){this.errorMessage = false}, 100000),
+		"errorMessage": _.debounce(function(){this.errorMessage = false}, 10000),
     "restrictedMessage": _.debounce(function(){this.restrictedMessage = false}, 2000)
 	},
 

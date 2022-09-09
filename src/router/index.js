@@ -29,6 +29,24 @@ const routes = [
         component: () => import('@/components/manager/Employees.vue'),
         meta: {title: 'Employees'}
       },
+      {
+        path: 'newsletter',
+        name: 'newsletter',
+        component: () => import('@/components/manager/Newsletter.vue'),
+        meta: {title: 'Newsletter'}
+      },
+      {
+        path: 'feedback',
+        name: 'feedback',
+        component: () => import('@/components/manager/Feedback.vue'),
+        meta: {title: 'Feedback'}
+      },
+      {
+        path: 'special_offers',
+        name: 'specialOffers',
+        component: () => import('@/components/manager/SpecialOffers.vue'),
+        meta: {title: 'SpecialOffers'}
+      },
       
     ]
   },
@@ -118,7 +136,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const publicPages = ['/login']; // '/register' excluded for logic of this app
-  const managerPages = ['/statistics', '/products', '/employees']
+  const managerPages = ['/statistics', '/products', '/employees', '/newsletter', '/feedback', '/special_offers']
   const customerAndWaiterPages = ['/checkout', '/finished_order', '/placed_order', 'order_status', 'order_feedback', 'order_details']
   const authRequired = !publicPages.includes(to.path);
   const user = Auth.getUser();  

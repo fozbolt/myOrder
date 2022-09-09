@@ -235,6 +235,17 @@ let Products = {
         return  _.sortBy( result.data, 'publish_date' );
     },
 
+    async fetchSubscribers() {  
+        let result = await Api.get('/get_subscribers')
+      
+        return  result.data
+    },
+
+    async fetchFeedbacks() {  
+        let result = await Api.get('/get_feedbacks')
+      
+        return  result.data
+    },
 
 };
 

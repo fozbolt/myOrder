@@ -23,6 +23,9 @@
                     <li><a href="#awards">Awards</a></li>
                   </ul>
                 </li>
+                <li><a  @click="this.$router.push({name: 'feedback'})"  aria-current="#feedback">Feedback</a></li> 
+                <li><a  @click="this.$router.push({name: 'newsletter'})"  aria-current="#newsletter">Newsletter</a></li> 
+                <li><a  @click="this.$router.push({name: 'specialOffers'})"  aria-current="#specialOffers">Special offers</a></li> 
                 <li><a @click="logout" aria-current="#logout" >Log out</a></li>
             </ul>
         </nav>
@@ -315,6 +318,29 @@ a[aria-current="#logout"]::before {
   cursor: default;
   text-decoration: none;
 }
+
+a[aria-current="#newsletter"]::before {
+  content: "\f0e0" !important;
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+}
+
+a[aria-current="#feedback"]::before {
+  content: "\f086" !important;
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+}
+
+a[aria-current="#specialOffers"]::before {
+  content: "\f2b5" !important;
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+}
+
+
 
 
 /*-------------------------------*/

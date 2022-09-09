@@ -81,8 +81,9 @@ export default {
       //needed because login handler sets it only on login and it becomes a problem when store restores during refresh (could be placed in beforeEach route too)
       setTimeout(()=>{
         if(this.$route.path !== '/login'){
-          let user = JSON.parse(localStorage.getItem('user')); 
+          let user = JSON.parse(localStorage.getItem('user'));    
           this.store.userType = user.type
+          this.store.username = user.username
         }
         },1000)
     }
