@@ -63,9 +63,14 @@ export default {
       },
 
       getColor(){
-        if (this.$route.path === '/' && this.store.userType !== 'manager') return ''
+        //a little bit hard coded for now
+        if (this.$route.path === '/'  && this.store.userType === 'waiter') return '#dbdbdb'
+        else if (this.$route.path === '/' && this.store.userType !== 'manager')  return ''
         else if (this.store.userType === 'manager') return '#e9ecef'
         else return 'white'
+
+        
+      
       },
 
       goTo(subcategory){

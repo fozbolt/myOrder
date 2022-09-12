@@ -21,7 +21,6 @@ import FeedbackCard from './FeedbackCard.vue';
     methods: {},
     async mounted() {
         this.feedbacks = await Products.fetchFeedbacks();
-        console.log(this.feedbacks)
     },
     
 }

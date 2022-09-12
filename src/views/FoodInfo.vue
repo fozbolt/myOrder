@@ -549,7 +549,7 @@ small{
 .toast-container {
     overflow: hidden;
     position: relative;
-    z-index:4
+    z-index:16
 }
 .toast-container > .toast {
     width: fit-content;

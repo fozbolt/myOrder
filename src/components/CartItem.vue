@@ -26,13 +26,13 @@
             <span >{{ info.price}}$</span>
         </div>
         <div id="quantityDiv">
-            <button @click="increment" id="plusButton" v-if="info.status === 'ordered/ready to take over' || this.$route.path === '/checkout' ">
+            <button @click="increment" id="plusButton" v-if="info.status === 'ordered|ready to take over' || this.$route.path === '/checkout' ">
                 <img src="@/assets/plusIcon.svg" alt=""/>
             </button>
     
             <span id="quantityDisplay" >{{ info.quantity }}</span>
 
-            <button @click="decrement" id="minusButton" v-if="info.status === 'ordered/ready to take over' || this.$route.path === '/checkout'">
+            <button @click="decrement" id="minusButton" v-if="info.status === 'ordered|ready to take over' || this.$route.path === '/checkout'">
                 <img src="@/assets/minusIcon.svg" alt=""/>
             </button>
         </div>
@@ -58,6 +58,7 @@ export default {
 
     increment() {
       this.info.quantity++;
+      console.log(this.info)
     
     },
     decrement() {

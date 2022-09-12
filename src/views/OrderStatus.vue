@@ -31,9 +31,9 @@ export default {
         return {
             //store,
            statusDict : {
-              'ordered/ready to take over': 25, 
-              'accepted/being prepared':50, 
-              'ready/waiting to be served':90, 
+              'ordered|ready to take over': 25, 
+              'accepted|being prepared':50, 
+              'ready|waiting to be served':90, 
               'served':1, 
               'paid':1,
             },

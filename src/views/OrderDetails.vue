@@ -13,7 +13,7 @@
 
 
         <!--INTERFACE: Changeable if order is not accepted-->
-        <div v-if="orderStatus === 'ordered/ready to take over'" id="checkoutContent" >
+        <div v-if="orderStatus === 'ordered|ready to take over'" id="checkoutContent" >
             <!-- <div  class="row">
                 <button @click="this.$router.go(-1)"  id="circle-bottom-checkout">
                     <img id="backIcon-checkout" src="@/assets/backIconBlue.png" />
@@ -21,23 +21,42 @@
             </div> -->
             <div class="row" id="headerRow">
             <h5><b>Order details</b></h5>
-            <small >Order status:{{orderStatus}}</small>
+            <small >Order status:  {{ orderStatus}}</small>
             <small >
                     Table: 
                     <input type="text" v-model="table"  id="tableInput"/>
             </small>
             </div>
-            <div class="row" id="cardsRow">  
-                <span v-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
-                <CartItem v-else :key="card.id" 
-                    v-for="(card, index ) in cartItems" :info="card" 
-                    v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
-                    v-on:delete-item="deleteItem(index)"
-                /> 
-            </div>
+
+            <button type="button" @click="onToggle" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" id="collapseButton">
+                <div v-if="!seeMore">
+                    <label >See more</label> 
+                    <img src="@/assets/SeeMoreArrowSmall.svg" alt="">
+                </div>
+                <div v-else>
+                    <label >See less</label> 
+                    <img src="@/assets/SeeMoreArrowSmall.svg" style=" transform: rotate(180deg)" >
+                </div>
+            </button>
+            <div class="collapse" id="collapseExample">
+                <div class="row" id="cardsRow">  
+                    <span v-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
+                    <CartItem v-else :key="card.id" 
+                        v-for="(card, index ) in cartItems" :info="card" 
+                        v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
+                        v-on:delete-item="deleteItem(index)"
+                    /> 
+                </div>
+            </div> 
             <div class="row" id="calculationDiv">
                 <div class="col">
-                    <!-- Empty half -->
+                    <div v-if="seeMore" @click="deleteOrder" class="funkyFont" style="color:#FF0303;" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                        </svg>
+                        Delete
+                    </div>
                 </div>
                 <div class="col-8">
                     <span id="withoutTax" >W/O tax: {{Math.round((totalSum - (totalSum*0.25)) * 100) / 100 || 0}} $</span>
@@ -64,7 +83,8 @@
 
             <div id="buttonsRow">
                 <!-- <button   @click="toggleTooltip"  data-bs-toggle="tooltip" data-bs-placement="top" title="Make new order if you want to add new meal" id="addMealBtn" class="btn btn-primary">ADD MEAL</button> -->
-                <button  @click="$router.push({ path: '/placed_order'})" id="backBtnAccepted" class="btn btn-primary funkyFont">Back</button>
+                <button v-if="store.userType === 'customer'"  @click="$router.push({ path: '/placed_order'})" id="backBtnAccepted" class="btn btn-primary funkyFont">Back</button>
+                <button v-if="store.userType === 'waiter'" @click="$router.push({ path: '/orders'})" id="backBtnAccepted" class="btn btn-primary funkyFont">Back</button>
                 <button  @click="update" class="btn btn-primary funkyFont" >Update</button>
             </div>
 
@@ -75,20 +95,37 @@
 
 
 
+
+
+
+
         <!--INTERFACE: Not changeable if order is accepted-->
         <div v-else id="checkoutContent" >
             <div class="row" id="headerRow">
             <h5><b>Order details</b></h5>
-                    <small >Order status:{{orderStatus}}</small>
+                    <small >Order status: {{orderStatus}}</small>
                     <small >Table: {{ table }}</small>
             </div>
-            <div class="row" id="cardsRow">  
-                <span v-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
-                <CartItem v-else :key="card.id" 
-                    v-for="(card, index ) in cartItems" :info="card" 
-                    v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
-                    v-on:delete-item="deleteItem(index)"
-                /> 
+
+            <button type="button" @click="onToggle" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" id="collapseButton">
+                <div v-if="!seeMore">
+                    <label >See more</label> 
+                    <img src="@/assets/SeeMoreArrowSmall.svg" alt="">
+                </div>
+                <div v-else>
+                    <label >See less</label> 
+                    <img src="@/assets/SeeMoreArrowSmall.svg" style=" transform: rotate(180deg)" >
+                </div>
+            </button> 
+            <div class="collapse" id="collapseExample">
+                <div class="row" id="cardsRow">  
+                    <span v-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
+                    <CartItem v-else :key="card.id" 
+                        v-for="(card, index ) in cartItems" :info="card" 
+                        v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
+                        v-on:delete-item="deleteItem(index)"
+                    /> 
+                </div>
             </div>
             <div class="row" id="calculationDiv">
                 <div class="col">
@@ -108,7 +145,7 @@
                 </div>
             </div>
             <div class="row">
-                <button @click="toggleCollapsible" class="collapsibleNotes" ref="collapsibleNotes">
+                <button @click="toggleCollapsibleNotes" class="collapsibleNotes" ref="collapsibleNotes">
                     <span>
                         <img src="@\assets\NotesIcon.svg" alt="">
                         <b> Notes</b>
@@ -118,7 +155,8 @@
             </div>
 
             <div id="buttonsRowAccepted">
-                <button  @click="$router.push({ path: '/placed_order'})" id="backBtnAccepted" class="btn btn-primary funkyFont">Back</button>
+                <button v-if="store.userType === 'customer'"  @click="$router.push({ path: '/placed_order'})" id="backBtnAccepted" class="btn btn-primary funkyFont">Back</button>
+                <button v-if="store.userType === 'waiter'" @click="$router.push({ path: '/orders'})" id="backBtnAccepted" class="btn btn-primary funkyFont">Back</button>
             </div>
             
         </div>
@@ -131,7 +169,7 @@
 <script>
 import CartItem from '@/components/CartItem.vue';
 import store from '@/store.js';
-import { Products } from '@/services';
+import { Orders } from '@/services';
 import Footer from '@/components/Footer.vue';
 import FloatingMenu from '@/components/FloatingMenu.vue';
 
@@ -154,6 +192,7 @@ export default {
             orderStatus: undefined,
             errorMessage: false,
             totalSum: 0,
+            seeMore: false,
             store,
         
         };
@@ -161,7 +200,7 @@ export default {
     async mounted() {
         this.cartItems = this.cartItems || [];
         let id = JSON.parse(localStorage.getItem('orderID')); 
-        let order = await Products.getOrder(id);
+        let order = await Orders.getOrder(id);
 
         
         this.orderInfo = order.orderInfo
@@ -178,7 +217,7 @@ export default {
 
          setTimeout(() => {
             if(store.type.toLowerCase()==='food'){
-                this.toggleCollapsible()   
+                this.toggleCollapsibleNotes()   
             } 
         }, 1000)
 
@@ -186,7 +225,7 @@ export default {
 
 
     methods:{
-        toggleCollapsible(){
+        toggleCollapsibleNotes(){
             let button = this.$refs['collapsibleNotes']
             //button.classList.toggle('active')
             
@@ -197,6 +236,10 @@ export default {
                 } else {
                 content.style.maxHeight = content.scrollHeight + "px";
                 } 
+        },
+
+        onToggle(){
+            this.seeMore = !this.seeMore;
         },
 
         async update(){
@@ -218,7 +261,7 @@ export default {
                 bill.id = JSON.parse(localStorage.getItem('orderID')); 
 
 
-                let success = await Products.updateOrder(bill)
+                let success = await Orders.updateOrder(bill)
                 if (success){
                     this.toggleModal();
 
@@ -248,7 +291,11 @@ export default {
             let button = this.$refs['basicToast']
             new bootstrap.Toast(button).show();
         },
-
+        
+        async deleteOrder(){
+            await Orders.deleteOrder( JSON.parse(localStorage.getItem('orderID')) )
+            this.$router.push({path: '/orders'})
+        }
 
     },
 
@@ -481,6 +528,19 @@ export default {
     height: 30px;
     padding: 0px 10px;
     text-align: center;
+}
+
+
+#collapseButton{
+    all: unset;
+    color: #0078D4;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    margin-left: 35px;
+    width:70px;
 }
 
 

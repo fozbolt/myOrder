@@ -58,10 +58,12 @@ export default {
         async (val)  => {
           //nije najbolja praksa i dodan timeout da bude vise cool loader
           this.cards = await Products.fetchProducts();
+
           if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
 
         //da li treba ovo?
           this.store.searchText = ''
+          if (true)  setTimeout(() => { this.loaded=true}, 3000)
         },
         {
           immediate: true, //immediate set to true means we watch the initial value of the reactive properties.

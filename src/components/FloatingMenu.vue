@@ -1,6 +1,6 @@
 <!-- source: https://www.cssscript.com/material-design-style-radial-fab-menu-pure-css/ -->
-<template>
-  <div class="wrapper" ref="target" @click="showFloatingMenu">
+<template >
+  <div v-if="store.userType === 'customer'"  class="wrapper" ref="target" @click="showFloatingMenu">
 
     <!--toast-->
     <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -62,11 +62,13 @@
 
 import { onClickOutside } from '@vueuse/core'
 import { ref } from 'vue'
+import store from '@/store.js'
 
 export default {
   name: 'FloatingMenu',
   data(){
     return{
+      store,
       callReasons: ['Help while ordering', 'Order manually', 'Pay Bill', 'Complaint', 'Other']
     }
   },
@@ -93,7 +95,7 @@ export default {
 
   mounted(){
     //change color when on this route to stand out more - can be done with inline style binding too
-    if (this.$route.path === '/food_list') this.$refs.label.style.backgroundColor= '#5A5EB9';
+    if (this.$route.path === '/food_list' && this.store.userType === 'customer') this.$refs.label.style.backgroundColor= '#5A5EB9';
   },
 
   setup() {

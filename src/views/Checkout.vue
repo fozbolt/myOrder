@@ -67,7 +67,7 @@
 <script>
 import CartItem from '@/components/CartItem.vue';
 import store from '@/store.js';
-import { Products } from '@/services';
+import { Orders } from '@/services';
 import Footer from '@/components/Footer.vue';
 import FloatingMenu from '@/components/FloatingMenu.vue';
 
@@ -88,6 +88,7 @@ export default {
             errorMessage: false,
             orderExists: false,
             spinnerOn: false,
+            orderCount: 0,
             store
         
         };
@@ -106,6 +107,7 @@ export default {
             } 
         }, 1000)
 
+        this.orderCount = await Orders.fetchOrders();
     },
 
     computed: {
@@ -150,7 +152,8 @@ export default {
                     table: '2', //hardcoded for now
                     totalAmount: this.totalSum,
                     note: this.textualNote,
-                    orderStatus: 'ordered/ready to take over' 
+                    orderStatus: 'ordered|ready to take over',
+                    //orderNumber: this.orderCount.length  //dummy orderNumber - now we get it through trigger in db
                 }
 
                 let bill = {
@@ -158,7 +161,7 @@ export default {
                 }
 
 
-                let id = await Products.newOrder(bill)
+                let id = await Orders.newOrder(bill)
                 
                 if (id) this.getInfo(id);
                 else console.log('place order error - create message for this')
@@ -175,12 +178,12 @@ export default {
 
         async getInfo(id){
             //timeout needed because operations and triggers in backend don't return orderId immediately 
-            //delete this function in case i dont need orderId and leave only await Products.getOrder(id) in callback  function
+            //delete this function in case i dont need orderId and leave only await Orders.getOrder(id) in callback  function
             try{
                
                 setTimeout(()=>{
                     (async() => {
-                         let order = await Products.getOrder(id)  
+                         let order = await Orders.getOrder(id)  
                          localStorage.setItem('orderID', JSON.stringify(order._id));
                     })();   
                   

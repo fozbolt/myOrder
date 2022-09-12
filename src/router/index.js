@@ -9,6 +9,7 @@ const routes = [
     path: '/',
     name: 'home',
     component: Home,
+    //manager
     children: [
       {
         path: 'statistics/:chartName',
@@ -64,14 +65,6 @@ const routes = [
     path: '/food_list',
     name: 'food_list',
     component: FoodList,
-    // children: [
-    //   {
-    //     path: ':id',
-    //     props: true,
-    //     name: 'FoodInfo',
-    //     component: () => import(/* webpackChunkName: "FoodInfo" */ '../views/FoodInfo.vue')
-    //   }
-    // ]
   },
   {
       path: '/food_list/:id',
@@ -114,6 +107,12 @@ const routes = [
     props: true,
     name: 'OrderDetails',
     component: () => import(/* webpackChunkName: "OrderDetails" */ '../views/OrderDetails.vue')  
+  },
+  {
+    path: '/orders',
+    props: true,
+    name: 'Orders',
+    component: () => import(/* webpackChunkName: "orders" */ '../views/Orders.vue')  
   }
 ]
 
@@ -157,7 +156,7 @@ router.beforeEach((to, from, next) => {
   }
 
   //allow only to customer, and waiter
-  if((user?.type !== 'waiter' || user?.type !== 'customer')  && customerAndWaiterPages.includes(to.path)){
+  if((user?.type !== 'waiter' && user?.type !== 'customer')  && customerAndWaiterPages.includes(to.path)){
     return next('/');
   }
 

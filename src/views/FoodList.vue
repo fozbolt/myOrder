@@ -66,6 +66,10 @@ export default {
         }
     },
 
+    beforeMount(){
+      console.log('aaav')
+      console.log(this.store)
+    },
     methods:{
       selectType (event) {
         let currentType = this.store.type;
@@ -318,7 +322,7 @@ export default {
 
 @media(max-width:500px){
   #food-list-content{
-  min-height: 150vh
+  min-height: 180vh
   }
 }
 

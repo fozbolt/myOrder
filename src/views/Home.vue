@@ -12,7 +12,7 @@
 import HomeSmartphone from '@/components/HomeSmartphone.vue';
 import HomeDesktop from '@/components/HomeDesktop.vue';
 import Manager from '@/components/manager/Manager.vue';
-import Waiter from '@/components/Waiter.vue';
+import Waiter from '@/components/waiter/Waiter.vue';
 import store from '@/store.js';
 
 

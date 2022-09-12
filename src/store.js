@@ -1,6 +1,6 @@
 export default {
     //user
-    userId: 'your_id',
+    userId: null,
     username: null,
     userType: 'manager',
     
@@ -13,8 +13,9 @@ export default {
     productTypes: [],  
     isFood : true,
     isDrink: false,
-
+    
     //order data
-    feedbackLeft: false
+    feedbackLeft: false,
+    selected_order_status: 'ordered|ready to take over',
 
 }

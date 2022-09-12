@@ -101,15 +101,14 @@ let Auth = {
             if(user_data) return user_data;
             return false;
         },
+        //deprecated
         get loaderState() {
             return store.showLoader
         },
     },
 }
 
-// naš objekt za sve pozive koji se dotiču `Post`ova
-let Products = {
-
+let Orders = {
     async newOrder(order_info){
         const response = await Api.post('/new_order', order_info)
         
@@ -118,6 +117,7 @@ let Products = {
         else if(response.data) return response.data.id
         
     },
+
     async saveFeedback(feedback){
         const response = await Api.post('/leave_feedback', feedback)
         
@@ -125,6 +125,71 @@ let Products = {
         else if(response.data) return true
         
     },
+
+    async getOrder(id) {
+        let response = await Api.get(`/order_info/${id}`);
+
+        let doc = response.data;
+        return doc
+        
+    },
+
+    async updateOrder(order) {
+        let response = await Api.patch(`/orders/${order.id}`, order);
+
+        if(!response) return false
+        else if(response.data) return true
+
+    },
+
+    async deleteOrder(id) {
+        return await Api.delete(`/orders/${id}`);
+    },
+
+
+    async getOrderStatusTypes() {
+        let response = await Api.get(`/order_types`);
+        
+        let doc = response.data;
+        return doc
+        
+    },
+
+    async getAll(searchTerm, status) {
+        let options = {};
+        if (searchTerm) {
+            options.params = {
+                _any: searchTerm,
+            };
+        }
+
+        let response = await Api.get(`/orders/${status}`, options)
+        console.log(response)
+        if(response){
+            response.data.id = response.data._id
+            delete response.data._id
+            return response.data
+        }
+        else return false;
+    },
+
+
+    //status_type- optional parameter used for fetching similar meals and drinks + manager filter + orders filter
+    async fetchOrders(term, status_type = '') { 
+        term = term || store.searchText; 
+        let result = await Orders.getAll(term, status_type )
+
+        //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
+        return  _.sortBy( result, 'orderInfo.date' ).reverse();
+  
+    },
+
+}
+
+
+
+
+let Products = {
 
     async addProduct(data){
         const response = await Api.post('/add_product', data)
@@ -174,22 +239,7 @@ let Products = {
         return doc
         
     },
-    async getOrder(id) {
-        let response = await Api.get(`/order_info/${id}`);
-
-        let doc = response.data;
-        return doc
-        
-    },
-
-    async updateOrder(order) {
-        let response = await Api.patch(`/orders/${order.id}`, order);
-
-        if(!response) return false
-        else if(response.data) return true
-
-    },
-
+   
     
     async deleteProduct(id) {
         return await Api.delete(`/products/${id}`);
@@ -312,4 +362,4 @@ let Employees = {
     },
 }
 
-export { Api, Products, Auth, Employees }; // exportamo Api za ručne pozive ili Products za metode.
+export { Api, Products, Auth, Employees, Orders }; // exportamo Api za ručne pozive ili Products za metode.

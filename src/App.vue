@@ -86,6 +86,7 @@ export default {
           this.store.username = user.username
         }
         },1000)
+        
     }
 
 
@@ -97,6 +98,7 @@ export default {
           let my_proxy = await Products.getProductTypes()
           let destructuredProxy= {...my_proxy.type}
           if (this.store.productTypes.length === 0) this.store.productTypes.push(destructuredProxy)
+          console.log(this.store.productTypes)
       },
 
   mounted(){

@@ -83,7 +83,7 @@ export default {
               rating: this.starRating,
               comment: this.textualNote,
               time: Date.now(),
-              orderNumber: orderData.orderInfo.orderId,
+              orderNumber: orderData.orderInfo.orderNumber,
               orderId: orderData._id
             }
 
