@@ -57,7 +57,7 @@ import Footer from '@/components/Footer.vue';
 import StarRating from 'vue-star-rating'
 import store from '@/store';
 import { Products } from '@/services';
-import FloatingMenu from '@/components/FloatingMenu.vue';
+import FloatingMenu from '@/components/customer/FloatingMenu.vue';
 
 export default {
     name: "Navbar",

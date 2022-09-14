@@ -129,7 +129,7 @@ import { Products } from '@/services';
 import Slider from '@/components/Slider.vue'
 import Footer from '@/components/Footer.vue';
 import _ from 'lodash';
-import FloatingMenu from '@/components/FloatingMenu.vue';
+import FloatingMenu from '@/components/customer/FloatingMenu.vue';
 
 
 export default {

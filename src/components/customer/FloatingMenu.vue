@@ -63,6 +63,7 @@
 import { onClickOutside } from '@vueuse/core'
 import { ref } from 'vue'
 import store from '@/store.js'
+import { Orders } from '@/services';
 
 export default {
   name: 'FloatingMenu',
@@ -80,10 +81,25 @@ export default {
             $("#myWaiterModal").modal("toggle");
     },
 
-    callWaiter(reason){
-      //show success notification
-      let button = this.$refs['basicToast']
-      new bootstrap.Toast(button).show();
+    async callWaiter(reason){
+      let data = {
+        table: '2', //hardcoded for now
+        reason: reason,
+        time: Date.now(),
+        status: 'new'
+      }
+      
+      let success = await Orders.sendCall(data)
+
+      //show success notification - check if it returns boolean or sth els
+      if (success){
+        let button = this.$refs['basicToast']
+        new bootstrap.Toast(button).show();
+      }else{
+        console.log('Errir accured during call sending - next iteration will have toast notification for it')
+      }
+
+       
     },
 
     showFloatingMenu(){

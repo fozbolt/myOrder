@@ -185,7 +185,7 @@ export default {
  
     data() {
         return {
-            id: undefined,
+            orderData: undefined,
             cartItems: [],
             textualNote: '',
             orderInfo: null,
@@ -199,24 +199,8 @@ export default {
         };
     },
     async mounted() {
-        this.cartItems = this.cartItems || [];
-        let id = JSON.parse(localStorage.getItem('orderID')); 
-        let order = await Orders.getOrder(id);
-        
-        this.id = order.orderInfo.orderId
-        this.orderInfo = order.orderInfo
-        this.cartItems = order.items;
-        this.cartItems  = this.cartItems.map(obj => ({ ...obj, status: this.orderInfo.orderStatus }))
 
-        // cant call directly from html orderInfo.table etc. because of asynchroneus nature: https://stackoverflow.com/questions/46579976/vue-js-cannot-read-property-even-though-the-object-exists
-        this.table = this.orderInfo.table
-        this.totalSum = this.orderInfo.totalAmount
-        this.textualNote = this.orderInfo.note
-        this.orderStatus = this.orderInfo.orderStatus
-        this.table = this.orderInfo.table
-     
-
-         setTimeout(() => {
+        setTimeout(() => {
             if(store.type.toLowerCase()==='food'){
                 this.toggleCollapsibleNotes()   
             } 
@@ -248,20 +232,20 @@ export default {
 
             if (this.cartItems.length > 0){
                 let info = {
-                    date: this.orderInfo.date, 
+                    date: this.orderData.orderInfo.date, 
                     dateUpdated: Date.now(),
                     table: this.table,
                     totalAmount: this.totalSum,
                     note: this.textualNote,
-                    orderStatus: 'ordered/ready to take over',
-                    orderId: this.id
+                    orderStatus: 'ordered|ready to take over',
+                    orderId: this.orderData.orderInfo.orderId
                 }
 
                 let bill = {
                     items: this.cartItems, orderInfo: info 
                 }
-                bill.id = JSON.parse(localStorage.getItem('orderID')); 
-
+                bill.id = this.orderData._id
+    
 
                 let success = await Orders.updateOrder(bill)
                 if (success){
@@ -297,6 +281,21 @@ export default {
         async deleteOrder(){
             await Orders.deleteOrder( JSON.parse(localStorage.getItem('orderID')) )
             this.$router.push({path: '/orders'})
+        },
+
+        async fillData(){
+            this.orderData = await Orders.getOrder(this.$route.params.id);
+
+            this.cartItems = this.orderData.items
+            let orderInfo = this.orderData.orderInfo
+            this.cartItems  = this.cartItems.map(obj => ({ ...obj, status: orderInfo.orderStatus }))
+
+            // cant call directly from html orderInfo.table etc. because of asynchroneus nature: https://stackoverflow.com/questions/46579976/vue-js-cannot-read-property-even-though-the-object-exists
+            this.table = orderInfo.table
+            this.totalSum = orderInfo.totalAmount
+            this.textualNote = orderInfo.note
+            this.orderStatus = orderInfo.orderStatus
+            this.table = orderInfo.table
         }
 
     },
@@ -313,15 +312,9 @@ export default {
 
 
     created(){
-        if(!Boolean( JSON.parse(localStorage.getItem('orderID') ))){
-            this.$router.push({path: '/'})
-        }
+        this.fillData();
     },
 
-    unmounted(){
-        //extra caution
-        localStorage.setItem('cart', JSON.stringify([]));
-    },
 
     
     

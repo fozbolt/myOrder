@@ -5,17 +5,15 @@
               class="nav nav-tabs" 
               @click="selectValue($event)" 
               >
-                <li v-for="(status, index) in orderStatusTypes" :key="index">
+                <li v-for="(status, index) in callStatusTypes" :key="index">
                     <a  
                       v-bind="getDataAttr(index, status)" 
                       class="nav-item nav-link pointer"  
-                      :class="{ active: status.toLowerCase() === store.selected_order_status.toLowerCase()}"
+                      :class="{ active: status.toLowerCase() === store.selected_call_status.toLowerCase()}"
                       role="tab"   data-bs-toggle="tab" aria-controls="public" aria-expanded="true"
                       >
                       {{status}}
-                      <span v-if="takeover && status==='ready|waiting to be served' " id="circle"></span>
                     </a>
-                    
                 </li>
             </ul> 
         </nav>
@@ -27,7 +25,6 @@
 
 import _ from 'lodash';
 import store from '@/store.js'
-import { Orders } from '@/services';
 
 export default {
     name: 'HorizontalScrollerOrders',
@@ -36,35 +33,23 @@ export default {
     data() { 
         return {
             store,
-            orderStatusTypes: [],
-            takeover: undefined
+            callStatusTypes: ['new', 'finished']
         }
     },
 
      methods:{
         selectValue (event) {
-            this.store.selected_order_status = event.target.innerHTML;
+            this.store.selected_call_status = event.target.innerHTML;
         },
        
-       getDataAttr(index, subcategory) {
+       getDataAttr(index) {
           return {
             'data-bs-target': '#tab' + index,
-            'id': subcategory,
-            //'ref': subcategory
           }
       },
 
-       
     },
 
-
-    async beforeMount(){
-        this.orderStatusTypes =  await Orders.getOrderStatusTypes();
-    },
-
-    async created(){
-        this.takeover = await Orders.fetchOrders(this.store.searchText, 'ready|waiting to be served');
-    }
 
    
 
@@ -85,6 +70,7 @@ export default {
 //izvor horizontal navbara: https://bootsnipp.com/snippets/bpP0r
 .nav-tabs {
   display: inline-flex;
+  justify-content: center;
   width: 100%;
   z-index: 0;
   overflow-x: auto;
@@ -178,18 +164,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-
-
-#circle{
-  height: 10px;
-  width: 10px;
-  background-color: red;
-  border-radius: 50%;
-  display: inline-block;
-  position:absolute;
-  top:5px;
 }
 
 

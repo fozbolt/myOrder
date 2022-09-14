@@ -20,7 +20,7 @@
 <script>
 
 import store from '@/store.js'
-import AboutUsCards from '@/components/AboutUsCards.vue'
+import AboutUsCards from '@/components/customer/AboutUsCards.vue'
 import { Products } from '@/services';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';

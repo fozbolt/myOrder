@@ -69,7 +69,7 @@ import CartItem from '@/components/CartItem.vue';
 import store from '@/store.js';
 import { Orders } from '@/services';
 import Footer from '@/components/Footer.vue';
-import FloatingMenu from '@/components/FloatingMenu.vue';
+import FloatingMenu from '@/components/customer/FloatingMenu.vue';
 
 export default {
     name: 'Checkout',

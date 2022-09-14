@@ -162,9 +162,9 @@ let Orders = {
                 _any: searchTerm,
             };
         }
-
+        
         let response = await Api.get(`/orders/${status}`, options)
-        console.log(response)
+
         if(response){
             response.data.id = response.data._id
             delete response.data._id
@@ -181,6 +181,54 @@ let Orders = {
 
         //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
         return  _.sortBy( result, 'orderInfo.date' ).reverse();
+  
+    },
+
+
+    async sendCall(data){
+        const response = await Api.post('/calls', data)
+        
+        if(!response) return false
+        else if(response.data) return true
+        
+    },
+
+
+    async updateCall(data) {
+        let response = await Api.patch(`/calls/${data._id}`, data);
+
+        if(!response) return false
+        else if(response.data) return true
+
+    },
+
+
+    //cloned code from food_list search
+    async getCalls(searchTerm, status) {
+        let options = {};
+        if (searchTerm) {
+            options.params = {
+                _any: searchTerm,
+            };
+        }
+
+        
+        let response = await Api.get(`/calls/${status}`, options)
+  
+        if(response){
+            response.data.id = response.data._id
+            delete response.data._id
+            return response.data
+        }
+        else return false;
+    },
+
+
+    async fetchCalls(term, reason = '') { 
+        term = term || store.searchText; 
+        let result = await Orders.getCalls(term, reason )
+
+        return  _.sortBy( result, 'time' ).reverse();
   
     },
 

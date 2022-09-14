@@ -148,9 +148,9 @@
   <script>
   import store from '@/store.js';
   import Footer from '@/components/Footer.vue';
-  import FloatingMenu from '@/components/FloatingMenu.vue';
+  import FloatingMenu from '@/components/customer/FloatingMenu.vue';
   import { Products } from '@/services';
-  import AboutCarousel from './InfoSlider.vue';
+  import AboutCarousel from '@/components/customer/InfoSlider.vue';
   import {emitter} from '@/main.js'
   
   export default {

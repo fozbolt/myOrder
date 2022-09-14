@@ -1,4 +1,5 @@
 <template>
+  <!--diagonal menu design -->
   <!-- <div class="parent hover01">
     <div class="one">
       <img src="@/assets/waiterCalls.png" alt="">
@@ -7,6 +8,7 @@
     <div class="three"></div>
     a
   </div> -->
+  
   <div class="container">
     <div class="row">
           <WaiterMenu v-for="card in cards" :key="card.name" :info="card"/>

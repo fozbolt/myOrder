@@ -1,1 +1,0 @@
-//ovo ce biti kao checkout

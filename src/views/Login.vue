@@ -82,7 +82,7 @@ export default {
         
 				this.$router.push('/');
 			}
-			else this.errorMessage = "Neuspjeli pokušaj prijave u sustav, molimo provjerite unesene podatke!";
+			else this.errorMessage = "Login failed, please check your input data";
 		},
 
     checkForCustomer(){

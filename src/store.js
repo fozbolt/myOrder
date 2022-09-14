@@ -17,5 +17,6 @@ export default {
     //order data
     feedbackLeft: false,
     selected_order_status: 'ordered|ready to take over',
+    selected_call_status: 'new'
 
 }

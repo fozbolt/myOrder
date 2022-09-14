@@ -1,8 +1,8 @@
 <template>
     <div class="col-xl-4 col-lg-4 col-md-12 col-6" id="column">
         <div id="contentWrapper" @click="this.$router.push({path: info.path})">
-            <span class="circle-notification">
-                4
+            <span v-if="number_of_notifications" class="circle-notification">
+                {{number_of_notifications}}
             </span>
             <div id="headline">
                 {{info.name}}
@@ -14,18 +14,33 @@
 
 
 <script>
-
+import { Orders } from '@/services';
+import store from '@/store.js'
  
 export default {
     name: "WaiterMenu",
     props: ['info'],
     
     data() {
-        return {};
+        return {
+          store,
+          number_of_notifications: undefined
+        };
     },
     methods: {},
-    mounted(){
-        console.log(this.info)
+
+    async mounted(){
+        //for notifications
+        if (this.info.name === 'Calls'){
+          let dataArr =  await Orders.fetchCalls(this.store.searchText, this.store.selected_call_status);
+          this.number_of_notifications = dataArr.length
+        }
+        else if (this.info.name === 'Orders'){                                 
+          let dataArr =  await Orders.fetchOrders(this.store.searchText, 'ready|waiting to be served');
+          this.number_of_notifications = dataArr.length
+        }
+        
+        
     }
 }
   

@@ -14,7 +14,7 @@
               </svg>
             </div>
             <div id="filter" class="funkyFont">
-                <CurrentTabOrders/>
+                <CurrentTabCalls/>
             </div>
           
       </div>
@@ -27,14 +27,14 @@
 
 import store from '@/store.js'
 import Footer from '@/components/Footer.vue';
-import CurrentTabOrders from '@/components/waiter/CurrentTabOrders.vue';
+import CurrentTabCalls from '@/components/waiter/CurrentTabCalls.vue';
 
 
 export default {
-  name: 'Orders',
+  name: 'Calls',
   components: {
     Footer,
-    CurrentTabOrders
+    CurrentTabCalls
 },
     data() { 
         return {
@@ -46,13 +46,11 @@ export default {
 
     
     },
-
-
+  
     async mounted(){
 
     },
 
- 
    
 
 

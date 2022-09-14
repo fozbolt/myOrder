@@ -49,7 +49,7 @@
 
 import CurrentTab from '@/components/CurrentTab';
 import store from '@/store.js'
-import FloatingMenu from '../components/FloatingMenu.vue';
+import FloatingMenu from '@/components/customer/FloatingMenu.vue';
 import Footer from '@/components/Footer.vue';
 
 

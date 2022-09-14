@@ -74,45 +74,49 @@ const routes = [
   },
   {
     path: '/checkout',
-    props: true,
     name: 'Chekout',
     component: () => import(/* webpackChunkName: "Checkout" */ '../views/Checkout.vue')
   },
   {
       path: '/placed_order',
-      props: true,
       name: 'PlacedOrder',
       component: () => import(/* webpackChunkName: "PlacedOrder" */ '../views/PlacedOrder.vue')  
   },
   {
       path: '/order_status',
-      props: true,
       name: 'OrderStatus',
       component: () => import(/* webpackChunkName: "OrderStatus" */ '../views/OrderStatus.vue')  
   },
   {
     path: '/order_feedback',
-    props: true,
     name: 'LeaveFeedback',
     component: () => import(/* webpackChunkName: "LeaveFeedback" */ '../views/LeaveFeedback.vue')  
   },
   {
     path: '/finish_order',
-    props: true,
     name: 'FinishedOrder',
     component: () => import(/* webpackChunkName: "FinishedOrder" */ '../views/FinishedOrder.vue')  
   },
   {
     path: '/order_details',
-    props: true,
     name: 'OrderDetails',
     component: () => import(/* webpackChunkName: "OrderDetails" */ '../views/OrderDetails.vue')  
   },
   {
     path: '/orders',
-    props: true,
     name: 'Orders',
     component: () => import(/* webpackChunkName: "orders" */ '../views/Orders.vue')  
+  },
+  {
+    path: '/orders/:id',
+    name: 'OrderDetailsWaiter',
+    props: true,
+    component: () => import(/* webpackChunkName: "orders" */ '@/components/waiter/OrderDetailsWaiter.vue')  
+  },
+  {
+    path: '/calls',
+    name: 'Calls',
+    component: () => import(/* webpackChunkName: "Calls" */ '../views/Calls.vue')  
   }
 ]
 

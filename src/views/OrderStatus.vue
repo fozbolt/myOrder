@@ -20,9 +20,9 @@
 
 <script>
 import Footer from '@/components/Footer.vue';
-import ProgressBar from '@/components/ProgressBar.vue';
+import ProgressBar from '@/components/customer/ProgressBar.vue';
 import { Products } from '@/services';
-import FloatingMenu from '@/components/FloatingMenu.vue';
+import FloatingMenu from '@/components/customer/FloatingMenu.vue';
 //import store from '@/store';
 
 export default {

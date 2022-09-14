@@ -59,11 +59,13 @@ export default {
           //nije najbolja praksa i dodan timeout da bude vise cool loader
           this.cards = await Products.fetchProducts();
 
+          //ugasi ga kad se carsi ucitaju ili kad ucitavanje traje predugo (3 sekunde)
           if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
+          if (true)  setTimeout(() => { this.loaded=true}, 3000)
 
         //da li treba ovo?
           this.store.searchText = ''
-          if (true)  setTimeout(() => { this.loaded=true}, 3000)
+          
         },
         {
           immediate: true, //immediate set to true means we watch the initial value of the reactive properties.

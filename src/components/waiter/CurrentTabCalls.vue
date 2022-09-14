@@ -1,65 +1,71 @@
 <template>
-    <Suspense>
-      <template #default>
+  <div>
+     <!-- Modal -->
+     <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 v-if="currCard.status==='new'" class="modal-title" id="exampleModalLabel">Mark as finished?</h5>
+                <h5 v-else class="modal-title" id="exampleModalLabel">Mark as unfinished / new?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+      
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" @click="updateCard" data-bs-dismiss="modal">Yes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="dummyDivNeededForSuspenseToWork"> <!--https://qdmana.com/2022/03/202203271244076861.html-->
-           <HorizontalScrollerOrders/>
+           <HorizontalScrollerCalls/>
           <div class="tab-content p-3" id="myTabContent">
             <div class="row">   
                 <div v-if="loaded===false" class="loader"></div>
-                <Card v-else  @click="gotoDetails(card)" :key="card.id" v-for="card in cards" :info="card" />   <!-- vrijednost varijable se prenosi u props info komponente card, dakle u info stavljamo da želimo proslijediti informaciju card, : uputa da vue ne uzima varijabblu kao običan string nego da pogleda unutra što se nalazi i to preda childu-->
+                <Card v-else @click="currCard = card" :key="card._id" v-for="card in cards" :info="card" data-bs-toggle="modal" data-bs-target="#Modal" />  
                 <span v-if="store.searchText!== '' && !cards.length">No results found!</span>
                 <span v-if="!cards.length">Currently no results in this subcategory</span>
             </div>
           </div>
         </div>
-      </template>
-      
-      <!--Skeleton loader - unfinished-->
-      <template #fallback>
-        <div class="dummyDivNeededForSuspenseToWork">
-          <!-- <HorizontalScroller/> -->
-         {{'Loading'}}
-         Loading..
-          <div class="tab-content p-3" id="myTabContent">
-            <div class="row">   
-                <Card :key="card.id" v-for="card in cards" :info="card" />     
-            </div>
-           </div>
-          </div>
-        </template>
-  
-    </Suspense>
+  </div>
+       
 </template>
   
   <script>
-  import Card from '@/components/waiter/OrderCard.vue'
-  import HorizontalScrollerOrders from '@/components/waiter/HorizontalScrollerOrders.vue'
+  import Card from '@/components/waiter/CallCard.vue'
+  import HorizontalScrollerCalls from '@/components/waiter/HorizontalScrollerCalls.vue'
   import store from '@/store.js'
   import { Orders } from '@/services';
   import _ from 'lodash';
   
   export default {
-    name: 'CurrentTabOrders',
+    name: 'CurrentTabCalls',
     props: ['info'],  
   
-    components:{ Card, HorizontalScrollerOrders },
+    components:{ Card, HorizontalScrollerCalls },
   
     data() { 
           return {
               store,
               cards: [],
-              loaded : false
+              loaded : false,
+              currCard: { 
+                status: 'new'
+              }
+              
           }
       },
   
      async created() {
 
           this.$watch(
-          (vm) => [vm.store.selected_order_status],
+          (vm) => [vm.store.selected_call_status],
           async (val)  => {
             //nije najbolja praksa i dodan timeout da bude vise cool loader
-            this.cards = await Orders.fetchOrders(this.store.searchText, this.store.selected_order_status);
-            
+            this.cards = await Orders.fetchCalls(this.store.searchText, this.store.selected_call_status);
+
             //ugasi ga kad se carsi ucitaju ili kad ucitavanje traje predugo (3 sekunde)
             if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
             if (true)  setTimeout(() => { this.loaded=true}, 4000)
@@ -75,10 +81,14 @@
      },
   
       methods: {
-          gotoDetails(card) {
-              this.store.searchText = ''
+          async updateCard() {
+              if(this.currCard.status === 'new') this.currCard.status = 'finished';
+              else this.currCard.status = 'new'; 
 
-              this.$router.push({ path: `/orders/${card._id}` });
+              this.currCard.updatedAt = Date.now();
+
+              await Orders.updateCall(this.currCard);
+              this.$router.go();
           },
   
   
@@ -87,7 +97,7 @@
       watch: {
         //deprecated or not?
         'store.searchText': _.debounce(async function(val) {
-            this.cards = await Orders.fetchOrders(val, this.store.selected_order_status);
+            this.cards = await Orders.fetchCalls(val, this.store.selected_call_status);
         }, 500),
   
     },
