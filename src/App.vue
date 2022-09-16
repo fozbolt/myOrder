@@ -5,7 +5,7 @@
     <div v-else-if="(auth.authenticated || this.$route.path ==='/login') && loaded===true" class="page-container">
       <div class="content-wrap">
         <Navbar @focusout="handleFocusOut" tabindex="0"/>
-  
+        
         <router-view v-if="store.userType === 'customer'" v-slot="{ Component, route }"> 
             <transition :name="transitionName" class="transition" mode="out-in">                 
                 <component :is="Component" :key="route.fullPath"></component>
@@ -98,7 +98,6 @@ export default {
           let my_proxy = await Products.getProductTypes()
           let destructuredProxy= {...my_proxy.type}
           if (this.store.productTypes.length === 0) this.store.productTypes.push(destructuredProxy)
-          console.log(this.store.productTypes)
       },
 
   mounted(){

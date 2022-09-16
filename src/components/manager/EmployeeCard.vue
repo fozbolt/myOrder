@@ -61,6 +61,7 @@ export default {
 #cardHeader{
     //because of intererance
     color:black;
+    font-weight: 400;
 }
 
 

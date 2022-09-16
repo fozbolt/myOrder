@@ -37,6 +37,7 @@
   import store from '@/store.js'
   import { Orders } from '@/services';
   import _ from 'lodash';
+
   
   export default {
     name: 'CurrentTabOrders',
@@ -55,23 +56,28 @@
      async created() {
 
           this.$watch(
-          (vm) => [vm.store.selected_order_status],
-          async (val)  => {
-            //nije najbolja praksa i dodan timeout da bude vise cool loader
+            (vm) => [vm.store.selected_order_status],
+            async (val)  => {
+              this.cards = await Orders.fetchOrders(this.store.searchText, this.store.selected_order_status);
+              
+              //loader turns off after cards are fetched or after 3 seconds of unsuccessful fetching
+              if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
+              if (true)  setTimeout(() => { this.loaded=true}, 4000)
+              
+              this.store.searchText = ''
+          
+            },
+            {
+              immediate: true, //immediate set to true means we watch the initial value of the reactive properties.
+              deep: true, //deep set to true means we watch for changes of properties in all levels of an object.
+            }
+        );
+        
+          //checks for new orders every 30 seconds
+          setInterval(async() =>{
             this.cards = await Orders.fetchOrders(this.store.searchText, this.store.selected_order_status);
             
-            //ugasi ga kad se carsi ucitaju ili kad ucitavanje traje predugo (3 sekunde)
-            if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
-            if (true)  setTimeout(() => { this.loaded=true}, 4000)
-            
-            this.store.searchText = ''
-        
-          },
-          {
-            immediate: true, //immediate set to true means we watch the initial value of the reactive properties.
-            deep: true, //deep set to true means we watch for changes of properties in all levels of an object.
-          }
-        );
+          },30000)
      },
   
       methods: {

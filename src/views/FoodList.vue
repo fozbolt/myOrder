@@ -1,7 +1,7 @@
 
 <template>
     <div>
-      <div id="food-list-content">
+      <div id="food-list-content" ref="foodListContent">
             <div id="search-field">
               <input 
                     v-model="store.searchText" 
@@ -35,7 +35,7 @@
                   </button>
                 </div>
 
-                <CurrentTab/>   
+                <CurrentTab ref="currTab"/>   
                 <FloatingMenu></FloatingMenu>
             </div>
           
@@ -65,11 +65,8 @@ export default {
             store,
         }
     },
+    
 
-    beforeMount(){
-      console.log('aaav')
-      console.log(this.store)
-    },
     methods:{
       selectType (event) {
         let currentType = this.store.type;
@@ -164,8 +161,19 @@ export default {
     },
 
     async mounted(){
-       document.getElementById(this.store.category).style.color="#0078D4";
-       document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
+      //hardcoded await for fetching cards so we can ge row height
+      if (window.innerWidth < 1199){
+        try{
+          setTimeout(()=>{
+            //this overrides #food-list-content
+            this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 250}px`
+          },3000)
+        }catch{}
+         
+      }
+    
+      document.getElementById(this.store.category).style.color="#0078D4";
+      document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
 
     },
 
@@ -322,7 +330,7 @@ export default {
 
 @media(max-width:500px){
   #food-list-content{
-  min-height: 180vh
+  min-height: 200vh
   }
 }
 

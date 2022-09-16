@@ -88,7 +88,7 @@ export default {
 .circle-notification {
   position: absolute;
   top: -15px;
-  left: 295px; 
+  right: 0px; 
   width: 40px;
   height: 40px;
   -webkit-border-radius: 25px;
@@ -111,7 +111,7 @@ export default {
   height:50vh;  
   border-radius:10px;
   margin: 0 20px;
-}
+  }
 }
 
 

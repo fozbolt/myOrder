@@ -1,10 +1,10 @@
-<template>
+<template >
   <Suspense>
-    <template #default>
-      <div class="dummyDivNeededForSuspenseToWork"> <!--https://qdmana.com/2022/03/202203271244076861.html-->
+    <template #default >
+      <div> <!--https://qdmana.com/2022/03/202203271244076861.html-->
          <HorizontalScroller/>
         <div class="tab-content p-3" id="myTabContent">
-          <div class="row">   
+          <div class="row" ref="row">   
               <div v-if="loaded===false" class="loader"></div>
               <Card v-else  @click="gotoDetails(card)" :key="card.id" v-for="card in cards" :info="card" />   <!-- vrijednost varijable se prenosi u props info komponente card, dakle u info stavljamo da želimo proslijediti informaciju card, : uputa da vue ne uzima varijabblu kao običan string nego da pogleda unutra što se nalazi i to preda childu-->
               <span v-if="store.searchText!== '' && !cards.length">No results found!</span>
@@ -16,7 +16,7 @@
     
     <!--Skeleton loader - unfinished-->
     <template #fallback>
-      <div class="dummyDivNeededForSuspenseToWork">
+      <div>
         <!-- <HorizontalScroller/> -->
        {{'Loading'}}
        Loading..
@@ -58,8 +58,8 @@ export default {
         async (val)  => {
           //nije najbolja praksa i dodan timeout da bude vise cool loader
           this.cards = await Products.fetchProducts();
-
-          //ugasi ga kad se carsi ucitaju ili kad ucitavanje traje predugo (3 sekunde)
+       
+          //ugasi ga kad se cardsi ucitaju ili kad ucitavanje traje predugo (3 sekunde)
           if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
           if (true)  setTimeout(() => { this.loaded=true}, 3000)
 
@@ -77,7 +77,7 @@ export default {
     methods: {
         gotoDetails(card) {
             this.store.searchText = ''
-            this.$router.push({ path: `/food_list/${card.id}` });
+            this.$router.push({ path: `/food_list/${card._id}` });
         },
 
 
@@ -90,6 +90,17 @@ export default {
       }, 500),
 
   },
+  
+  mounted(){
+  
+    try{
+        //hardcoded wait for async
+        setTimeout(()=>{
+          this.store.clientHeightRow = this.$refs.row.clientHeight
+        },2000)
+    }catch{}
+    
+  }
 
   
 

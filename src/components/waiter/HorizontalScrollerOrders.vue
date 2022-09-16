@@ -43,7 +43,8 @@ export default {
 
      methods:{
         selectValue (event) {
-            this.store.selected_order_status = event.target.innerHTML;
+            //otherwise it consumes nearby elemens - resolve later
+            this.store.selected_order_status = event.target.textContent
         },
        
        getDataAttr(index, subcategory) {
@@ -75,7 +76,7 @@ export default {
  
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .container{
   padding-left: 0px;
@@ -85,6 +86,7 @@ export default {
 //izvor horizontal navbara: https://bootsnipp.com/snippets/bpP0r
 .nav-tabs {
   display: inline-flex;
+  justify-content:left ;
   width: 100%;
   z-index: 0;
   overflow-x: auto;
@@ -193,13 +195,18 @@ export default {
 }
 
 
+@media (max-width:600px){
+  ul > li:first-of-type{
+    margin-left:0vw;
+  }
+}
 
 
 @media (min-width:767px){
  .nav-tabs{
   width:600px;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
 
 
  }

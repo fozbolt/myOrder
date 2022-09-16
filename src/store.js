@@ -13,6 +13,7 @@ export default {
     productTypes: [],  
     isFood : true,
     isDrink: false,
+    clientHeightRow: undefined,
     
     //order data
     feedbackLeft: false,

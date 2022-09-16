@@ -64,7 +64,7 @@ export default {
 
       getColor(){
         //a little bit hard coded for now
-        if (this.$route.path === '/'  && this.store.userType === 'waiter') return '#dbdbdb'
+        if (this.$route.path === '/'  && this.store.userType === 'waiter') return '#e9ecef'
         else if (this.$route.path === '/' && this.store.userType !== 'manager')  return ''
         else if (this.store.userType === 'manager') return '#e9ecef'
         else return 'white'

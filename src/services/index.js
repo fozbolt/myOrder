@@ -68,7 +68,9 @@ let Auth = {
     logout() {
         localStorage.removeItem('orderID');
         localStorage.removeItem('user');
+        localStorage.removeItem('cart');
         $router.go(); //this should be enough
+        
         //this.$router.push({ path: `/login` });
     },
     isAuthenticated(){
@@ -275,7 +277,19 @@ let Products = {
             price: doc.price,
             subCategory: doc.subCategory,
             category: doc.category,
-            type: doc.type
+            type: doc.type,
+            cookingTime: doc.cookingTime,
+            description: doc.description,
+            ingredients: doc.ingredients,
+            url: doc.url,
+            energy_value: doc.energy_value,
+            carbohydrates: doc.carbohydrates,
+            protein: doc.protein,
+            fat: doc.fat,
+            vitamin_a: doc.vitamin_a,
+            vitamin_c: doc.vitamin_c,
+            calcium: doc.calcium,
+            zinc: doc.zinc
             //posted_at: Number(doc.postedAt),
             
         };

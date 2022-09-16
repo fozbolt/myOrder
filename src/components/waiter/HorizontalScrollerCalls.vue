@@ -87,8 +87,8 @@ export default {
   // --bs-nav-tabs-border-radius: 0.375rem;
   // --bs-nav-tabs-link-hover-border-color: #e9ecef #e9ecef #dee2e6;
   --bs-nav-tabs-link-active-color: #0078D4;
-  //--bs-nav-tabs-link-active-bg: #fff;
-  //--bs-nav-tabs-link-active-border-color: #dee2e6 #dee2e6 #fff;
+  --bs-nav-tabs-link-active-border-color: #dee2e6 #dee2e6 #fff;
+  --bs-nav-tabs-link-active-bg: none !important;
   //border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
 }
 .nav-tabs>li.active>a,
@@ -166,6 +166,14 @@ export default {
     justify-content: center;
 }
 
+.nav-link{
+  font-size: 20px;
+}
+
+
+.dummyDivNeededForSuspenseToWork {
+  margin-top: 20px;
+}
 
 
 

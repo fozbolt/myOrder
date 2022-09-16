@@ -24,7 +24,8 @@
                     @input-file="inputFile"
                     ref="upload"
                     >
-                    Upload avatar
+                    <span v-if="$route.path === '/products'">Upload photo</span>
+                    <span v-else>Upload avatar</span>
                 </file-upload>
             </div>
         </div>

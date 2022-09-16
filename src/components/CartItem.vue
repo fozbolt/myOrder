@@ -42,39 +42,60 @@
 
 <script>
 
-
 export default {
   name: 'CartItem',
   props: ['info'],  //definiramo da card može primiti info odnosno propse
+ 
 
   components:{},
   data() { 
         return {
-    
+            currIndex : undefined
         }
   },  
 
   methods:{
 
     increment() {
-      this.info.quantity++;
-      console.log(this.info)
+        this.info.quantity++;
+        console.log('te ova kartica: ', this.info)
+        console.log('kak kak index wut:',this.info.index)
     
     },
     decrement() {
       this.info.quantity--;
-      if (this.info.quantity < 1)  this.toggleModal();
+      if (this.info.quantity < 1)  this.toggleModal('');
+    },
+
+    getIndex(){
+        return this.info.index;
     },
 
      toggleModal(value = null){
-            if (value === 'returnItem') this.increment();
-            else if (value === 'removeItem') this.$emit('delete-item')
-
+            //modal warning for deleting item from cart - when we have multiple items with same id in cart, it opens with right index and closes with wrong
             //refactor and use refs - here we close through js, else replace add data-dismiss with data-bs-dismiss (Boostrap 5)
             $("#staticBackdrop").modal("toggle");
+
+            if (!value){
+                console.log(this.info)
+                this.currIndex = this.info.index
+                console.log(this.currIndex)
+            }
+            else{
+                console.log(this.currIndex)
+                console.log(this.info)
+                if (value === 'returnItem') this.increment();
+                else if (value === 'removeItem') this.$emit('delete-item', this.currIndex)
+            }
+
+            //option without modal
+            // this.$emit('delete-item', this.currIndex)
+            
         }
  
     },
+
+
 
 }
  

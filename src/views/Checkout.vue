@@ -16,11 +16,12 @@
                 <span v-else-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
             
 
-                <CartItem v-else :key="card.id" 
-                    v-for="(card, index ) in cartItems" :info="card" 
+                <CartItem v-else :key="index" 
+                    v-for="(card, index ) in cartItems" :info="addIndexAndSend(card, index)" 
                     v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
-                    v-on:delete-item="deleteItem(index)"
+                    @delete-item="deleteItem"
                 /> 
+           
             </div>
             <div class="row" id="calculationDiv">
                 <div class="col">
@@ -89,25 +90,25 @@ export default {
             orderExists: false,
             spinnerOn: false,
             orderCount: 0,
-            store
+            store,
         
         };
     },
     async mounted() {
+
         this.cartItems = this.cartItems || [];
         this.cartItems = JSON.parse(localStorage.getItem('cart'));
-
+        
         if(Boolean( JSON.parse(localStorage.getItem('orderID') ))){
             this.orderExists = true;
         }
+           
         
         setTimeout(() => {
-            if(store.type.toLowerCase()==='food'){
-                this.toggleCollapsible()   
-            } 
+                this.toggleCollapsible();
         }, 1000)
 
-        this.orderCount = await Orders.fetchOrders();
+        //this.orderCount = await Orders.fetchOrders();
     },
 
     computed: {
@@ -123,15 +124,17 @@ export default {
     methods:{
         toggleCollapsible(){
             let button = this.$refs['collapsibleNotes']
-            //button.classList.toggle('active')
             
-            let content = button.nextElementSibling;
-            //console.log(content)
-            if (content.style.maxHeight){
-                content.style.maxHeight = null;
+            try{
+                let content = button.nextElementSibling;
+       
+                if (content.style.maxHeight){
+                    content.style.maxHeight = null;
                 } else {
-                content.style.maxHeight = content.scrollHeight + "px";
+                    content.style.maxHeight = content.scrollHeight + "px";
                 } 
+            }catch(err){}
+           
         },
 
         toggleSpinner(){
@@ -172,8 +175,18 @@ export default {
         },
 
         deleteItem (index) {
-            //promijeniti u id
+            //cannot set it by id because of case when we have multiple cart items with same id
             this.cartItems.splice(index, 1);
+        
+            //quickfix for case when we delete one of multiple items with same id and quantity of current goes to 0 but item isn't removed
+            //this.cart.items = this.cart.items.filter(item => item.quantity !== 0)
+        },
+
+
+        addIndexAndSend(card, index){
+            //ne zaboraviti obrisati ga onda
+            card.index = index;
+            return card
         },
 
         async getInfo(id){

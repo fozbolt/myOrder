@@ -348,7 +348,7 @@ a[aria-current="#specialOffers"]::before {
 /*-------------------------------*/
 
 .hamburger {
-  position: fixed;
+  position: absolute;
   top: 20px;  
   z-index: 999;
   display: block;

@@ -117,7 +117,7 @@ export default {
  
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .container{
   padding-left: 0px;
@@ -127,6 +127,7 @@ export default {
 //izvor horizontal navbara: https://bootsnipp.com/snippets/bpP0r
 .nav-tabs {
   display: inline-flex;
+  justify-content:left;
   width: 100%;
   z-index: 0;
   overflow-x: auto;
@@ -150,6 +151,10 @@ export default {
 .nav-tabs>li.active>a:focus,
 .nav-tabs>li.active>a:hover {
   border-width: 0;
+}
+
+.nav-link{
+  font-size:16px;
 }
 
 
@@ -221,7 +226,11 @@ export default {
 }
 
 
-
+@media (max-width:600px){
+  ul > li:first-of-type{
+    margin-left:0vw;
+  }
+}
 
 @media (min-width:767px){
  .nav-tabs{

@@ -64,6 +64,10 @@
                                     <textarea v-model="description" class="form-control floatingTextarea" placeholder="Description"></textarea>
                                     <label for="floatingTextarea">Description</label>
                                 </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="floatingInput" v-model="discount" placeholder="Discount">
+                                    <label for="floatingInput">Discount (with % ), optional</label>
+                                </div>
                                 <div class="nutritionDiv">
                                     <h3>Nutrition facts</h3>
                                     <table>
@@ -206,6 +210,7 @@ export default {
             cookingTime: '',
             description: '',
             ingredients: '',
+            discount: '',
 
             //nutrition data
             energy_value: '',
@@ -271,7 +276,8 @@ export default {
             this.subCategory= card.subCategory,
             this.cookingTime= card.cookingTime,
             this.description= card.description,
-            this.ingredients = card.ingredients
+            this.ingredients = card.ingredients,
+            this.discount = card.discount,
 
             //nutrition data
             this.energy_value= card.energy_value,
@@ -300,7 +306,8 @@ export default {
             this.subCategory= '',
             this.cookingTime= '',
             this.description= '',
-            this.ingredients= ''
+            this.ingredients= '',
+            this.discount = '',
             
             //nutrition data
             this.energy_value=  '',
@@ -338,7 +345,7 @@ export default {
                 this.productUrl = await result.ref.getDownloadURL();
             }
             else if (this.currCard) this.productUrl = this.currCard.url
-            else this.productUrl = "https://source.unsplash.com/random/400x400/?food"
+            else this.currType.toLowerCase() === 'food'? this.productUrl = "https://source.unsplash.com/random/400x400/?food" : this.productUrl = "https://source.unsplash.com/random/400x400/?drink"
 
             //mongo storage when we get firabase storage url
             let product = {
@@ -351,6 +358,7 @@ export default {
                 cookingTime: this.cookingTime,
                 description: this.description,
                 ingredients: this.ingredients,
+                discount: this.discount,
                 createdBy: this.currCard?.createdBy || Auth.getUser().username,
                 createdAt: this.currCard?.createdAt || Date.now(),
                 updatedAt: this.currCard?.updatedAt || Date.now(),
@@ -515,7 +523,7 @@ export default {
 }
 
 .container{
-    margin-top:15px;
+    margin: 15px 0 0 0;
     width:100%;
 }
 

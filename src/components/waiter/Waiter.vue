@@ -8,7 +8,7 @@
     <div class="three"></div>
     a
   </div> -->
-  
+
   <div class="container">
     <div class="row">
           <WaiterMenu v-for="card in cards" :key="card.name" :info="card"/>
@@ -59,11 +59,14 @@ export default {
 <style lang="scss" scoped>
 .row{
   width:100%;
-  height: 50%;
+  height: 100%;
   margin:auto;
 }
 
 
+
+
+/* diagonal menu design */
 
 // .parent {
 //   position: relative;

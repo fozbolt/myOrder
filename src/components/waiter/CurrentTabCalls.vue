@@ -78,6 +78,12 @@
             deep: true, //deep set to true means we watch for changes of properties in all levels of an object.
           }
         );
+
+
+        setInterval(async() =>{
+            this.cards = await Orders.fetchCalls(val, this.store.selected_call_status);
+            
+          },30000)
      },
   
       methods: {

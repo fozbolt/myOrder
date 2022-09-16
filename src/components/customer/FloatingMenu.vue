@@ -96,7 +96,7 @@ export default {
         let button = this.$refs['basicToast']
         new bootstrap.Toast(button).show();
       }else{
-        console.log('Errir accured during call sending - next iteration will have toast notification for it')
+        console.log('Error accured during call sending - next iteration will have toast notification for it')
       }
 
        

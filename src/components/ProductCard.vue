@@ -1,7 +1,7 @@
 <template >
-    <!--ovo je bilo stavljeno zbog bootsrap responsivensaa odnosno classa xl lg md itd, a sprievaalo je pogled, pogledati da li micanje ovog krisi responsiveness na drugim stranicaima odnosno gdje kod se koristi ova komponenta-->
+    <!--ovo je bilo stavljeno zbog bootstrap responsivensaa odnosno classa xl lg md itd, a sprievaalo je pogled, pogledati da li micanje ovog krisi responsiveness na drugim stranicaima odnosno gdje kod se koristi ova komponenta-->
     <!-- <div v-if="this.$route.path==='/products'" class="col-xl-3 col-lg-3 col-md-3 col-6" id="column"></div> -->
-    <div v-if="this.$route.path==='/products' || this.$route.path==='/orders'" class="col-xl-3 col-lg-3 col-md-3 col-6" id="column">
+    <div  class="col-xl-3 col-lg-3 col-md-3 col-6" id="column">
         <div class="card" >
             <span v-if="info.discount" class="circle-left">
                 <b>{{info.discount}}</b> 
@@ -14,7 +14,7 @@
 
             <div class="card-body p-0">
                 <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
-                <h5 class="card-title" id="cardHeader">{{info.name}}</h5>
+                <h5 class="card-title" id="cardHeader" :style="{fontWeight: $route.path === '/products' ? 400 : 200}">{{info.name}}</h5>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
 
 export default {
   name: 'Card',
-  props: ['info'],  //definiramo da card može primiti info odnosno propse
+  props: ['info'],  
 
   data() { 
         return {
@@ -77,7 +77,7 @@ export default {
 .circle-right {
   position: absolute;
   top: -15px;
-  left: 110px; //jer right:-12px ili -15px stvaraju bug s boostrap responsivenes
+  right: 0px; //jer right:-12px ili -15px stvaraju bug s boostrap responsivenes
   width: 50px;
   height: 50px;
   -webkit-border-radius: 25px;

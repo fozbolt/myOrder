@@ -1,7 +1,7 @@
 
 <template>
     <div>
-      <div id="food-list-content">
+      <div id="food-list-content" ref="foodListContent">
             <div id="search-field">
               <input 
                     v-model="store.searchText" 
@@ -42,14 +42,17 @@ export default {
         }
     },
 
-    methods:{
 
+
+    mounted(){
+      //hardcoded await for fetching cards so we can ge row height
+      if (window.innerWidth < 1199){
+          setTimeout(()=>{
+            //this overrides #food-list-content
+            this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 250}px`
+        },3000)
+      }
     
-    },
-
-
-    async mounted(){
-
     },
 
  

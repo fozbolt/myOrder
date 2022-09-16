@@ -35,9 +35,10 @@ export default {
     convertTime(){
         let date = new Date(this.info.orderInfo.date);
        
-        return (
-            date.getHours()+ ":"+ date.getMinutes()
-        )
+        if (date.getMinutes() < 10 ) date = date.getHours()+ ":0"+ date.getMinutes()
+        else  date = date.getHours()+ ":"+ date.getMinutes()
+
+        return  date
     }
   }
 

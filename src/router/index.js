@@ -150,7 +150,6 @@ router.beforeEach((to, from, next) => {
   }
   //ako jer korisnik ulogiran ne dopusti na /login i /register
   if (user && !authRequired) {
-    console.log('tu')
     return next('/');
   }
 

@@ -73,7 +73,8 @@ export default {
   },
 
   async mounted(){
-    this.cards = await Products.fetchProducts('', this.productInfo.category);
+    this.cards = await Products.fetchProducts('', this.productInfo.type, this.productInfo.category);
+  
 
     this.filteredCards = this.cards.filter(item =>  item.id !== this.$route.params.id )
   }
