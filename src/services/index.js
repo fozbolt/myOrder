@@ -157,7 +157,7 @@ let Orders = {
         
     },
 
-    async getAll(searchTerm, status) {
+    async getAll(searchTerm, productType, status) {
         let options = {};
         if (searchTerm) {
             options.params = {
@@ -165,7 +165,7 @@ let Orders = {
             };
         }
         
-        let response = await Api.get(`/orders/${status}`, options)
+        let response = await Api.get(`/orders/${productType}/${status}`, options)
 
         if(response){
             response.data.id = response.data._id
@@ -177,9 +177,9 @@ let Orders = {
 
 
     //status_type- optional parameter used for fetching similar meals and drinks + manager filter + orders filter
-    async fetchOrders(term, status_type = '') { 
+    async fetchOrders(term, productType, status_type = '') { 
         term = term || store.searchText; 
-        let result = await Orders.getAll(term, status_type )
+        let result = await Orders.getAll(term, productType, status_type )
 
         //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
         return  _.sortBy( result, 'orderInfo.date' ).reverse();

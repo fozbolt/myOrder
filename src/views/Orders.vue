@@ -14,6 +14,14 @@
               </svg>
             </div>
             <div id="filter" class="funkyFont">
+                <div id="type" >
+                  <button id="food" @click="selectType($event)" v-bind:class="{ foodActive: store.isFood }" class="square">
+                    <h5 class="type-item">Food</h5>
+                  </button>
+                  <button id="drink" @click="selectType($event)" v-bind:class="{ drinkActive: store.isDrink }" class="square" >
+                    <h5 class="type-item">Drink</h5>
+                  </button>
+                </div>
                 <CurrentTabOrders/>
             </div>
           
@@ -52,11 +60,50 @@ export default {
             this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 250}px`
         },3000)
       }
-    
+
+      document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
     },
 
  
-   
+    methods:{
+      selectType (event) {
+        let currentType = this.store.type;
+        let elementText = event.target.textContent
+
+        //toggle active color
+        document.getElementById(this.store.type.toLowerCase()).style.color="black";
+        this.store.type = elementText[0].toUpperCase() + elementText.slice(1).toLowerCase();
+        document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
+  
+        //toggle active type class
+        if (currentType !== this.store.type){
+          this.store.isFood = !this.store.isFood;
+          this.store.isDrink = !this.store.isDrink
+        }
+
+        
+      },
+    },
+
+
+    // watch: {
+    //    'store.type': {
+    //      handler: async function() {
+          
+    //        this.store.selected_order_status = 'ordered|ready to take over';
+    //    }
+    //   },
+    // },
+
+
+
+    beforeUnmount(){
+      this.store.type='Food'
+      this.store.category = 'MainCourse'
+      this.store.selectedSubCategory = 'All'
+      this.store.isFood = true
+      this.store.isDrink= false
+    },
 
 
 

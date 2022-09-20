@@ -1,8 +1,8 @@
 <template>
     <div class="card" >
         <span v-if="info.discount" class="circle-left">
-            <b>{{info.discount}}</b> 
-            <small>OFF</small>
+                <b>{{info.discount}}</b> 
+                <small>OFF</small>
         </span>
         <span class="circle-right">
             {{info.price}}$

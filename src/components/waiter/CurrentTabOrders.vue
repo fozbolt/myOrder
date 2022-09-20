@@ -58,11 +58,11 @@
           this.$watch(
             (vm) => [vm.store.selected_order_status],
             async (val)  => {
-              this.cards = await Orders.fetchOrders(this.store.searchText, this.store.selected_order_status);
+              this.getOrders()
               
-              //loader turns off after cards are fetched or after 3 seconds of unsuccessful fetching
-              if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
-              if (true)  setTimeout(() => { this.loaded=true}, 4000)
+              //loader turns off after cards are fetched or after 2 seconds of unsuccessful fetching
+              if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 2000)
+              else this.loaded=true
               
               this.store.searchText = ''
           
@@ -75,7 +75,7 @@
         
           //checks for new orders every 30 seconds
           setInterval(async() =>{
-            this.cards = await Orders.fetchOrders(this.store.searchText, this.store.selected_order_status);
+            this.getOrders()
             
           },30000)
      },
@@ -86,15 +86,41 @@
 
               this.$router.push({ path: `/orders/${card._id}` });
           },
+
+          filterOrders(orders){
+            // refactor this later cause now it resembles for loop too much (even though filter is a for loop)
+            let filteredOrders = orders.filter(order => {
+                  let found = false
+                  order = order.items.filter(item => {
+                      if( item.type.toLowerCase() === this.store.type.toLowerCase() && found === false ){
+                        found = true
+                      }
+                  });
+
+                  if (found) return order;
+              });
+
+            return filteredOrders
+          },
+
+          async getOrders(){
+            let orders = await Orders.fetchOrders(this.store.searchText, this.store.type, this.store.selected_order_status);
+            this.cards = this.filterOrders(orders)
+          }
   
   
     },
   
       watch: {
-        //deprecated or not?
         'store.searchText': _.debounce(async function(val) {
-            this.cards = await Orders.fetchOrders(val, this.store.selected_order_status);
+          this.getOrders()
         }, 500),
+
+        'store.type': {
+        handler: async function(newValue) {
+          this.getOrders()
+        }
+      },
   
     },
 

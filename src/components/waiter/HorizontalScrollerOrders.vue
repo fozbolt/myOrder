@@ -13,7 +13,7 @@
                       role="tab"   data-bs-toggle="tab" aria-controls="public" aria-expanded="true"
                       >
                       {{status}}
-                      <span v-if="takeover && status==='ready|waiting to be served' " id="circle"></span>
+                      <span v-if="takeover && status==='ready|waiting to be served' && chosenType === store.type" id="circle"></span>
                     </a>
                     
                 </li>
@@ -25,19 +25,18 @@
 
 <script>
 
-import _ from 'lodash';
 import store from '@/store.js'
 import { Orders } from '@/services';
 
 export default {
-    name: 'HorizontalScrollerOrders',
-    props: ['info'],  
+    name: 'HorizontalScrollerOrders', 
 
     data() { 
         return {
             store,
             orderStatusTypes: [],
-            takeover: undefined
+            takeover: undefined,
+            chosenType: undefined
         }
     },
 
@@ -47,13 +46,27 @@ export default {
             this.store.selected_order_status = event.target.textContent
         },
        
-       getDataAttr(index, subcategory) {
+       getDataAttr(index) {
           return {
             'data-bs-target': '#tab' + index,
-            'id': subcategory,
-            //'ref': subcategory
           }
       },
+
+
+      toggleActiveSubCategory(){
+        setTimeout(() => {
+            document.querySelectorAll('.pointer').forEach(function(categoryBtn) {
+      
+                      if (categoryBtn.textContent === store.selected_order_status || categoryBtn.textContent.slice(0, -1) === store.selected_order_status){
+                          categoryBtn.style.color = '#0078D4'
+                      }  
+                      else{
+                          categoryBtn.style.color = 'black'
+                      }
+                  });
+
+        }, 100)
+      }
 
        
     },
@@ -64,7 +77,28 @@ export default {
     },
 
     async created(){
-        this.takeover = await Orders.fetchOrders(this.store.searchText, 'ready|waiting to be served');
+        this.takeover = await Orders.fetchOrders(this.store.searchText, this.store.type, 'ready|waiting to be served');
+        
+        if (this.takeover[0].orderInfo.foodStatus) this.chosenType = 'Food'
+        else if (this.takeover[0].orderInfo.drinkStatus) this.chosenType = 'Drink'
+    },
+
+    watch:{
+        'store.type': {
+          handler: async function(newValue) {
+            this.store.selected_order_status = 'ordered|ready to take over'
+            this.toggleActiveSubCategory(); 
+
+           
+      }
+     },
+
+     'store.selected_order_status': {
+          handler: async function(newValue) {
+          
+            this.toggleActiveSubCategory(); 
+      }
+     },
     }
 
    
@@ -99,6 +133,8 @@ export default {
   font-size:20px;
   background-color: none; // bila je ova i ona omogucava white overflow koji ce mi trebati background-color: var(--bs-nav-tabs-link-active-bg);
   --bs-nav-tabs-border-width: 0px;
+  margin-bottom: 1px;
+  margin-top: 1px;
   //--bs-nav-tabs-border-color: #dee2e6;
   // --bs-nav-tabs-border-radius: 0.375rem;
   // --bs-nav-tabs-link-hover-border-color: #e9ecef #e9ecef #dee2e6;

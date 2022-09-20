@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" id="scrollerContent">
         <nav class="nav nav-tabs list mt-2" id="myTab" role="tablist">
             <ul  
               class="nav nav-tabs" 
@@ -253,6 +253,10 @@ export default {
 
   .list{
     width:70%;
+  }
+  
+  #scrollerContent{
+    margin-top:10px;
   }
 }
 </style>

@@ -63,12 +63,11 @@
           this.$watch(
           (vm) => [vm.store.selected_call_status],
           async (val)  => {
-            //nije najbolja praksa i dodan timeout da bude vise cool loader
             this.cards = await Orders.fetchCalls(this.store.searchText, this.store.selected_call_status);
 
-            //ugasi ga kad se carsi ucitaju ili kad ucitavanje traje predugo (3 sekunde)
-            if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
-            if (true)  setTimeout(() => { this.loaded=true}, 4000)
+            //loader turns off after cards are fetched or after 2 seconds of unsuccessful fetching
+            if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 2000)
+            else this.loaded=true
             
             this.store.searchText = ''
         
@@ -81,7 +80,7 @@
 
 
         setInterval(async() =>{
-            this.cards = await Orders.fetchCalls(val, this.store.selected_call_status);
+            this.cards = await Orders.fetchCalls(this.store.searchText, this.store.selected_call_status);
             
           },30000)
      },

@@ -11,7 +11,8 @@
                 <component :is="Component" :key="route.fullPath"></component>
             </transition>
         </router-view>
-        <router-view v-else />
+        
+        <router-view v-else :key="$route.fullPath" />
         
       </div>
         <!-- <Footer class="footer"/> -->

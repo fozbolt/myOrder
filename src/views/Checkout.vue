@@ -144,6 +144,14 @@ export default {
             },5000)
         },
 
+        orderHasType(type){
+            let arr = this.cartItems.filter(item => item.type.toLowerCase() === type.toLowerCase())
+            
+            if (arr.length === 0) return false
+            else return true
+        },
+
+
         async placeOrder(){
             this.toggleSpinner();
 
@@ -158,6 +166,12 @@ export default {
                     orderStatus: 'ordered|ready to take over',
                     //orderNumber: this.orderCount.length  //dummy orderNumber - now we get it through trigger in db
                 }
+
+
+                //inspect for food and drink
+                if(this.orderHasType('Food'))   info.foodStatus = 'ordered|ready to take over'
+                if (this.orderHasType('Drink')) info.drinkStatus = 'ordered|ready to take over'
+
 
                 let bill = {
                     items: this.cartItems, orderInfo: info 

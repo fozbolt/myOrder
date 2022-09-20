@@ -21,11 +21,11 @@
             </div> -->
             <div class="row" id="headerRow">
             <h5><b>Order details</b></h5>
-            <small >Order status:  {{ orderStatus}}</small>
-            <small >
-                    Table: 
-                    <input type="text" v-model="table"  id="tableInput"/>
-            </small>
+                <small >Order status:  {{ orderStatus}}</small>
+                <small >
+                        Table: 
+                        <input type="text" v-model="table"  id="tableInput"/>
+                </small>
             </div>
 
             <button type="button" @click="onToggle" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" id="collapseButton">
@@ -243,6 +243,15 @@ export default {
             this.seeMore = !this.seeMore;
         },
 
+
+        orderHasType(type){
+            let arr = this.cartItems.filter(item => item.type.toLowerCase() === type.toLowerCase())
+
+            return arr //if empty then false
+        },
+
+
+
         async update(){
             this.cartItems = this.cartItems || [];
 
@@ -256,6 +265,13 @@ export default {
                     orderStatus: 'ordered/ready to take over',
                     orderId: this.id
                 }
+
+
+                //inspect for food and drink
+                if(this.orderHasType('Food'))   info.foodStatus = 'ordered|ready to take over'
+                if (this.orderHasType('Drink')) info.drinkStatus = 'ordered|ready to take over'
+
+
 
                 let bill = {
                     items: this.cartItems, orderInfo: info 
@@ -553,6 +569,10 @@ export default {
     width:70px;
 }
 
+
+#headerRow > *:last-child{
+    margin-top:2px;
+}
 
 
 /* content responsiveness */

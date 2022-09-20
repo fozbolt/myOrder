@@ -2,7 +2,7 @@
   <Suspense>
     <template #default >
       <div> <!--https://qdmana.com/2022/03/202203271244076861.html-->
-         <HorizontalScroller/>
+        <HorizontalScroller/>
         <div class="tab-content p-3" id="myTabContent">
           <div class="row" ref="row">   
               <div v-if="loaded===false" class="loader"></div>
@@ -56,14 +56,13 @@ export default {
         this.$watch(
         (vm) => [vm.store.type, vm.store.category, vm.store.selectedSubCategory],
         async (val)  => {
-          //nije najbolja praksa i dodan timeout da bude vise cool loader
           this.cards = await Products.fetchProducts();
        
-          //ugasi ga kad se cardsi ucitaju ili kad ucitavanje traje predugo (3 sekunde)
-          if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
-          if (true)  setTimeout(() => { this.loaded=true}, 3000)
+          //loader turns off after cards are fetched or after 2 seconds of unsuccessful fetching
+          if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 2000)
+              else this.loaded=true
 
-        //da li treba ovo?
+
           this.store.searchText = ''
           
         },
@@ -97,7 +96,7 @@ export default {
         //hardcoded wait for async
         setTimeout(()=>{
           this.store.clientHeightRow = this.$refs.row.clientHeight
-        },2000)
+        },3000)
     }catch{}
     
   }

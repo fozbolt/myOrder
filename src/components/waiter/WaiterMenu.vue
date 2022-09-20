@@ -32,12 +32,13 @@ export default {
     async mounted(){
         //for notifications
         if (this.info.name === 'Calls'){
-          let dataArr =  await Orders.fetchCalls(this.store.searchText, this.store.selected_call_status);
+          let dataArr =  await Orders.fetchCalls(this.store.searchText, 'new');
           this.number_of_notifications = dataArr.length
         }
         else if (this.info.name === 'Orders'){                                 
-          let dataArr =  await Orders.fetchOrders(this.store.searchText, 'ready|waiting to be served');
-          this.number_of_notifications = dataArr.length
+          let dataArr1 =  await Orders.fetchOrders(this.store.searchText, 'Food', 'ready|waiting to be served');
+          let dataArr2 = await Orders.fetchOrders(this.store.searchText, 'Drink', 'ready|waiting to be served');
+          this.number_of_notifications = dataArr1.length + dataArr2.length
         }
         
         

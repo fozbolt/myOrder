@@ -167,7 +167,7 @@ export default {
           setTimeout(()=>{
             //this overrides #food-list-content
             this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 250}px`
-          },3000)
+          },4000)
         }catch{}
          
       }
@@ -181,6 +181,8 @@ export default {
       this.store.type='Food'
       this.store.category = 'MainCourse'
       this.store.selectedSubCategory = 'All'
+      this.store.isFood = true
+      this.store.isDrink= false
     },
    
 
@@ -352,5 +354,6 @@ export default {
   #type{
     margin-top: 20px;
   }
+  
 }
 </style>

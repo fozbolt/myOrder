@@ -88,6 +88,8 @@ export default {
     border-radius: 0 0 10px 10px;
     text-align: center;
     padding:0;
+    z-index: 1;
+    position: relative;
 }
 
 .card-text{

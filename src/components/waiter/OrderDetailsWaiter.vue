@@ -191,6 +191,8 @@ export default {
             orderInfo: null,
             table: undefined,
             orderStatus: undefined,
+            drinkStatus: undefined,
+            foodStatus: undefined,
             errorMessage: false,
             totalSum: 0,
             seeMore: false,
@@ -227,6 +229,14 @@ export default {
             this.seeMore = !this.seeMore;
         },
 
+        orderHasType(type){
+            let arr = this.cartItems.filter(item => item.type.toLowerCase() === type.toLowerCase())
+
+            return arr //if empty then false
+        },
+
+
+
         async update(){
             this.cartItems = this.cartItems || [];
 
@@ -240,6 +250,13 @@ export default {
                     orderStatus: 'ordered|ready to take over',
                     orderId: this.orderData.orderInfo.orderId
                 }
+
+
+                //inspect for food and drink
+                if(this.orderHasType('Food'))   info.foodStatus = 'ordered|ready to take over'
+                if (this.orderHasType('Drink')) info.drinkStatus = 'ordered|ready to take over'
+
+
 
                 let bill = {
                     items: this.cartItems, orderInfo: info 
@@ -255,7 +272,7 @@ export default {
                         this.$router.push({ path: `/placed_order` });
                     },2000)
                 }
-                else console.log('place order error - create message for this')
+                else console.log('place order error')
             
             }else{
                 this.errorMessage = 'Your cart is empty';
@@ -546,6 +563,9 @@ export default {
     width:70px;
 }
 
+#headerRow > *:last-child{
+    margin-top:2px;
+}
 
 
 /* content responsiveness */

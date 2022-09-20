@@ -18,7 +18,9 @@
         </div>
 
         <div id="imageDiv">
-            <img src="@/assets/foodInfo.jpg"/>
+            <!-- <img  :src="info.url ? info.url : '@/assets/foodInfo.jpg'" /> -->
+            <img v-if="info.url" :src="info.url" />
+            <img v-else src="@/assets/foodInfo.jpg" alt="">
         </div>
         <div id="dataDiv">
             <label>{{ info.name }}</label>
@@ -58,8 +60,6 @@ export default {
 
     increment() {
         this.info.quantity++;
-        console.log('te ova kartica: ', this.info)
-        console.log('kak kak index wut:',this.info.index)
     
     },
     decrement() {
@@ -74,26 +74,31 @@ export default {
      toggleModal(value = null){
             //modal warning for deleting item from cart - when we have multiple items with same id in cart, it opens with right index and closes with wrong
             //refactor and use refs - here we close through js, else replace add data-dismiss with data-bs-dismiss (Boostrap 5)
-            $("#staticBackdrop").modal("toggle");
+            // $("#staticBackdrop").modal("toggle");
 
-            if (!value){
-                console.log(this.info)
-                this.currIndex = this.info.index
-                console.log(this.currIndex)
-            }
-            else{
-                console.log(this.currIndex)
-                console.log(this.info)
-                if (value === 'returnItem') this.increment();
-                else if (value === 'removeItem') this.$emit('delete-item', this.currIndex)
-            }
+            // if (!value){
+            //     console.log(this.info)
+            //     this.currIndex = this.info.index
+            //     console.log(this.currIndex)
+            // }
+            // else{
+            //     console.log(this.currIndex)
+            //     console.log(this.info)
+            //     if (value === 'returnItem') this.increment();
+            //     else if (value === 'removeItem') this.$emit('delete-item', this.currIndex)
+            // }
 
             //option without modal
-            // this.$emit('delete-item', this.currIndex)
+            this.$emit('delete-item', this.currIndex)
             
         }
  
     },
+
+    mounted(){
+        console.log(this.info)
+    }
+        
 
 
 
