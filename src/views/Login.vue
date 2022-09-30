@@ -22,7 +22,7 @@
                 <div class="password" onfocus="document.getElementById('password_eye').style.display='block';"
                       onblur="document.getElementById('password_eye').style.display='none';">
                     <i class="fas fa-key" id="iconPassword"></i>
-                    <input v-model="password" type="password" class="form-control"  id="hidden_password" placeholder="password..."   />
+                    <input v-model="password" type="password" class="form-control"  id="hidden_password" placeholder="password..."  autocomplete="off"  />
                     <i class="fas fa-eye" id="password_eye" v-on:click="show_password()"></i>
                     
                 </div>
@@ -89,11 +89,12 @@ export default {
       //if query exists then we know its customer - force push login
       this.qrUser = this.$route.query.username;
       this.qrPass = this.$route.query.password;
-      this.store.table += this.$route.query.table;
+      
 
       if(this.qrUser!=null && this.qrPass!=null){
           this.email = this.qrUser
           this.password = this.qrPass
+          localStorage.setItem('table', JSON.stringify(this.$route.query.table));
 
           this.login();
       }

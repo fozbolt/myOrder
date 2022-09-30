@@ -1,8 +1,9 @@
 <template>
     <div class="col-xl-4 col-lg-4 col-md-12 col-6" id="column">
-        <div id="contentWrapper" @click="this.$router.push({path: info.path})">
+        <div id="contentWrapper" @click="goTo">
             <span v-if="number_of_notifications" class="circle-notification">
-                {{number_of_notifications}}
+                <label v-if="info.name === 'Calls'">{{number_of_notifications -1}}</label> <!--quickfix-->
+                <label v-else>{{number_of_notifications}}</label>
             </span>
             <div id="headline">
                 {{info.name}}
@@ -18,7 +19,7 @@ import { Orders } from '@/services';
 import store from '@/store.js'
  
 export default {
-    name: "WaiterMenu",
+    name: "StaffMenu",
     props: ['info'],
     
     data() {
@@ -27,21 +28,43 @@ export default {
           number_of_notifications: undefined
         };
     },
-    methods: {},
+    methods: {
+      async getCount(status, type=undefined){
 
-    async mounted(){
+          if (this.info.name === 'Calls'){
+                let dataArr =  await Orders.fetchCalls(this.store.searchText, 'new');
+                return  dataArr.length
+              }
+          else{                                 
+                let dataArr =  await Orders.fetchOrders(this.store.searchText, type, status);
+                return  dataArr.length
+          } 
+      },
+
+      async initializeUserData(){
+          if (this.store.userType === 'waiter'){
+            this.number_of_notifications = await this.getCount('ready|waiting to be served', 'Food') + await this.getCount('ready|waiting to be served', 'Drink')
+          }
+          else if (this.store.userType === 'chef'){
+            this.number_of_notifications = await this.getCount('ordered|ready to take over', 'Food')
+          }
+          else if (this.store.userType === 'barman'){
+            this.number_of_notifications = await this.getCount('ordered|ready to take over', 'Drink')
+          }
+        },
+
+      goTo(){
+        this.store.selected_order_status = this.info.selected_state;
+        this.$router.push({path: this.info.path})
+      }
+
+
+    },
+
+    created(){
         //for notifications
-        if (this.info.name === 'Calls'){
-          let dataArr =  await Orders.fetchCalls(this.store.searchText, 'new');
-          this.number_of_notifications = dataArr.length
-        }
-        else if (this.info.name === 'Orders'){                                 
-          let dataArr1 =  await Orders.fetchOrders(this.store.searchText, 'Food', 'ready|waiting to be served');
-          let dataArr2 = await Orders.fetchOrders(this.store.searchText, 'Drink', 'ready|waiting to be served');
-          this.number_of_notifications = dataArr1.length + dataArr2.length
-        }
-        
-        
+        if(this.info.notificationEnabled) this.initializeUserData();
+ 
     }
 }
   

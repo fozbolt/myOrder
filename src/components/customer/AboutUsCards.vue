@@ -15,7 +15,7 @@
 
 export default {
   name: 'SimilarMealsCard',
-  props: ['info'],  //definiramo da card može primiti info odnosno propse
+  props: ['info'],
 
   data() { 
         return {
@@ -66,7 +66,7 @@ export default {
 .circle-right {
 position: absolute;
 top: -15px;
-left: 110px; //jer right:-12px ili -15px stvaraju bug s boostrap responsivenes
+left: 110px; //because right:-12px or -15px create bug with boostrap responsiveness
 width: 50px;
 height: 50px;
 -webkit-border-radius: 25px;

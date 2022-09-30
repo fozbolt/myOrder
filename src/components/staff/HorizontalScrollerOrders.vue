@@ -3,6 +3,7 @@
         <nav class="nav nav-tabs list mt-2" id="myTab" role="tablist">
             <ul  
               class="nav nav-tabs" 
+              id="tabs" 
               @click="selectValue($event)" 
               >
                 <li v-for="(status, index) in orderStatusTypes" :key="index">
@@ -13,7 +14,7 @@
                       role="tab"   data-bs-toggle="tab" aria-controls="public" aria-expanded="true"
                       >
                       {{status}}
-                      <span v-if="takeover && status==='ready|waiting to be served' && chosenType === store.type" id="circle"></span>
+                      <span v-if="takeover && status===currStatus && chosenType === store.type" id="circle"></span>
                     </a>
                     
                 </li>
@@ -36,13 +37,14 @@ export default {
             store,
             orderStatusTypes: [],
             takeover: undefined,
-            chosenType: undefined
+            chosenType: undefined,
+            currStatus: undefined
         }
     },
 
      methods:{
         selectValue (event) {
-            //otherwise it consumes nearby elemens - resolve later
+            //otherwise it consumes nearby elements - resolve later
             this.store.selected_order_status = event.target.textContent
         },
        
@@ -66,7 +68,28 @@ export default {
                   });
 
         }, 100)
+      },
+
+      async setInterfaceData(currStatus){
+        if (this.store.userType === 'waiter'){
+            this.takeover = await Orders.fetchOrders(this.store.searchText, this.store.type, currStatus );
+
+            if (this.takeover[0].orderInfo.foodStatus) this.chosenType = 'Food';
+            else if (this.takeover[0].orderInfo.drinkStatus) this.chosenType = 'Drink';
+        }
+        else if(this.store.userType === 'barman'){
+            this.takeover = await Orders.fetchOrders(this.store.searchText, 'Drink', currStatus);
+            this.chosenType = 'Drink'
+
+        }
+        else if(this.store.userType === 'chef'){
+            this.takeover = await Orders.fetchOrders(this.store.searchText, 'Food', currStatus);
+            this.chosenType = 'Food'
+        }
+        
+        this.currStatus = currStatus;
       }
+
 
        
     },
@@ -76,12 +99,17 @@ export default {
         this.orderStatusTypes =  await Orders.getOrderStatusTypes();
     },
 
-    async created(){
-        this.takeover = await Orders.fetchOrders(this.store.searchText, this.store.type, 'ready|waiting to be served');
-        
-        if (this.takeover[0].orderInfo.foodStatus) this.chosenType = 'Food'
-        else if (this.takeover[0].orderInfo.drinkStatus) this.chosenType = 'Drink'
+
+    created(){ 
+        if (this.store.userType === 'waiter')   this.setInterfaceData('ready|waiting to be served');
+        else  this.setInterfaceData('ordered|ready to take over');
     },
+
+
+    mounted(){
+      document.getElementById('tabs').scrollLeft += 20;
+    },
+
 
     watch:{
         'store.type': {
@@ -93,7 +121,7 @@ export default {
       }
      },
 
-     'store.selected_order_status': {
+        'store.selected_order_status': {
           handler: async function(newValue) {
           
             this.toggleActiveSubCategory(); 
@@ -117,7 +145,7 @@ export default {
   padding-right: 0px;
 }
 
-//izvor horizontal navbara: https://bootsnipp.com/snippets/bpP0r
+
 .nav-tabs {
   display: inline-flex;
   justify-content:left ;
@@ -135,10 +163,13 @@ export default {
   --bs-nav-tabs-border-width: 0px;
   margin-bottom: 1px;
   margin-top: 1px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  --bs-nav-tabs-link-active-color: #0078D4;
+
   //--bs-nav-tabs-border-color: #dee2e6;
   // --bs-nav-tabs-border-radius: 0.375rem;
   // --bs-nav-tabs-link-hover-border-color: #e9ecef #e9ecef #dee2e6;
-  --bs-nav-tabs-link-active-color: #0078D4;
   //--bs-nav-tabs-link-active-bg: #fff;
   //--bs-nav-tabs-link-active-border-color: #dee2e6 #dee2e6 #fff;
   //border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
@@ -188,12 +219,12 @@ export default {
   padding: 15px 0;
 }
 .tab-content {
-    //promjena
   padding: 20px 1rem !important;
 }
 
 .nav-tabs::-webkit-scrollbar {
   display: none; /*Safari and Chrome*/
+
 }
 .tabCards {
   background: #FFF none repeat scroll 0% 0%;

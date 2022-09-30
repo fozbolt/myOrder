@@ -16,7 +16,7 @@
                     <small>OFF</small>
                 </span>
                 <span id="circle-right" class="funkyFont">
-                    {{this.card.price}}$
+                    {{constPrice}}$
                 </span>
                 
                 <img 
@@ -42,7 +42,7 @@
                 <div id="ingredients"> {{ card.ingredients || defaultIngredients}}</div>
                 <div id="clockDiv">
                     <img src="@/assets/clockIcon.svg" alt="" id="clockIcon">
-                    <small ><b> {{card.cookingTime || defaultCookingTime}} min</b></small>
+                    <small ><b> {{card.cookingTime || defaultCookingTime}}</b></small>
                 </div>
 
                 <button  v-if="card.type.toLowerCase()==='food'" @click="toggleCollapsible" class="collapsible" ref="collapsible">Choose additions</button>
@@ -135,7 +135,7 @@ import { Products } from '@/services';
 import Slider from '@/components/Slider.vue'
 import Footer from '@/components/Footer.vue';
 import _ from 'lodash';
-import FloatingMenu from '@/components/customer/FloatingMenu.vue';
+import FloatingMenu from '@/components/FloatingMenu.vue';
 
 
 export default {
@@ -153,6 +153,7 @@ export default {
             store,
             card: null,
             cart: [],
+            constPrice: undefined,
             checkedPrices: [0],
             button_z_index: 'visible',
             additions: {
@@ -174,6 +175,8 @@ export default {
     async mounted() {
         this.card = await Products.getOne(this.id);
         this.cart = JSON.parse(localStorage.getItem('cart')); 
+        this.constPrice = this.card.price
+        
 
         if (!Array.isArray(this.cart)) this.cart = []
             
@@ -195,16 +198,15 @@ export default {
         addToCart(){
             this.cart = JSON.parse(localStorage.getItem('cart')); 
             this.card.additions = this.checkedPrices.map(value => Object.keys(this.additions)[value]);
-            this.card.price = this.card.price + this.additionsSum;
+            this.card.price = Number(this.card.price) + Number(this.additionsSum);
+  
+            this.adjustID()
          
             //check if item already in cart (must have same additions)
             let foundIndex = null
+            
             this.cart.forEach((item,index) => { 
-                if(item.id === this.card.id){
-                    console.log(this.card)
-                    console.log(item)
-                }  
-                if(item.id === this.card.id && _.isEqual(item.additions.sort(), this.card.additions.sort()) && item.additions.length === this.card.additions.length){
+                if(item._id === this.card._id && _.isEqual(item.additions.sort(), this.card.additions.sort()) && item.additions.length === this.card.additions.length){
                     foundIndex = index
                 } 
             });
@@ -220,12 +222,21 @@ export default {
 
             localStorage.setItem('cart', JSON.stringify(this.cart));
             this.checkedPrices = [0];
+            this.card.price = this.constPrice;
 
             //show success notification
             let button = this.$refs['basicToast']
             new bootstrap.Toast(button).show();
 
         },
+
+        adjustID(){
+            if(this.card.id){
+                this.card._id = this.card.id;
+                delete this.card.id
+            }
+        },
+
 
         goToCheckout(){
             this.$router.push({ path: '/checkout' });
@@ -260,7 +271,7 @@ export default {
 
      computed: {
         sum() {
-            if (this.checkedPrices[this.checkedPrices.length - 1] === 0 && this.checkedPrices.length > 1 ) {
+            if (this.checkedPrices[this.checkedPrices.length - 1] === 0 ) {
                 this.checkedPrices = [0]           //if last chosen element is "no additions" -> reset array
             }
             else if (this.checkedPrices.includes(0) ) {

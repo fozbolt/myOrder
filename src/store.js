@@ -2,6 +2,7 @@ export default {
     //user
     userId: null,
     username: null,
+    table: null,
     userType: 'manager',
     
     //functionality

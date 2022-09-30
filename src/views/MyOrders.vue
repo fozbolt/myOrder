@@ -14,7 +14,7 @@
               </svg>
             </div>
             <div id="filter" class="funkyFont">
-                <div id="type" >
+                <div v-if="store.userType === 'waiter'" id="type" >
                   <button id="food" @click="selectType($event)" v-bind:class="{ foodActive: store.isFood }" class="square">
                     <h5 class="type-item">Food</h5>
                   </button>
@@ -22,21 +22,7 @@
                     <h5 class="type-item">Drink</h5>
                   </button>
                 </div>
-
-                <div class="category funkyFont">
-                  <button 
-                    @click="selectCategory($event)"
-                    v-bind="getDataAttr(category)"   
-                    v-for="(value, category, index) in store.productTypes[0][store.type]"
-                    :key="index"
-                    class="category-item"
-                    >
-                    {{ category }}
-                  </button>
-                </div>
-
-                <CurrentTab ref="currTab"/>   
-                <FloatingMenu></FloatingMenu>
+                <CurrentTabOrders />
             </div>
           
       </div>
@@ -47,26 +33,40 @@
 
 <script>
 
-import CurrentTab from '@/components/CurrentTab';
 import store from '@/store.js'
-import FloatingMenu from '@/components/FloatingMenu.vue';
 import Footer from '@/components/Footer.vue';
+import CurrentTabOrders from '@/components/staff/CurrentTabOrders.vue';
 
 
 export default {
-  name: 'FoodList',
+  name: 'MyOrders',
   components: {
-    CurrentTab,
-    FloatingMenu,
-    Footer
+    Footer,
+    CurrentTabOrders
 },
     data() { 
         return {
             store,
         }
     },
-    
 
+
+
+    mounted(){
+      //hardcoded await for fetching cards so we can ge row height
+      if (window.innerWidth < 1199){
+          setTimeout(()=>{
+            //this overrides #food-list-content
+            if(this.store.clientHeightRow > 400 ){
+              this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 250}px`
+            }
+        },3000)
+      }
+
+      if (this.store.userType === 'waiter') document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
+    },
+
+ 
     methods:{
       selectType (event) {
         let currentType = this.store.type;
@@ -85,100 +85,8 @@ export default {
 
         
       },
-      selectCategory (event=undefined) {
-
-          this.store.category = event.target.textContent;
-        
-          //temporary solution for space in name
-          if (event.target.textContent === 'Main course') this.store.category = 'MainCourse'
-
-          //toggle active type - 
-          this.toggleActiveCategory()
-           
-
-          //when category is changed, put subcategory on default 
-          //this.store.selectedSubCategory='All' ova linija ne treba ? malo testirano i izgleda da ne
-        
-
-      },
-
-      toggleActiveCategory(){
-        //refs - optimal for vue but they aren't reactive
-        //  for (let ref in this.$refs) {
-        //     if (ref === this.store.category){
-        //        console.log('ref:',this.$refs[ref])
-        //        this.$refs[ref].style.color = '#0078D4'
-        //     }  
-        //     else{
-        //       //console.log(this.$refs[ref]);
-        //       this.$refs[ref].style.color = 'black'
-        //     }
-        //   }
-
-        //timeout kako bi se malo počekalo da se updejtaju DOM elementi
-        setTimeout(() => {
-          document.querySelectorAll('.category-item').forEach(function(categoryBtn) {
-                    if (categoryBtn.textContent === store.category){
-                        categoryBtn.style.color = '#0078D4'
-                    }  
-                    else{
-                        categoryBtn.style.color = 'black'
-                    }
-                });
-
-        }, 50)
-        
-        
-      },
-
-      getDataAttr(category) {  
-        return {
-          'id': category,
-          //'ref': category
-          }
-        },
-
-    
-    },
-     watch: {
-       
-      'store.type': {
-        handler: async function(newValue) {
-          //refactor to be more dynamic
-          if (this.store.type.toLowerCase() === 'food') this.store.category = 'MainCourse'
-          else this.store.category = 'Non-alcoholic'
-          
-          this.toggleActiveCategory()
-
-      }
-     },
-
-     'store.category': {
-          handler: async function(newValue) {
-            this.store.selectSubCategory = 'All'
-      }
-     }
-
     },
 
-    async mounted(){
-      //hardcoded await for fetching cards so we can ge row height
-      if (window.innerWidth < 1199){
-        try{
-          setTimeout(()=>{
-            //this overrides #food-list-content
-            try{
-                this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 300}px`
-            }catch(e){}
-          },3000)
-        }catch{}
-         
-      }
-    
-      document.getElementById(this.store.category).style.color="#0078D4";
-      document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
-
-    },
 
     beforeUnmount(){
       this.store.type='Food'
@@ -187,7 +95,6 @@ export default {
       this.store.isFood = true
       this.store.isDrink= false
     },
-   
 
 
 
@@ -218,7 +125,7 @@ export default {
 
 #header-search {
   display: inline-block; 
-  width: 90%; 
+  width: 95%; 
   height: 32px;  color: black; 
   border: none; 
   outline: none;
@@ -231,8 +138,8 @@ export default {
   position: relative; 
   right: 5px;
   fill: gray; 
-  width: 7%; 
-  height: 32px;
+  width: 5%; 
+  height: 24px;
   vertical-align: middle; 
   cursor: pointer;
 }
@@ -302,7 +209,7 @@ export default {
 
 }
 
-//fora simulira malo klik
+
 #food:active {
   border: none;
   color: #0078D4 !important;
@@ -335,7 +242,7 @@ export default {
 
 @media(max-width:500px){
   #food-list-content{
-  min-height: 200vh
+  min-height: 180vh
   }
 }
 
@@ -357,6 +264,5 @@ export default {
   #type{
     margin-top: 20px;
   }
-  
 }
 </style>

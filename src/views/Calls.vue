@@ -27,7 +27,7 @@
 
 import store from '@/store.js'
 import Footer from '@/components/Footer.vue';
-import CurrentTabCalls from '@/components/waiter/CurrentTabCalls.vue';
+import CurrentTabCalls from '@/components/staff/CurrentTabCalls.vue';
 
 
 export default {
@@ -52,7 +52,10 @@ export default {
       if (window.innerWidth < 1199){
           setTimeout(()=>{
             //this overrides #food-list-content
-            this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 250}px`
+            if(this.store.clientHeightRow > 400 ){
+              this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 350}px`;
+            }
+            
         },3000)
       }
     
@@ -89,7 +92,7 @@ export default {
 
 #header-search {
   display: inline-block; 
-  width: 95%; 
+  width: 90%; 
   height: 32px;  color: black; 
   border: none; 
   outline: none;
@@ -102,8 +105,8 @@ export default {
   position: relative; 
   right: 5px;
   fill: gray; 
-  width: 5%; 
-  height: 24px;
+  width: 7%; 
+  height: 32px;
   vertical-align: middle; 
   cursor: pointer;
 }
@@ -173,7 +176,7 @@ export default {
 
 }
 
-//fora simulira malo klik
+
 #food:active {
   border: none;
   color: #0078D4 !important;

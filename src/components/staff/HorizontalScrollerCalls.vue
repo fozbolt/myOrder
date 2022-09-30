@@ -67,7 +67,7 @@ export default {
   padding-right: 0px;
 }
 
-//izvor horizontal navbara: https://bootsnipp.com/snippets/bpP0r
+//horizontal navbar source: https://bootsnipp.com/snippets/bpP0r
 .nav-tabs {
   display: inline-flex;
   justify-content: center;
@@ -136,7 +136,6 @@ export default {
   padding: 15px 0;
 }
 .tab-content {
-    //promjena
   padding: 20px 1rem !important;
 }
 

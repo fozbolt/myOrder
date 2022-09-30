@@ -3,7 +3,7 @@ import $router from '@/router'
 import store from '@/store.js';
 
 
-// instanca axios-a za potrebe myOrder backenda
+// axios instance for myOrder backend
 let Api = axios.create({
     baseURL: 'http://localhost:5000/',
     //baseURL: 'https://my-order.herokuapp.com/',
@@ -17,12 +17,12 @@ Api.interceptors.request.use((request) => {
     } catch (e) {
         console.error(e);
     }
-    //dodaje token u header i returna odnoso šalje dalje na backend
+    //adds token to header and returns/send it with requests on backend
     return request;
 });
 
 
-//Dodan i ovaj interceptor jer se može desiti da dodamo token i token ide prema backendu, backend skuži da je token isteko i vrati 401 grešku, pa da nas rerouta na login
+//this interceptor is added because it can happen that we add token and token goes to backend, backend figures out that token expired and returns 401 error, so this interceptor reroutes us to /login
 Api.interceptors.response.use( 
     (response) => {return response},
     (error) => {
@@ -36,7 +36,7 @@ Api.interceptors.response.use(
 
 let Auth = {
     async register(new_user){
-        //pass ide preko SSL-a pa ga nije nužno heshirati
+        //password goes through SSL so it isn't necessary to hash it in post request?
         const response = await Api.post('/register', {new_user});
         
         if(!response)
@@ -54,7 +54,6 @@ let Auth = {
 
         if(response.data){
             let user = response.data
-            //prvi put spremamo radi tokena
             localStorage.setItem('user', JSON.stringify(user));
             store.userType = user.type
             
@@ -88,7 +87,7 @@ let Auth = {
     },
 
     state: {
-        //javascript setteri - get ispred nekog atributa - taj atribut pretvaraju u funkciju, funkcija koja se predstavlja da je varijabla i može se čitati kao atribut, ne treba pozivati funkciju iz drugog modula nego varijablu kao i prije
+        //javascript setters(get before function name or variable) - taj atribut pretvaraju u funkciju, funkcija koja se predstavlja da je varijabla i može se čitati kao atribut, ne treba pozivati funkciju iz drugog modula nego varijablu kao i prije
 
         get authenticated() {
             return Auth.isAuthenticated();
@@ -271,7 +270,6 @@ let Products = {
         let doc = response.data;
     
         return {
-            //ovo premapirati i vidjeti koji podaci jos trebaju za jelo
             id: doc._id,
             name: doc.name,
             price: doc.price,
@@ -315,13 +313,6 @@ let Products = {
             };
         }
 
-        //sazeti u options.params
-        //   options.categories = {
-        //     type,
-        //     category,
-        //     subCategory: subcategory,
-
-        // }
 
         let response = await Api.get(`/menu/${type}/${category}/${subcategory}`, options)
         response.data.id = response.data._id
@@ -424,4 +415,4 @@ let Employees = {
     },
 }
 
-export { Api, Products, Auth, Employees, Orders }; // exportamo Api za ručne pozive ili Products za metode.
+export { Api, Products, Auth, Employees, Orders };

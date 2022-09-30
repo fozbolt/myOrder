@@ -3,7 +3,7 @@
 
          <!-- Modal -->
          <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-body">
@@ -46,7 +46,7 @@
 
 export default {
   name: 'CartItem',
-  props: ['info'],  //definiramo da card može primiti info odnosno propse
+  props: ['info'],  //we define props "info" which can this CartItem.vue take
  
 
   components:{},
@@ -94,12 +94,7 @@ export default {
         }
  
     },
-
-    mounted(){
-        console.log(this.info)
-    }
-        
-
+    
 
 
 }
@@ -214,9 +209,7 @@ small{
     color:white; 
 }
 
-.modal-dialog{
-    top:50vw;
-}
+
 
 .modal-body > p{
     margin-bottom: 0;

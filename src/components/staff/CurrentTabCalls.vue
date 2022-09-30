@@ -21,7 +21,7 @@
         <div class="dummyDivNeededForSuspenseToWork"> <!--https://qdmana.com/2022/03/202203271244076861.html-->
            <HorizontalScrollerCalls/>
           <div class="tab-content p-3" id="myTabContent">
-            <div class="row">   
+            <div class="row"  ref="row">   
                 <div v-if="loaded===false" class="loader"></div>
                 <Card v-else @click="currCard = card" :key="card._id" v-for="card in cards" :info="card" data-bs-toggle="modal" data-bs-target="#Modal" />  
                 <span v-if="store.searchText!== '' && !cards.length">No results found!</span>
@@ -34,8 +34,8 @@
 </template>
   
   <script>
-  import Card from '@/components/waiter/CallCard.vue'
-  import HorizontalScrollerCalls from '@/components/waiter/HorizontalScrollerCalls.vue'
+  import Card from '@/components/staff/CallCard.vue'
+  import HorizontalScrollerCalls from '@/components/staff/HorizontalScrollerCalls.vue'
   import store from '@/store.js'
   import { Orders } from '@/services';
   import _ from 'lodash';
@@ -108,6 +108,15 @@
     },
 
 
+    mounted(){
+      setTimeout(()=>{
+        try{
+            this.store.clientHeightRow = this.$refs.row.clientHeight || 0
+          }catch(e){}
+        },3000)
+    },
+
+
     beforeUnmount(){
       this.store.searchText = ''
     }
@@ -138,7 +147,7 @@
     animation: spin 0.5s linear infinite;
 }
 
-//promjena
+
 .dummyDivNeededForSuspenseToWork{
     margin-top:20px;
 }

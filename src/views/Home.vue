@@ -4,7 +4,7 @@
     <HomeDesktop v-else-if="store.userType==='customer'"/>
 
     <Manager v-else-if="store.userType==='manager'" />
-    <Waiter v-else-if="store.userType==='waiter'" /> <!--ili opcenito staff?-->
+    <Staff v-else-if="store.userType==='chef' || store.userType==='barman' || store.userType==='waiter'" />
 
 </template>
 
@@ -12,13 +12,13 @@
 import HomeSmartphone from '@/components/HomeSmartphone.vue';
 import HomeDesktop from '@/components/HomeDesktop.vue';
 import Manager from '@/components/manager/Manager.vue';
-import Waiter from '@/components/waiter/Waiter.vue';
+import Staff from '@/components/staff/Staff.vue';
 import store from '@/store.js';
 
 
 export default {
     name: "Home",
-    components: { HomeSmartphone, HomeDesktop, Manager, Waiter },
+    components: { HomeSmartphone, HomeDesktop, Manager, Staff },
 
     data() {
         return {

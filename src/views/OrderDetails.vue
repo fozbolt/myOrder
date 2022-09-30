@@ -13,7 +13,7 @@
 
 
         <!--INTERFACE: Changeable if order is not accepted-->
-        <div v-if="orderStatus === 'ordered|ready to take over'" id="checkoutContent" >
+        <div v-if="foodStatus === 'ordered|ready to take over' || drinkStatus === 'ordered|ready to take over'" id="checkoutContent" >
             <!-- <div  class="row">
                 <button @click="this.$router.go(-1)"  id="circle-bottom-checkout">
                     <img id="backIcon-checkout" src="@/assets/backIconBlue.png" />
@@ -21,7 +21,8 @@
             </div> -->
             <div class="row" id="headerRow">
             <h5><b>Order details</b></h5>
-                <small >Order status:  {{ orderStatus}}</small>
+                <small v-if="foodStatus" >Food status: {{foodStatus}}</small>
+                <small v-if="drinkStatus" >Drink status: {{drinkStatus}}</small>
                 <small >
                         Table: 
                         <input type="text" v-model="table"  id="tableInput"/>
@@ -103,7 +104,8 @@
         <div v-else id="checkoutContent" >
             <div class="row" id="headerRow">
             <h5><b>Order details</b></h5>
-                    <small >Order status: {{orderStatus}}</small>
+                    <small v-if="foodStatus" >Food status: {{foodStatus}}</small>
+                    <small v-if="drinkStatus" >Drink status: {{drinkStatus}}</small>
                     <small >Table: {{ table }}</small>
             </div>
 
@@ -171,11 +173,10 @@ import CartItem from '@/components/CartItem.vue';
 import store from '@/store.js';
 import { Orders } from '@/services';
 import Footer from '@/components/Footer.vue';
-import FloatingMenu from '@/components/customer/FloatingMenu.vue';
+import FloatingMenu from '@/components/FloatingMenu.vue';
 
 export default {
-    name: 'Checkout',
-    props: ['id'],
+    name: 'OrderDetails',
 
     components: {
     CartItem,
@@ -190,15 +191,16 @@ export default {
             textualNote: '',
             orderInfo: null,
             table: undefined,
-            orderStatus: undefined,
+            drinkStatus: 'ordered|ready to take over',
+            foodStatus: 'ordered|ready to take over',
             errorMessage: false,
-            totalSum: 0,
             seeMore: false,
             store,
         
         };
     },
     async mounted() {
+        //refactor this - its too long and redundant
         this.cartItems = this.cartItems || [];
         let id = JSON.parse(localStorage.getItem('orderID')); 
         let order = await Orders.getOrder(id);
@@ -206,16 +208,23 @@ export default {
         this.id = order.orderInfo.orderId
         this.orderInfo = order.orderInfo
         this.cartItems = order.items;
-        this.cartItems  = this.cartItems.map(obj => ({ ...obj, status: this.orderInfo.orderStatus }))
 
         // cant call directly from html orderInfo.table etc. because of asynchroneus nature: https://stackoverflow.com/questions/46579976/vue-js-cannot-read-property-even-though-the-object-exists
         this.table = this.orderInfo.table
         this.totalSum = this.orderInfo.totalAmount
         this.textualNote = this.orderInfo.note
-        this.orderStatus = this.orderInfo.orderStatus
-        this.table = this.orderInfo.table
-     
 
+        this.foodStatus = this.orderInfo.foodStatus
+        this.drinkStatus = this.orderInfo.drinkStatus
+
+        //quickfix so we can change only cards that have order status "ordered"
+        this.cartItems.forEach(item => {
+            if(item.type === 'Food') item.status = this.foodStatus
+            else item.status = this.drinkStatus
+        });
+
+
+     
          setTimeout(() => {
             if(store.type.toLowerCase()==='food'){
                 this.toggleCollapsibleNotes()   
@@ -255,21 +264,28 @@ export default {
         async update(){
             this.cartItems = this.cartItems || [];
 
-            if (this.cartItems.length > 0){
+            if (this.cartItems.length > 0 && this.validateTable()){
                 let info = {
                     date: this.orderInfo.date, 
+                    createdBy: this.orderInfo.createdBy,
+                    createdByType:  this.orderInfo.createdByType,
                     dateUpdated: Date.now(),
+                    updatedBy: this.store.username,
+                    updatedByUserType: this.store.userType,
                     table: this.table,
                     totalAmount: this.totalSum,
                     note: this.textualNote,
-                    orderStatus: 'ordered/ready to take over',
                     orderId: this.id
                 }
 
-
-                //inspect for food and drink
+                
+                //inspect for food and drink - default is set on load and if changed later it reasigns
                 if(this.orderHasType('Food'))   info.foodStatus = 'ordered|ready to take over'
                 if (this.orderHasType('Drink')) info.drinkStatus = 'ordered|ready to take over'
+
+
+                //remove status from cart items
+                this.cartItems.forEach(function(v){ delete v.status, delete v.index  });
 
 
 
@@ -290,12 +306,12 @@ export default {
                 else console.log('place order error - create message for this')
             
             }else{
-                this.errorMessage = 'Your cart is empty';
+                this.errorMessage = 'Make sure your cart and table number are not empty';
             }
         },
 
         deleteItem (index) {
-            //promijeniti u id
+            //change to id?
             this.cartItems.splice(index, 1);
         },
 
@@ -313,6 +329,11 @@ export default {
         async deleteOrder(){
             await Orders.deleteOrder( JSON.parse(localStorage.getItem('orderID')) )
             this.$router.push({path: '/orders'})
+        },
+
+        validateTable(){
+            //source: https://stackoverflow.com/questions/175739/how-can-i-check-if-a-string-is-a-valid-number
+            return !isNaN(parseFloat(this.table)) && isFinite(this.table);
         }
 
     },
@@ -477,11 +498,13 @@ export default {
    display: flex; 
    justify-content: space-around; 
    margin-top:10px;
+   margin-bottom:100px;
 }
 #buttonsRowAccepted{
    display: flex; 
    justify-content: flex-start;
    margin-top:10px;
+   margin-bottom:100px;
 }
 
 #backBtn{

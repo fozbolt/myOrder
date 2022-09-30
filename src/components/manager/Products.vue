@@ -523,7 +523,7 @@ export default {
 }
 
 .container{
-    margin: 15px 0 0 0;
+    margin-top: 15px;
     width:100%;
 }
 
@@ -626,7 +626,9 @@ option{
     }
 
     .container{
-        margin-top:10px;
+        margin-top: 10px;
+        padding-right: 0;
+        padding-left: 0;
     }
 
     #productsHeader{

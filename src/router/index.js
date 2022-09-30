@@ -109,14 +109,19 @@ const routes = [
   },
   {
     path: '/orders/:id',
-    name: 'OrderDetailsWaiter',
+    name: 'OrderDetailsStaff',
     props: true,
-    component: () => import(/* webpackChunkName: "orders" */ '@/components/waiter/OrderDetailsWaiter.vue')  
+    component: () => import(/* webpackChunkName: "orders" */ '../views/OrderDetailsStaff.vue')  
   },
   {
     path: '/calls',
     name: 'Calls',
     component: () => import(/* webpackChunkName: "Calls" */ '../views/Calls.vue')  
+  },
+  {
+    path: '/my_orders',
+    name: 'MyOrders',
+    component: () => import(/* webpackChunkName: "MyOrders" */ '../views/MyOrders.vue')  
   }
 ]
 
@@ -140,15 +145,18 @@ router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const publicPages = ['/login']; // '/register' excluded for logic of this app
   const managerPages = ['/statistics', '/products', '/employees', '/newsletter', '/feedback', '/special_offers']
-  const customerAndWaiterPages = ['/checkout', '/finished_order', '/placed_order', 'order_status', 'order_feedback', 'order_details']
+  const customerAndWaiterPages = ['/checkout', '/food_list']
+  const customerPages = ['/finished_order', '/placed_order', 'order_status', 'order_feedback', 'order_details']
+  const staffPages = ['/orders', '/calls', '/my_orders']
+
   const authRequired = !publicPages.includes(to.path);
   const user = Auth.getUser();  
 
-  // ako korisnik nije ulogiran i stranica nije whitelistana
+  // if user is not logged in and page(url) isnt whitelisted
   if (authRequired && !user) {
     return next('/login');
   }
-  //ako jer korisnik ulogiran ne dopusti na /login i /register
+  //if user is logged in dont allow  /login and /register
   if (user && !authRequired) {
     return next('/');
   }
@@ -160,6 +168,17 @@ router.beforeEach((to, from, next) => {
 
   //allow only to customer, and waiter
   if((user?.type !== 'waiter' && user?.type !== 'customer')  && customerAndWaiterPages.includes(to.path)){
+    return next('/');
+  }
+
+
+  //allow only to customer
+  if((user?.type !== 'customer')  && customerPages.includes(to.path)){
+    return next('/');
+  }
+
+  //allow only to staff
+  if((user?.type !== 'waiter' && user?.type !== 'chef' && user?.type !== 'barman')  && staffPages.includes(to.path)){
     return next('/');
   }
 

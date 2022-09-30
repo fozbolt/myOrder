@@ -15,7 +15,7 @@
   
         <!-- Modal - plan: make as component -->
            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog">
+              <div class="modal-dialog  modal-dialog-centered">
                   <!-- Modal content-->
                   <div class="modal-content">
                     <div class="modal-header">
@@ -145,7 +145,7 @@
   <script>
   import store from '@/store.js';
   import Footer from '@/components/Footer.vue';
-  import FloatingMenu from '@/components/customer/FloatingMenu.vue';
+  import FloatingMenu from '@/components/FloatingMenu.vue';
   import { Products } from '@/services';
   import AboutCarousel from '@/components/customer/InfoSlider.vue';
   import {emitter} from '@/main.js'
@@ -407,7 +407,7 @@
   
   #subscribeContent{
     position:absolute; 
-    font-family: 'Inter';
+    /* font-family: 'Inter'; */
     font-style: normal;
     font-weight: 400;
     display: flex;
@@ -548,9 +548,7 @@
       color:white; 
   }
   
-  .modal-dialog{
-      top:50vw;
-  }
+
   
   .modal-body > p{
       margin-bottom: 0;

@@ -21,7 +21,7 @@
        {{'Loading'}}
        Loading..
         <div class="tab-content p-3" id="myTabContent">
-          <div class="row">   
+          <div class="row" ref="row">   
               <Card :key="card.id" v-for="card in cards" :info="card" />     
           </div>
          </div>
@@ -75,8 +75,10 @@ export default {
 
     methods: {
         gotoDetails(card) {
-            this.store.searchText = ''
-            this.$router.push({ path: `/food_list/${card._id}` });
+            if(this.store.userType === 'customer'){
+              this.store.searchText = ''
+              this.$router.push({ path: `/food_list/${card._id}` });
+            }
         },
 
 

@@ -56,8 +56,8 @@
 import Footer from '@/components/Footer.vue';
 import StarRating from 'vue-star-rating'
 import store from '@/store';
-import { Products } from '@/services';
-import FloatingMenu from '@/components/customer/FloatingMenu.vue';
+import { Orders } from '@/services';
+import FloatingMenu from '@/components/FloatingMenu.vue';
 
 export default {
     name: "Navbar",
@@ -83,12 +83,12 @@ export default {
               rating: this.starRating,
               comment: this.textualNote,
               time: Date.now(),
-              orderNumber: orderData.orderInfo.orderNumber,
+              orderNumber: orderData.orderInfo.orderId,
               orderId: orderData._id
             }
 
       
-            let success = await Products.saveFeedback(feedbackData)
+            let success = await Orders.saveFeedback(feedbackData)
 
             let button = this.$refs['basicToast']
             new bootstrap.Toast(button).show();
@@ -104,7 +104,7 @@ export default {
 
         async getStatus(){
           let id = JSON.parse(localStorage.getItem('orderID')); 
-          return await Products.getOrder(id);
+          return await Orders.getOrder(id);
       }
     },
 
@@ -290,7 +290,7 @@ export default {
 .toast-container {
     overflow: hidden;
     position: relative;
-    z-index:10;
+    z-index:100;
 }
 
 

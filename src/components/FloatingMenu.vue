@@ -1,6 +1,6 @@
 <!-- source: https://www.cssscript.com/material-design-style-radial-fab-menu-pure-css/ -->
 <template >
-  <div v-if="store.userType === 'customer'"  class="wrapper" ref="target" @click="showFloatingMenu">
+  <div v-if="store.userType === 'customer' || (store.userType==='waiter' && waiterPathList.includes($route.path))"  class="wrapper" ref="target" @click="showFloatingMenu">
 
     <!--toast-->
     <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -41,21 +41,43 @@
   <input id="triggerButton" class="triggerButton" type="checkbox"/>
   <label for="triggerButton"  ref="label" id="menuLabel"></label>
 
-  <div class="one fa-solid fa-clipboard-question"  
-      @click="$router.push({ path: `/order_status` })" 
-      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
-  </div>
-  <div class="two fa fa-solid fa-cart-plus" 
-      @click="$router.push({ path: `/checkout` })" 
-      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
-  </div>
-  <div class="three fa fa-phone" 
-      type="button" 
-      data-bs-toggle="modal" 
-      data-bs-target="#myModal" 
-      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
-  </div>
-</div>
+  <!--content for customer-->
+    <div v-if="store.userType ==='customer'"
+        class="one fa-solid fa-clipboard-question"  
+        @click="$router.push({ path: `/order_status` })" 
+       style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+    <div  v-if="store.userType ==='customer'"
+        class="two fa fa-solid fa-cart-plus" 
+        @click="$router.push({ path: `/checkout` })" 
+        :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+    <div  v-if="store.userType ==='customer'"
+        class="three fa fa-phone" 
+        type="button" 
+        data-bs-toggle="modal" 
+        data-bs-target="#myModal" 
+        :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+
+  <!--content for waiter-->
+    <div  v-if="store.userType ==='waiter'"
+        class="one fa-solid fa-clipboard-question"  
+        @click="$router.push({ path: `/orders` })" 
+        :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+    <div  v-if="store.userType ==='waiter'"
+        class="two fa fa-solid fa-cart-plus" 
+        @click="$router.push({ path: `/checkout` })" 
+        :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+    <div  v-if="store.userType ==='waiter'"
+        class="three fa fa-phone" 
+        type="button" 
+        @click="$router.push({ path: `/calls` })" 
+        :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+    </div>
 
 </template>
 <script>
@@ -70,7 +92,8 @@ export default {
   data(){
     return{
       store,
-      callReasons: ['Help while ordering', 'Order manually', 'Pay Bill', 'Complaint', 'Other']
+      callReasons: ['Help while ordering', 'Order manually', 'Pay Bill', 'Complaint', 'Other'],
+      waiterPathList: ['/food_list', '/orders', '/calls']
     }
   },
 
@@ -83,10 +106,10 @@ export default {
 
     async callWaiter(reason){
       let data = {
-        table: '2', //hardcoded for now
+        table: this.store.table,
         reason: reason,
         time: Date.now(),
-        status: 'new'
+        status: 'new',
       }
       
       let success = await Orders.sendCall(data)
@@ -111,7 +134,9 @@ export default {
 
   mounted(){
     //change color when on this route to stand out more - can be done with inline style binding too
-    if (this.$route.path === '/food_list' && this.store.userType === 'customer') this.$refs.label.style.backgroundColor= '#5A5EB9';
+    try{
+        if (this.$route.path === '/food_list') this.$refs.label.style.backgroundColor= '#5A5EB9';
+    }catch(e){}
   },
 
   setup() {

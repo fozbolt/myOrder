@@ -3,7 +3,7 @@
     <div id="placed-order-content">
       <!-- Modal -->
           <div class="modal fade" id="finishModal" data-bs-backdrop="true" data-bs-keyboard="false" tabindex="0" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog">
+              <div class="modal-dialog  modal-dialog-centered">
                   <!-- Modal content-->
                   <div class="modal-content">
                       <div class="modal-body">
@@ -106,7 +106,7 @@ export default {
     toggleModal(){
             //refactor and use refs
             $("#finishModal").modal("toggle");
-        },
+    },
 
     finishOrder(){
       //delete localstorage and rest here
@@ -381,7 +381,7 @@ $toggle-control-size: $toggle-height - ($toggle-gutter * 2);
 
 }
 
-//samo za buttone jer su najkriticniji i najlosije responzivni na mid verzijama
+//only for the buttons because they are the most critical and the worst responsive on the mid versions
 @media (min-width:469px){
   .col {
   display: inline-grid;
@@ -559,10 +559,6 @@ $toggle-control-size: $toggle-height - ($toggle-gutter * 2);
 
 .modal-footer > .btn{
     color:white; 
-}
-
-.modal-dialog{
-    top:50vw;
 }
 
 .modal-body > p{

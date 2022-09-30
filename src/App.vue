@@ -1,6 +1,6 @@
 <template>
-
-    <LoadingScreen v-if="!loaded && this.$route.path==='/'"></LoadingScreen>
+    <!--for UX purposes on customer interface only-->
+    <LoadingScreen v-if="!loaded && store.userType === 'customer'"></LoadingScreen> 
 
     <div v-else-if="(auth.authenticated || this.$route.path ==='/login') && loaded===true" class="page-container">
       <div class="content-wrap">
@@ -44,7 +44,7 @@ export default {
           password: '',
           store,
           auth: Auth.state,
-          loaded: true,
+          loaded: false,
           transitionName: 'animation-right',
         }
   },
@@ -63,9 +63,11 @@ export default {
     },
 
     setLoader(){
-        setTimeout(()=>{
-          this.loaded=true
-        },3000)
+        if(this.store.userType !== 'customer') this.loaded = true;
+        else 
+            setTimeout(()=>{
+                this.loaded=true
+            },3000)
     },
 
 
@@ -85,6 +87,8 @@ export default {
           let user = JSON.parse(localStorage.getItem('user'));    
           this.store.userType = user.type
           this.store.username = user.username
+          this.store.userId = user.id
+          this.store.table = parseInt(JSON.parse(localStorage.getItem('table')));
         }
         },1000)
         
@@ -95,7 +99,6 @@ export default {
   },
 
   async beforeMount() {
-          //nek se za sada vuku na landingu, pa kasnije prebaciti u food_list?
           let my_proxy = await Products.getProductTypes()
           let destructuredProxy= {...my_proxy.type}
           if (this.store.productTypes.length === 0) this.store.productTypes.push(destructuredProxy)

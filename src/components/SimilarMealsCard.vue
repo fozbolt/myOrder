@@ -10,7 +10,6 @@
         <img :src="info.url" class="card-img-top" alt="Meal image">
 
         <div class="card-body p-0" id="cardBdy">
-            <!-- <h5 class="card-title"><button class="btn btn-primary">ADD TO CART</button></h5> -->
             <h5 class="card-title funkyFont" id="cardHeader">{{info.name}}</h5>
         </div>
     </div>
@@ -112,6 +111,7 @@ export default {
 
 
 .circle-left >small{
+    color:black;
     font-size:10px;
     margin-top: -4px;
 }

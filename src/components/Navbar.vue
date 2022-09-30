@@ -13,7 +13,8 @@
               <a @click="this.$router.push('/food_list')"  href="" class="nav-link nav-link-ltr">Order now</a>
             </li>
             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
-              <a @click="this.$router.push('/checkout')" href=""  class="nav-link nav-link-ltr">My order</a>
+              <a v-if="store.userType=== 'customer'" @click="this.$router.push('/checkout')" href=""  class="nav-link nav-link-ltr">My order</a>
+              <a v-if="store.userType=== 'waiter'" @click="this.$router.push('/checkout')" href=""  class="nav-link nav-link-ltr">Checkout</a>
             </li>
              <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a  @click="goTo('Top offers')" class="nav-link nav-link-ltr" href="#">Top offers</a>
@@ -21,10 +22,10 @@
              <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a  @click="goTo('New offers')" class="nav-link nav-link-ltr" >New offers</a>
             </li>
-            <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
+            <li v-if="store.userType === 'customer'" class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a @click="scrollTo('aboutSection')" class="nav-link  nav-link-ltr">About us</a>
             </li>
-             <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
+             <li v-if="store.userType === 'customer'" class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
               <a @click="scrollTo('subscribeSection')" class="nav-link nav-link-ltr" href="#">Subscribe</a>
             </li>
             <span v-if="auth.authenticated">

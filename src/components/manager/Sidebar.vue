@@ -62,6 +62,7 @@ export default {
 
   data() { 
         return {
+          closed: true
         }
   },  
 
@@ -69,19 +70,19 @@ export default {
     logout() {
           Auth.logout();
           //refresh
-          this.$router.go('/login'); //ovo dodao jucer
+          this.$router.go('/login');
       },
- 
-    },
 
-    created(){
+      toggleSidebar(){
         $(document).ready(function () {
             let trigger = $('.hamburger'),
                 overlay = $('.overlay'),
                 isClosed = false;
+                
 
                 trigger.click(function () {
-                hamburger_cross();      
+                  this.closed= !this.closed;
+                  hamburger_cross();      
                 });
 
                 function hamburger_cross() {
@@ -106,7 +107,35 @@ export default {
                     $('#wrapper').toggleClass('toggled');
             });  
         });
+      }
+ 
+    },
+
+    mounted(){
+       this.toggleSidebar();
+    },
+
+    watch:{
+        "$route.path": { 
+              handler () {
+                let overlay = $('.overlay');
+                let trigger = $('.hamburger');
+                      if (this.closed == true) {          
+                          overlay.hide();
+                          trigger.removeClass('is-open');
+                          trigger.addClass('is-closed');
+                        
+                        
+                      } else {   
+                          overlay.show();
+                          trigger.removeClass('is-closed');
+                          trigger.addClass('is-open');
+                          
+          }
+      }
     }
+  }
+    
 
 
 }

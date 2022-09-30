@@ -14,7 +14,7 @@
               </svg>
             </div>
             <div id="filter" class="funkyFont">
-                <div id="type" >
+                <div v-if="store.userType === 'waiter'" id="type" >
                   <button id="food" @click="selectType($event)" v-bind:class="{ foodActive: store.isFood }" class="square">
                     <h5 class="type-item">Food</h5>
                   </button>
@@ -26,6 +26,7 @@
             </div>
           
       </div>
+      <FloatingMenu/>
       <Footer></Footer>
   </div>
 </template>
@@ -35,14 +36,16 @@
 
 import store from '@/store.js'
 import Footer from '@/components/Footer.vue';
-import CurrentTabOrders from '@/components/waiter/CurrentTabOrders.vue';
+import FloatingMenu from '@/components/FloatingMenu.vue';
+import CurrentTabOrders from '@/components/staff/CurrentTabOrders.vue';
 
 
 export default {
   name: 'Orders',
   components: {
     Footer,
-    CurrentTabOrders
+    CurrentTabOrders,
+    FloatingMenu
 },
     data() { 
         return {
@@ -57,11 +60,13 @@ export default {
       if (window.innerWidth < 1199){
           setTimeout(()=>{
             //this overrides #food-list-content
-            this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 250}px`
+            if(this.store.clientHeightRow > 400 ){
+              this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 450}px`
+            }
         },3000)
       }
 
-      document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
+      if (this.store.userType === 'waiter') document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
     },
 
  
@@ -84,17 +89,6 @@ export default {
         
       },
     },
-
-
-    // watch: {
-    //    'store.type': {
-    //      handler: async function() {
-          
-    //        this.store.selected_order_status = 'ordered|ready to take over';
-    //    }
-    //   },
-    // },
-
 
 
     beforeUnmount(){
@@ -134,7 +128,7 @@ export default {
 
 #header-search {
   display: inline-block; 
-  width: 95%; 
+  width: 90%; 
   height: 32px;  color: black; 
   border: none; 
   outline: none;
@@ -147,8 +141,8 @@ export default {
   position: relative; 
   right: 5px;
   fill: gray; 
-  width: 5%; 
-  height: 24px;
+  width: 7%; 
+  height: 32px;
   vertical-align: middle; 
   cursor: pointer;
 }
@@ -218,7 +212,7 @@ export default {
 
 }
 
-//fora simulira malo klik
+
 #food:active {
   border: none;
   color: #0078D4 !important;

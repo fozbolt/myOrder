@@ -124,7 +124,7 @@ export default {
   padding-right: 0px;
 }
 
-//izvor horizontal navbara: https://bootsnipp.com/snippets/bpP0r
+//source of horizontal navbar: https://bootsnipp.com/snippets/bpP0r
 .nav-tabs {
   display: inline-flex;
   justify-content:left;
@@ -139,10 +139,13 @@ export default {
   margin: -3px 0 -3px 0;
   background-color: none; // bila je ova i ona omogucava white overflow koji ce mi trebati background-color: var(--bs-nav-tabs-link-active-bg);
   --bs-nav-tabs-border-width: 0px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  --bs-nav-tabs-link-active-color: #0078D4;
+  
   //--bs-nav-tabs-border-color: #dee2e6;
   // --bs-nav-tabs-border-radius: 0.375rem;
   // --bs-nav-tabs-link-hover-border-color: #e9ecef #e9ecef #dee2e6;
-  --bs-nav-tabs-link-active-color: #0078D4;
   //--bs-nav-tabs-link-active-bg: #fff;
   //--bs-nav-tabs-link-active-border-color: #dee2e6 #dee2e6 #fff;
   //border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
@@ -225,6 +228,17 @@ export default {
     justify-content: center;
 }
 
+.nav-tabs > li >a::after{
+    background:none;
+}
+
+.nav-link.active{
+    background-color:none !important;
+}
+.nav-tabs{
+    background:none;
+    --bs-nav-tabs-link-active-bg: none !important;
+}
 
 @media (max-width:600px){
   ul > li:first-of-type{

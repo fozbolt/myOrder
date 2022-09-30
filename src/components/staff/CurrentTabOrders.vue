@@ -4,7 +4,7 @@
         <div class="dummyDivNeededForSuspenseToWork"> <!--https://qdmana.com/2022/03/202203271244076861.html-->
            <HorizontalScrollerOrders/>
           <div class="tab-content p-3" id="myTabContent">
-            <div class="row">   
+            <div class="row" ref="row">   
                 <div v-if="loaded===false" class="loader"></div>
                 <Card v-else  @click="gotoDetails(card)" :key="card.id" v-for="card in cards" :info="card" />   <!-- vrijednost varijable se prenosi u props info komponente card, dakle u info stavljamo da želimo proslijediti informaciju card, : uputa da vue ne uzima varijabblu kao običan string nego da pogleda unutra što se nalazi i to preda childu-->
                 <span v-if="store.searchText!== '' && !cards.length">No results found!</span>
@@ -21,7 +21,7 @@
          {{'Loading'}}
          Loading..
           <div class="tab-content p-3" id="myTabContent">
-            <div class="row">   
+            <div class="row" ref="row">   
                 <Card :key="card.id" v-for="card in cards" :info="card" />     
             </div>
            </div>
@@ -32,8 +32,8 @@
 </template>
   
   <script>
-  import Card from '@/components/waiter/OrderCard.vue'
-  import HorizontalScrollerOrders from '@/components/waiter/HorizontalScrollerOrders.vue'
+  import Card from '@/components/staff/OrderCard.vue'
+  import HorizontalScrollerOrders from '@/components/staff/HorizontalScrollerOrders.vue'
   import store from '@/store.js'
   import { Orders } from '@/services';
   import _ from 'lodash';
@@ -54,16 +54,20 @@
       },
   
      async created() {
+          setTimeout(() => { this.getOrders() }, 1000) 
 
           this.$watch(
             (vm) => [vm.store.selected_order_status],
             async (val)  => {
               this.getOrders()
-              
+                        
               //loader turns off after cards are fetched or after 2 seconds of unsuccessful fetching
-              if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 2000)
-              else this.loaded=true
-              
+              // if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 2000)
+              // else this.loaded=true
+
+              //quickfix for barman when it loads content for chef first - cannot fix that without major refactoring and causing weaknesses on other parts of app
+              setTimeout(() => { this.loaded=true}, 2000)
+
               this.store.searchText = ''
           
             },
@@ -79,10 +83,14 @@
             
           },30000)
      },
+
   
       methods: {
           gotoDetails(card) {
               this.store.searchText = ''
+              if(this.store.userType !== 'customer' && this.store.userType !== 'manager'){
+                    sessionStorage.setItem("current_type", this.store.type);
+              } 
 
               this.$router.push({ path: `/orders/${card._id}` });
           },
@@ -99,11 +107,22 @@
 
                   if (found) return order;
               });
+             
 
+            //if in my_orders filter again by updatedBy (its our order if we participated in creating or updating it)
+            if(this.$route.path === '/my_orders'){
+              filteredOrders = filteredOrders.filter(order => order.orderInfo.updatedBy === this.store.username ||  order.orderInfo.createdBy === this.store.username ||  order.orderInfo.foodAcceptedBy === this.store.username || order.orderInfo.drinkAcceptedBy === this.store.username);
+            }
+           
             return filteredOrders
           },
 
+
+
           async getOrders(){
+            //simplest way to make barman see onyl drinks, chef food and waiter all(through type filter)
+            if(this.store.userType === 'barman') this.store.type = 'Drink'
+
             let orders = await Orders.fetchOrders(this.store.searchText, this.store.type, this.store.selected_order_status);
             this.cards = this.filterOrders(orders)
           }
@@ -119,9 +138,23 @@
         'store.type': {
         handler: async function(newValue) {
           this.getOrders()
+
+          try{
+            this.store.clientHeightRow = this.$refs.row.clientHeight || 0
+          }catch(e){}
         }
       },
   
+    },
+
+
+    mounted(){
+      setTimeout(()=>{  
+          try{
+            this.store.clientHeightRow = this.$refs.row.clientHeight || 0
+          }catch(e){}   
+        },3000)
+        
     },
 
 
@@ -155,7 +188,7 @@
     animation: spin 0.5s linear infinite;
 }
 
-//promjena
+
 .dummyDivNeededForSuspenseToWork{
     margin-top:20px;
 }
