@@ -261,8 +261,11 @@ export default {
         adjustResponsiveness(){
             //bad idea - needs refactoring
             let box = document.querySelector('#titleDiv');
-            let height = box.offsetHeight;
-            if (height > 80) document.querySelector('#ingredients').style.paddingTop  = '20px'
+            try{    
+                let height = box.offsetHeight;
+                if (height > 80) document.querySelector('#ingredients').style.paddingTop  = '20px'
+            }catch(e){}
+           
         },
 
 

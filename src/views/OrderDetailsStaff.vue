@@ -216,6 +216,7 @@
             <div class="collapse" id="collapseExample" ref="collapseDiv">
                 <div class="row" id="cardsRow" >  
                     <span v-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
+                    
                     <CartItem v-else :key="card.id" 
                         v-for="(card, index ) in filteredCartItems" :info="card" 
                         v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
@@ -376,7 +377,8 @@ export default {
             if (this.store.userType === 'chef' || this.current_type === 'Food') this.foodStatus = newStatus;
             else if (this.store.userType === 'barman' || this.current_type === 'Drink') this.drinkStatus = newStatus;
 
-       
+            this.addAcceptedStatus();   
+
             this.update();
         },
 
@@ -403,20 +405,23 @@ export default {
             }
             else {
                 if(this.store.userType === 'waiter') this.toggleStatusModal();
-                else {
-                    if(this.current_type === 'Food'){
-                        this.foodAcceptedBy = this.store.username;
-                        this.foodAcceptedByID = 'example_id_631afb2f42bd5e3d7c4c859c'; //hardcoded for now untill I make modal (I need to fetch that chef/waiter id first)
-                    }
-                    else if(this.current_type === 'Drink'){
-                        this.drinkAcceptedBy = this.store.username;
-                        this.drinkAcceptedByID = 'example_id_631afb2f42bd5e3d7c4c859c'; //hardcoded for now untill I make modal (I need to fetch that chef/waiter id first)
-                    }
-                }
-                
+                else this.addAcceptedStatus();       
                 
             }
             
+        },
+
+
+
+        addAcceptedStatus(){
+            if(this.current_type === 'Food'){
+                        this.foodAcceptedBy = this.store.username;
+                        this.foodAcceptedByID = 'example_id_631afb2f42bd5e3d7c4c859c'; //hardcoded for now untill I make modal (I need to fetch that chef/waiter id first)
+            }
+            else if(this.current_type === 'Drink'){
+                this.drinkAcceptedBy = this.store.username;
+                this.drinkAcceptedByID = 'example_id_631afb2f42bd5e3d7c4c859c'; //hardcoded for now untill I make modal (I need to fetch that chef/waiter id first)
+            }
         },
 
 
@@ -488,13 +493,12 @@ export default {
                     drinkAcceptedByID: this.drinkAcceptedByID || this.orderData.orderInfo.drinkAcceptedByID
            
                 }
-               
-                
+            
 
                 //inspect for food and drink - default is set on load and if changed later it reasigns
                 if(this.orderHasType('Food'))   info.foodStatus = this.foodStatus || this.orderData.orderInfo.foodStatus;
                 if (this.orderHasType('Drink')) info.drinkStatus = this.drinkStatus || this.orderData.orderInfo.drinkStatus;
-
+             
 
                 //remove status from cart items
                 this.cartItems.forEach(function(v){ delete v.status, delete v.index  });
@@ -569,6 +573,12 @@ export default {
             this.foodStatus = orderInfo.foodStatus;
             this.drinkStatus = orderInfo.drinkStatus;
 
+            //quickfix so we can change only cards that have order status "ordered"
+            this.cartItems.forEach(item => {
+                if(item.type === 'Food') item.status = this.foodStatus
+                else item.status = this.drinkStatus
+            });
+
         },
 
 
@@ -593,11 +603,7 @@ export default {
             this.prevFoodStatus = orderInfo.foodStatus 
             this.prevDrinkStatus = orderInfo.drinkStatus
             
-            //quickfix so we can change only cards that have order status "ordered"
-            this.cartItems.forEach(item => {
-                if(item.type === 'Food') item.status = this.foodStatus
-                else item.status = this.drinkStatus
-            });
+         
 
         },
 
@@ -691,6 +697,7 @@ export default {
 
     created(){
         this.fillData();
+        this.store.username = JSON.parse(localStorage.getItem('user')).username;
 
         setTimeout(() => {
             this.setStatusTypes()
@@ -711,6 +718,7 @@ export default {
     max-width:100%;
     margin:auto;
     flex-shrink: 1;
+    overflow-x: hidden;
 }
 
 

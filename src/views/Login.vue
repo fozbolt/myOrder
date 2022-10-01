@@ -346,6 +346,9 @@ small{
   form > .btn{
     font-size:20px;
   }
+  #logo-main{
+  margin-top: 10vh;
+ }
 
 }
 

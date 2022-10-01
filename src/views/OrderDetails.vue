@@ -358,6 +358,7 @@ export default {
     unmounted(){
         //extra caution
         localStorage.setItem('cart', JSON.stringify([]));
+        this.store.username = JSON.parse(localStorage.getItem('user')).username;
     },
 
     
@@ -371,6 +372,7 @@ export default {
     max-width:100%;
     margin:auto;
     flex-shrink: 1;
+    overflow-x: hidden;
 }
 
 

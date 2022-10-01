@@ -6,7 +6,7 @@
         <div class="tab-content p-3" id="myTabContent">
           <div class="row" ref="row">   
               <div v-if="loaded===false" class="loader"></div>
-              <Card v-else  @click="gotoDetails(card)" :key="card.id" v-for="card in cards" :info="card" />   <!-- vrijednost varijable se prenosi u props info komponente card, dakle u info stavljamo da želimo proslijediti informaciju card, : uputa da vue ne uzima varijabblu kao običan string nego da pogleda unutra što se nalazi i to preda childu-->
+              <Card v-else  @click="gotoDetails(card)" :key="card._id" v-for="card in cards" :info="card" />   <!-- vrijednost varijable se prenosi u props info komponente card, dakle u info stavljamo da želimo proslijediti informaciju card, : uputa da vue ne uzima varijabblu kao običan string nego da pogleda unutra što se nalazi i to preda childu-->
               <span v-if="store.searchText!== '' && !cards.length">No results found!</span>
               <span v-if="!cards.length">Currently no results in this subcategory</span>
           </div>
@@ -57,7 +57,7 @@ export default {
         (vm) => [vm.store.type, vm.store.category, vm.store.selectedSubCategory],
         async (val)  => {
           this.cards = await Products.fetchProducts();
-       
+
           //loader turns off after cards are fetched or after 2 seconds of unsuccessful fetching
           if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 2000)
               else this.loaded=true
@@ -90,6 +90,7 @@ export default {
           this.cards = await Products.fetchProducts(val);
       }, 500),
 
+
   },
   
   mounted(){
@@ -97,7 +98,9 @@ export default {
     try{
         //hardcoded wait for async
         setTimeout(()=>{
-          this.store.clientHeightRow = this.$refs.row.clientHeight
+          try{
+            this.store.clientHeightRow = this.$refs.row.clientHeight
+          }catch(e){}
         },3000)
     }catch{}
     

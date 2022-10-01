@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import HomeSmartphone from '@/components/HomeSmartphone.vue';
-import HomeDesktop from '@/components/HomeDesktop.vue';
+import HomeSmartphone from '@/components/customer/HomeSmartphone.vue';
+import HomeDesktop from '@/components/customer/HomeDesktop.vue';
 import Manager from '@/components/manager/Manager.vue';
 import Staff from '@/components/staff/Staff.vue';
 import store from '@/store.js';
@@ -27,20 +27,26 @@ export default {
         };
     },
 
+    
+
     mounted() {
       this.$nextTick(() => {
         window.addEventListener('resize', this.onResize);
       })
     },
 
+
+
     beforeDestroy() { 
-      window.removeEventListener('resize', this.onResize); 
+        window.removeEventListener('resize', this.onResize); 
     },
 
+
+
     methods: {  
-      onResize() {
-        this.windowWidth = window.innerWidth
-      }
+        onResize() {
+            this.windowWidth = window.innerWidth
+        }
     }
 
 }

@@ -3,7 +3,7 @@ export default {
     userId: null,
     username: null,
     table: null,
-    userType: 'manager',
+    userType: 'customer',
     
     //functionality
     searchText: '',
@@ -19,6 +19,7 @@ export default {
     //order data
     feedbackLeft: false,
     selected_order_status: 'ordered|ready to take over',
-    selected_call_status: 'new'
+    selected_call_status: 'new',
+
 
 }

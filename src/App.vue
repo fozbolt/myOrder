@@ -1,6 +1,6 @@
 <template>
     <!--for UX purposes on customer interface only-->
-    <LoadingScreen v-if="!loaded && store.userType === 'customer'"></LoadingScreen> 
+    <LoadingScreen v-if="!loaded"></LoadingScreen> 
 
     <div v-else-if="(auth.authenticated || this.$route.path ==='/login') && loaded===true" class="page-container">
       <div class="content-wrap">
@@ -62,6 +62,7 @@ export default {
       }); 
     },
 
+
     setLoader(){
         if(this.store.userType !== 'customer') this.loaded = true;
         else 
@@ -69,6 +70,7 @@ export default {
                 this.loaded=true
             },3000)
     },
+
 
 
     createCart(){
@@ -80,9 +82,11 @@ export default {
       }
     },
 
+
     getUserType(){
       //needed because login handler sets it only on login and it becomes a problem when store restores during refresh (could be placed in beforeEach route too)
       setTimeout(()=>{
+        //activats only on refresh
         if(this.$route.path !== '/login'){
           let user = JSON.parse(localStorage.getItem('user'));    
           this.store.userType = user.type
@@ -90,6 +94,7 @@ export default {
           this.store.userId = user.id
           this.store.table = parseInt(JSON.parse(localStorage.getItem('table')));
         }
+
         },1000)
         
     }
@@ -105,7 +110,7 @@ export default {
       },
 
   mounted(){
-        this.setLoader();
+        this.setLoader()
   
         this.getUserType();
         this.createCart();

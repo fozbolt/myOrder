@@ -81,10 +81,12 @@ export default {
                 this.cart.push(this.card)
             }
 
+ 
             localStorage.setItem('cart', JSON.stringify(this.cart));
 
             //show success notification
             let button = this.$refs['basicToast']
+            new bootstrap.Toast(button).hide();
             new bootstrap.Toast(button).show();
 
         },
@@ -94,10 +96,11 @@ export default {
               this.store.searchText = ''
               this.$router.push({ path: `/food_list/${this.card._id}` });
             }
-        },
-            
+        }        
 
-  }
+  },
+
+
 
 }
  

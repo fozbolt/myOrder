@@ -303,7 +303,8 @@
   
   #homepageBody{
     max-width: 100%;
-    background-color:#232626; 
+    background-image: linear-gradient(0deg, rgb(31 36 30) 0%, rgb(38 42 42) 83%, rgb(40 41 45) 100%);
+    /* background-color:#232626;  */
     /* background-color: #5d74697a; */
   }
   .homepageContent {
@@ -847,4 +848,4 @@
   
   
   </style>
-  
+  #

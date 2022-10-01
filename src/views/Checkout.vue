@@ -114,7 +114,8 @@ export default {
                 this.toggleCollapsible();
         }, 1000)
 
-        //this.orderCount = await Orders.fetchOrders();
+        //faster than getting from App.vue 
+        this.store.username = JSON.parse(localStorage.getItem('user')).username;
     },
 
     computed: {
@@ -262,6 +263,7 @@ export default {
     max-width:100%;
     margin:auto;
     flex-shrink: 1;
+    overflow-x: hidden;
 }
 
 #checkoutGif{
