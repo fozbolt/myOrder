@@ -515,6 +515,8 @@ option{
 
     .container{
         margin-top:10px;
+        padding-right:0;
+        padding-left:0;
     }
 
     #productsHeader{

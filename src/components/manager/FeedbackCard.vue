@@ -7,12 +7,21 @@
                         <div class="blockquote-custom-icon bg-info shadow-1-strong">
                             <i class="fa fa-quote-left text-white"></i>
                         </div>
-                        <p class="mb-0 mt-2 font-italic">
+                        <p class="mb-0 mt-2 font-italic" id="comment">
                         "{{info.comment}}"
                         </p>
+
+                        <div id="ratingWrapper">
+                            <span v-for="(rating ,key, index) in info.rating" :key="index"> 
+                                <label>{{key}}</label>
+                                <star-rating :rating="rating" :read-only="true" :star-size="20" :show-rating="false" :glow="10" />  
+                            </span>
+                        </div>
+                          
                         <p class="mb-0 mt-2 font-italic" style="text-align:right;">
                             <a href="#">See order details</a>
                         </p>
+
                         <footer class="blockquote-footer pt-4 mt-4 border-top">
                             order number: {{info.orderNumber}}, {{convertTime()}}
                         </footer>
@@ -25,16 +34,16 @@
 </template>
  
 <script>
- 
- 
+import StarRating from 'vue-star-rating'
+
 export default {
    name: 'FeedbackCard',
+   components: {StarRating },
    props: ['info'],  
- 
-   components:{},
+
    data() { 
          return {
-     
+            rating: 2
          }
    },  
  
@@ -65,6 +74,10 @@ export default {
     width:100%;
     margin-top: 50px;
 }
+
+#comment {
+    font-size:20px;
+}
  
 .d-flex{
     width:100%;
@@ -90,5 +103,29 @@ position: absolute;
 top: -40px;
 left: 19px;
 }
+
+
+
+
+#ratingWrapper{
+    margin: 30px 20px;
+}
+
+#ratingWrapper > span > label{
+    margin-right: 10px;
+}
  
+
+#ratingWrapper > span{
+    display:flex;
+    justify-content: end;
+    margin-bottom:5px;
+}
+
+
+@media(max-width: 600px){
+    #ratingWrapper > span{
+    margin-bottom: 20px;
+    }
+}
  </style>

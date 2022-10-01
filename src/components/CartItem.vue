@@ -3,7 +3,7 @@
 
          <!-- Modal -->
          <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-body">
@@ -18,7 +18,9 @@
         </div>
 
         <div id="imageDiv">
-            <img src="@/assets/foodInfo.jpg"/>
+            <!-- <img  :src="info.url ? info.url : '@/assets/foodInfo.jpg'" /> -->
+            <img v-if="info.url" :src="info.url" />
+            <img v-else src="@/assets/foodInfo.jpg" alt="">
         </div>
         <div id="dataDiv">
             <label>{{ info.name }}</label>
@@ -26,13 +28,13 @@
             <span >{{ info.price}}$</span>
         </div>
         <div id="quantityDiv">
-            <button @click="increment" id="plusButton" v-if="info.status === 'ordered/ready to take over' || this.$route.path === '/checkout' ">
+            <button @click="increment" id="plusButton" v-if="info.status === 'ordered|ready to take over' || this.$route.path === '/checkout' ">
                 <img src="@/assets/plusIcon.svg" alt=""/>
             </button>
     
             <span id="quantityDisplay" >{{ info.quantity }}</span>
 
-            <button @click="decrement" id="minusButton" v-if="info.status === 'ordered/ready to take over' || this.$route.path === '/checkout'">
+            <button @click="decrement" id="minusButton" v-if="info.status === 'ordered|ready to take over' || this.$route.path === '/checkout'">
                 <img src="@/assets/minusIcon.svg" alt=""/>
             </button>
         </div>
@@ -42,38 +44,62 @@
 
 <script>
 
-
 export default {
   name: 'CartItem',
-  props: ['info'],  //definiramo da card može primiti info odnosno propse
+  props: ['info'],  //we define props "info" which can this CartItem.vue take
+ 
 
   components:{},
   data() { 
         return {
-    
+            currIndex : undefined
         }
   },  
 
   methods:{
 
     increment() {
-      this.info.quantity++;
+        this.info.quantity++;
     
     },
     decrement() {
       this.info.quantity--;
-      if (this.info.quantity < 1)  this.toggleModal();
+      if (this.info.quantity < 1)  this.toggleModal('');
+    },
+
+    getIndex(){
+        return this.info.index;
     },
 
      toggleModal(value = null){
-            if (value === 'returnItem') this.increment();
-            else if (value === 'removeItem') this.$emit('delete-item')
-
+            //modal warning for deleting item from cart - when we have multiple items with same id in cart, it opens with right index and closes with wrong
             //refactor and use refs - here we close through js, else replace add data-dismiss with data-bs-dismiss (Boostrap 5)
-            $("#staticBackdrop").modal("toggle");
+            // $("#staticBackdrop").modal("toggle");
+
+            // if (!value){
+            //     console.log(this.info)
+            //     this.currIndex = this.info.index
+            //     console.log(this.currIndex)
+            // }
+            // else{
+            //     console.log(this.currIndex)
+            //     console.log(this.info)
+            //     if (value === 'returnItem') this.increment();
+            //     else if (value === 'removeItem') this.$emit('delete-item', this.currIndex)
+            // }
+
+            //option without modal
+            this.$emit('delete-item', this.currIndex)
+            
         }
  
     },
+
+    mounted(){
+    //    console.log(this.info)
+    }
+    
+
 
 }
  
@@ -187,9 +213,7 @@ small{
     color:white; 
 }
 
-.modal-dialog{
-    top:50vw;
-}
+
 
 .modal-body > p{
     margin-bottom: 0;

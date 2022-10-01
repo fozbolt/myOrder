@@ -8,7 +8,9 @@
             <progress-bar
               :value="statusDict[currStatus]" bar-class="bg-info"
             />
-            <label>{{ currStatus }}</label>
+            <!-- currently showing only food status if we have food AND drink in order since drinks are almost immediately ready-->
+            <label v-if="currFoodStatus">{{ currFoodStatus || 'Fetching status...' }}</label>
+            <label v-else>{{ currDrinkStatus || 'Fetching status...' }}</label>
           </div>
           <button @click="this.$router.go(-1)" id="backBtn" class="btn btn-primary funkyFont">Back</button>
         </div>
@@ -20,8 +22,8 @@
 
 <script>
 import Footer from '@/components/Footer.vue';
-import ProgressBar from '@/components/ProgressBar.vue';
-import { Products } from '@/services';
+import ProgressBar from '@/components/customer/ProgressBar.vue';
+import { Orders } from '@/services';
 import FloatingMenu from '@/components/FloatingMenu.vue';
 //import store from '@/store';
 
@@ -31,13 +33,14 @@ export default {
         return {
             //store,
            statusDict : {
-              'ordered/ready to take over': 25, 
-              'accepted/being prepared':50, 
-              'ready/waiting to be served':90, 
+              'ordered|ready to take over': 25, 
+              'accepted|being prepared':50, 
+              'ready|waiting to be served':90, 
               'served':1, 
               'paid':1,
             },
-            currStatus: 'Fetching status...'
+            currFoodStatus: undefined,
+            currDrinkStatus: undefined
         };
     },
     components: {
@@ -49,8 +52,10 @@ export default {
     methods: {
       async getStatus(){
         let id = JSON.parse(localStorage.getItem('orderID')); 
-        let order = await Products.getOrder(id);
-        this.currStatus = order.orderInfo.orderStatus
+        let order = await Orders.getOrder(id);
+  
+        this.currFoodStatus = order.orderInfo.foodStatus
+        this.currDrinkStatus = order.orderInfo.drinkStatus
       }
     },
 

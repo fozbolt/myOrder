@@ -68,14 +68,14 @@ export default {
   methods:{
     gotoDetails(card) {
             this.store.searchText = ''
-            this.$router.push({ path: `/food_list/${card.id}` });
+            this.$router.push({ path: `/food_list/${card._id}` });
         },
   },
 
   async mounted(){
-    this.cards = await Products.fetchProducts('', this.productInfo.category);
-
-    this.filteredCards = this.cards.filter(item =>  item.id !== this.$route.params.id )
+    this.cards = await Products.fetchProducts('', this.productInfo.type, this.productInfo.category);
+  
+    this.filteredCards = this.cards.filter(item =>  item._id !== this.$route.params.id )
   }
  
 }

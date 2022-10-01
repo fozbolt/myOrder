@@ -15,9 +15,9 @@
   
         <!-- Modal - plan: make as component -->
            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog">
+              <div class="modal-dialog  modal-dialog-centered">
                   <!-- Modal content-->
-                  <div class="modal-content">
+                  <div class="modal-content" style="bottom: 60vh;">
                     <div class="modal-header">
                       <h3>Enter your email and enjoy our offers</h3>
                     </div>
@@ -101,18 +101,21 @@
         <div class="collapse" id="collapseExample">
             <div class="card card-body" id="cardBody">
               <div id="contentHolder">
-                <div class="topOffers" @click="goTo('Top offers')">
-                    <img src="@/assets/discount.png" class="seeOffersIcon" alt="see offers icon">
-                    <h5>Top offers</h5>
-                </div>
-                <div class="topOffers" @click="goTo('New offers')">
+                  <div class="topOffers" @click="goTo('Top offers')">
+                      <img src="@/assets/discount.png" class="seeOffersIcon" alt="see offers icon">
+                      <h5>Top offers</h5>
+                  </div>
+
+                  <div class="topOffers" @click="goTo('New offers')">
                     <img src="@/assets/newIcon.png" class="seeOffersIcon" alt="see offers icon">
                     <h5>New offers</h5>
-                </div>
-                <div class="topOffers" @click="goTo('Top offers')"> <!--not implemented yet-->
+                  </div>
+
+                  <div class="topOffers" @click="goTo('Top offers')"> <!--not implemented yet-->
                     <img src="@/assets/happyHours.svg" class="seeOffersIcon" alt="see offers icon">
                     <h5>Our happy hours</h5>   
-                </div>
+                  </div>
+                
               </div>
             </div>
         </div>
@@ -147,11 +150,11 @@
   import Footer from '@/components/Footer.vue';
   import FloatingMenu from '@/components/FloatingMenu.vue';
   import { Products } from '@/services';
-  import AboutCarousel from './InfoSlider.vue';
+  import AboutCarousel from '@/components/customer/InfoSlider.vue';
   import {emitter} from '@/main.js'
   
   export default {
-      name: "HomeSmartphone",
+      name: "HomeDesktop",
       components: { Footer, FloatingMenu, AboutCarousel },
   
       data() {
@@ -189,7 +192,6 @@
         validateEmail(email) 
         {
             //simple regex
-            console.log(email)
             var re = /\S+@\S+\.\S+/;
             return re.test(email);
         },
@@ -273,8 +275,8 @@
                 
                 this.collapsibleOpen = !this.collapsibleOpen;
   
-                if(this.collapsibleOpen) this.$refs.checkOffers.style.top = '500px';
-                else this.$refs.checkOffers.style.top = '330px';
+                if(this.collapsibleOpen) this.$refs.checkOffers.style.top = '600px';
+                else this.$refs.checkOffers.style.top = '50vh';
               }
   
   
@@ -301,52 +303,46 @@
   
   #homepageBody{
     max-width: 100%;
+    background-image: linear-gradient(0deg, rgb(31 36 30) 0%, rgb(38 42 42) 83%, rgb(40 41 45) 100%);
+    /* background-color:#232626;  */
+    /* background-color: #5d74697a; */
   }
-  
   .homepageContent {
-      height: 100vh;
+      height: 105vh;
       width: 100%;
       background-color: #262a2b;
       /* to hide strange border alike behavior - nije bas neki fiks - popraviti */
-      top:3px; 
+      /* top:3px;  */
   }
   
   #landingContent{
       display: flex;
       position:relative;
-      /* top:-50px; */
+      top:-55px;
       left:0px;
       align-items: flex-start;
       overflow: visible;
       flex-direction: column;
       background-color:#262a2b;
-      height: 105vh;
   }
   
   
   
   #landingImage{
     position: absolute;
-    top:-50px;
-    left:0;
+    /* top:-55px; */
     width:100%;
-    height:105vh;
-    z-index: 11;
+    z-index: 13;
     /* background-image: url('@/assets/HeroMobile.png'); */
-    background-size: cover;
+    /* background-size: cover; */
     
   }
   
-  picture {
-    max-width: 100%;
-    max-height: 105vh;
-    display: flex;
-   
-  }
+  
   picture img {
-   object-fit: cover; 
-      height: 105vh;
+      /* object-fit: cover;  */
       width:100%;
+      height: fit-content;
   }
   
   #abouthomepageContent{
@@ -358,12 +354,16 @@
     flex-direction: column;
     align-items: center;
     border-radius: 0 0 50% 50%;
+    position: relative;
+    top: 25vh;
+    z-index:13;
   }
   
   #abouthomepageContent2{
     position:relative;
     top: -450px;
-    z-index: -1;
+    z-index: 0;
+    height: fit-content;
   }
   
   #abouthomepageContent2 > img {
@@ -391,7 +391,11 @@
   /* subscribeDiv */
   #subscribeDiv{
     height: auto;
-    width:100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
   }
   
   #subscribeImageDiv{
@@ -407,34 +411,36 @@
   }
   
   #subscribeContent{
-    position:absolute; 
+    position: absolute;
+    width: 60%;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-direction: column;
   }
   
   #subscribeContent > h1{
-    font-size: 120px;
-    line-height: 145px;
-    margin-top: 20px;
+    font-size: 20vw;
+    height: 22vw;
   }
   
   #subscribeContent > h5{
-  font-size: 25px;
-  line-height: 27px;
-  
+    font-size: 3vw;
+    margin-bottom: 2vh;
   }
   
   
   #subscribeContent > small{
     font-family: 'Roboto';
-    font-size: 16px;
-    line-height: 19px;
-    color:#353131;
+    font-size: 2vw;
+    line-height: 4vh;
+    color: #353131;
+    -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
+    margin-bottom: 4vh;
   }
   
   
@@ -442,15 +448,15 @@
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
-    font-size: 25px;
-    line-height: 26px;
+    font-size: 3vw;
     text-align: center;
     letter-spacing: 0.095em;
-    display:block;
+    display: block;
     margin: 20px;
     background: none;
     padding: 10px 25px;
     border: 1px solid;
+    -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
   }
   
@@ -458,9 +464,16 @@
   
   
   
-  
   #orderNowButton{
     position:relative;
+    font-size: 2vw;
+    text-align: center;
+    height: fit-content;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    border-radius: 50%;
+    margin: 2vw 2px 0vw 2vw;
    
   }
   
@@ -483,28 +496,29 @@
   
   #mainText{
     position: relative;
-    width: 281px;
+    width: 40vw;
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
-    font-size: 22px;
-    line-height: 26px;
+    font-size: 3vw;
+    line-height: 3vw;
     color: #000000;
+    -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
   }
   
   
   #subText{
-    margin-top:5px;
+    margin-top: 5px;
     position: relative;
-    width: 300px;
+    width: 40vw;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
     line-height: 18px;
     color: #161515;
-    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
   }
   
   #landingText{
@@ -515,7 +529,7 @@
     text-align: left;
     align-self: flex-start; 
     height: auto;
-    z-index:12;
+    z-index:13;
     
   }
   
@@ -549,9 +563,7 @@
       color:white; 
   }
   
-  .modal-dialog{
-      top:50vw;
-  }
+
   
   .modal-body > p{
       margin-bottom: 0;
@@ -588,21 +600,25 @@
   
   
   #descHeader{
-    width:85%; 
-    align-items: center; 
-    position: relative; 
+    /* width: 85%: */
+    align-items: center;
+    position: relative;
     bottom: 20%;
     text-align: left;
+    display: flex;
+    font-size: 2rem;
+    flex-direction: column;
+    justify-content: center;
   }
   
   #descHeader > ul {
     margin-top: 1rem;
-    line-height: 25px;
+    line-height: 35px;
   }
   
   #checkOffersDiv{
     position:relative;
-    top:330px;
+    top:50vh;
     z-index:2;
     color:white;
     text-align:center;
@@ -610,7 +626,7 @@
   
   #checkOffersDiv > h5{
     font-weight:300;
-    font-size: 25px;
+    font-size: 4rem;
     backdrop-filter: blur(2px);
     width: fit-content;
     margin-left: auto;
@@ -622,13 +638,15 @@
     z-index:2;
     color:white;
     text-align: left;
-    margin-right: auto;
-    margin-left: 25%;
+    margin: auto 2vw;
+    display: flex;
+    align-items: center;
+    height: fit-content;
   }
   
   .topOffers > h5{
     font-weight:300;
-    font-size: 20px;
+    font-size: 2rem;
     backdrop-filter: blur(2px);
     width: fit-content;
     margin-left: auto;
@@ -640,21 +658,23 @@
   #cardBody{
     width: 100%;
     position: relative;
+    top:40px;
   }
   
   #contentHolder{
     width:100%; 
-    height: 500px; 
+    height: 600px; 
     position:relative; 
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
   }
+
   
   
   .seeOffersIcon{
-    height: 30px;
-    width: 30px;
+    height: 3rem;
+    width: 3rem;
     margin-right: 5px;
   }
   
@@ -667,11 +687,13 @@
   #subText >  h6 {
     margin-top:10px;
     font-family: "Montserrat Medium";
-    max-width: 40ch;
+    max-width: fit-content;
     text-align: left;
     transform: scale(0.94);
-    animation: scale 3s forwards cubic-bezier(0.5, 1, 0.89, 1);
-    font-size: 18px;
+    animation: scale 5s forwards cubic-bezier(0.5, 1, 0.89, 1);
+    font-size: 2vw;
+    backdrop-filter: blur(5px);
+
   }
   @keyframes scale {
     100% {
@@ -685,7 +707,7 @@
     filter: blur(4px);
     padding: 0px 2px;
   }
-
+  
   span:nth-child(1) {
     animation: fade-in 3.8s 0.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
@@ -758,6 +780,8 @@
     animation: fade-in 0.8s 1.8s forwards cubic-bezier(0.11, 0, 0.5, 0);
   }
   
+  
+  
   /* About and subscribe section text animation source: https://codepen.io/grotandthemob/pen/bmXvzK*/
   .header {
     opacity: 0;
@@ -780,26 +804,48 @@
   
   
   
-  @media (max-width:767px){
-   #landingImage{
-     height: 100vh;
-     z-index:13;
-   }
-   #landingText{
-     z-index:13;
-   }
-  }
-  
+
+
+
   @media (min-width:767px){
    #landingText{
-     left:30vw;
-     top:15vw;
-     z-index:11;
+      left: 5vw;
+      top: 25vw;
+      z-index: 13;
+   }
+  }
+
+
+  @media (min-width:1024px){
+   #landingContent{
+      height: 135vh;
+   }
+   #abouthomepageContent{
+      top: 0;
+   }
+  }
+
+  @media (min-width:1200px){
+   #landingContent{
+      height: 175vh;
+   }
+   #abouthomepageContent{
+      top: 7vh;
    }
   }
   
+
   
+
+  @media (min-width:1700px){
+   #landingContent{
+      height: 170vh;
+   }
+   #abouthomepageContent{
+      top: 12vh;
+   }
+  }
   
   
   </style>
-  
+  #

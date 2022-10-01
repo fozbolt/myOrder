@@ -22,7 +22,7 @@
                 <div class="password" onfocus="document.getElementById('password_eye').style.display='block';"
                       onblur="document.getElementById('password_eye').style.display='none';">
                     <i class="fas fa-key" id="iconPassword"></i>
-                    <input v-model="password" type="password" class="form-control"  id="hidden_password" placeholder="password..."   />
+                    <input v-model="password" type="password" class="form-control"  id="hidden_password" placeholder="password..."  autocomplete="off"  />
                     <i class="fas fa-eye" id="password_eye" v-on:click="show_password()"></i>
                     
                 </div>
@@ -82,18 +82,19 @@ export default {
         
 				this.$router.push('/');
 			}
-			else this.errorMessage = "Neuspjeli pokušaj prijave u sustav, molimo provjerite unesene podatke!";
+			else this.errorMessage = "Login failed, please check your input data";
 		},
 
     checkForCustomer(){
       //if query exists then we know its customer - force push login
       this.qrUser = this.$route.query.username;
       this.qrPass = this.$route.query.password;
-      this.store.table += this.$route.query.table;
+      
 
       if(this.qrUser!=null && this.qrPass!=null){
           this.email = this.qrUser
           this.password = this.qrPass
+          localStorage.setItem('table', JSON.stringify(this.$route.query.table));
 
           this.login();
       }
@@ -345,6 +346,9 @@ small{
   form > .btn{
     font-size:20px;
   }
+  #logo-main{
+  margin-top: 10vh;
+ }
 
 }
 

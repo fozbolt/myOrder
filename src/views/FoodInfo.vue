@@ -6,20 +6,26 @@
                     <div class="toast-header text-light">
                         <img id="successIcon" src="@/assets/successIcon.png"/>
                         <!-- <i class="fa-regular fa-circle-check fa-bounce"></i> -->
-                        <h6 class="my-0">{{this.card.name}} Added to cart</h6>
+                        <h6 class="my-0">{{this.card.name}} added to cart</h6>
                     </div>
                 </div>  
             </div>
             <div id="imageZoomableDiv" oncontextmenu="return false;">
-                <span id="circle-left" class="funkyFont">
-                        <b>40%</b>
-                        <small>OFF</small>
+                <span v-if="card.discount" class="circle-left">
+                    <b>{{card.discount}}</b> 
+                    <small>OFF</small>
                 </span>
                 <span id="circle-right" class="funkyFont">
-                    {{this.card.price}}$
+                    {{constPrice}}$
                 </span>
                 
-                <img @mousedown="button_z_index = 'hidden'" @mouseup="button_z_index = 'visible'" id="mainFoodImg" src="@/assets/foodInfo.jpg" alt="foodInfoImage"/>
+                <img 
+                    @mousedown="button_z_index = 'hidden'" 
+                    @mouseup="button_z_index = 'visible'" 
+                    id="mainFoodImg" 
+                    :src="card.url || '@/assets/foodInfo.jpg'" 
+                    alt="foodInfoImage"
+                />
             </div>
             <button @click="$router.push({ path: '/food_list' })" :style="{ 'visibility': button_z_index }" id="circle-bottom">
                     <img id="backIcon" src="@/assets/backIcon.png" />
@@ -35,12 +41,12 @@
                 </div>
                 <div id="ingredients"> {{ card.ingredients || defaultIngredients}}</div>
                 <div id="clockDiv">
-                    <img src="@/assets/clockIcon.svg" alt="">
+                    <img src="@/assets/clockIcon.svg" alt="" id="clockIcon">
                     <small ><b> {{card.cookingTime || defaultCookingTime}}</b></small>
                 </div>
 
-                <button  v-if="store.type.toLowerCase()==='food'" @click="toggleCollapsible" class="collapsible" ref="collapsible">Choose additions</button>
-                <div v-if="store.type.toLowerCase()==='food'" class="content">
+                <button  v-if="card.type.toLowerCase()==='food'" @click="toggleCollapsible" class="collapsible" ref="collapsible">Choose additions</button>
+                <div v-if="card.type.toLowerCase()==='food'" class="content">
                     <div v-for="(value, key, index) in additions" class="form-check" v-bind:style= "[index===additions.length-1 ? {'border-bottom':'black solid 1px'} : {}]" :key="index" >
                         <input :value="index" v-model="checkedPrices" class="form-check-input" type="checkbox" id="flexCheckDefault" >
                         <label class="form-check-label" for="flexCheckDefault">
@@ -64,35 +70,35 @@
                         <table>
                             <tr>
                                 <th>Energy value</th>
-                                <th>1000 kcal</th>
+                                <th>{{this.card.energy_value || '1200'}} kcal</th>
                             </tr>
                             <tr>
                                 <td>Carbohydrates</td>
-                                <td>100 g</td>
+                                <td>{{this.card.carbohydrates || '110'}} g</td>
                             </tr>
                             <tr>
                                 <td>Protein</td>
-                                <td>20 g</td>
+                                <td>{{this.card.protein || '20'}} g</td>
                             </tr>
                             <tr>
                                 <td>Fat</td>
-                                <td>30 g</td>
+                                <td>{{this.card.fat || '55'}} g</td>
                             </tr>
                             <tr>
                                 <td>Vitamin A</td>
-                                <td>1230 mg</td>
+                                <td>{{this.card.vitamin_a || '1230'}} mg</td>
                             </tr>
                             <tr>
                                 <td>Vitamin C</td>
-                                <td>220 mg</td>
+                                <td>{{this.card.vitamin_c || '220'}} mg</td>
                             </tr>
                             <tr>
                                 <td>Calcium</td>
-                                <td>20 mg</td>
+                                <td>{{this.card.calcium || '20'}} mg</td>
                             </tr>
                             <tr>
                                 <td>Zinc</td>
-                                <td>30 mg</td>
+                                <td>{{this.card.zinc|| '10'}} mg</td>
                             </tr>
                         </table>
                     </div>
@@ -140,12 +146,14 @@ export default {
     Slider,
     Footer,
     FloatingMenu
-},
+    },
+
     data() {
         return {
             store,
             card: null,
             cart: [],
+            constPrice: undefined,
             checkedPrices: [0],
             button_z_index: 'visible',
             additions: {
@@ -159,7 +167,7 @@ export default {
             },
             additionsSum: 0,
             defaultIngredients: 'tomatoes, cheese, ham, mushrooms, artichokes, capers, garlic, olives, oregano',
-            defaultCookingTime: '25-35 min',
+            defaultCookingTime: '25-35',
             defaultDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate'
 
         };
@@ -167,6 +175,8 @@ export default {
     async mounted() {
         this.card = await Products.getOne(this.id);
         this.cart = JSON.parse(localStorage.getItem('cart')); 
+        this.constPrice = this.card.price
+        
 
         if (!Array.isArray(this.cart)) this.cart = []
             
@@ -186,14 +196,17 @@ export default {
    
     methods:{
         addToCart(){
-            this.cart = this.cart || [];
+            this.cart = JSON.parse(localStorage.getItem('cart')); 
             this.card.additions = this.checkedPrices.map(value => Object.keys(this.additions)[value]);
-            this.card.price = this.card.price + this.additionsSum;
+            this.card.price = Number(this.card.price) + Number(this.additionsSum);
+  
+            this.adjustID()
          
             //check if item already in cart (must have same additions)
             let foundIndex = null
-            this.cart.forEach((item,index) => {    
-                if(item.id === this.card.id && _.isEqual(item.additions.sort(), this.card.additions.sort())){
+            
+            this.cart.forEach((item,index) => { 
+                if(item._id === this.card._id && _.isEqual(item.additions.sort(), this.card.additions.sort()) && item.additions.length === this.card.additions.length){
                     foundIndex = index
                 } 
             });
@@ -208,6 +221,8 @@ export default {
             }
 
             localStorage.setItem('cart', JSON.stringify(this.cart));
+            this.checkedPrices = [0];
+            this.card.price = this.constPrice;
 
             //show success notification
             let button = this.$refs['basicToast']
@@ -215,31 +230,42 @@ export default {
 
         },
 
+        adjustID(){
+            if(this.card.id){
+                this.card._id = this.card.id;
+                delete this.card.id
+            }
+        },
+
+
         goToCheckout(){
             this.$router.push({ path: '/checkout' });
         },
 
         toggleCollapsible(){
             let button = this.$refs['collapsible']
-            button.classList.toggle('dropdownActive')
+            try{
+                button.classList.toggle('dropdownActive')
             
-            let content = button.nextElementSibling;
-            if (content.style.maxHeight){
-                content.style.maxHeight = null;
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-            }     
+                let content = button.nextElementSibling;
+                    if (content.style.maxHeight){
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }     
+            }catch(err){}
+            
         },
 
-        // toFront(){
-        //     document.getElementById('circle-bottom').zIndex=-1;
-        // },
 
         adjustResponsiveness(){
-            //loša ideja- refaktorirati
+            //bad idea - needs refactoring
             let box = document.querySelector('#titleDiv');
-            let height = box.offsetHeight;
-            if (height > 80) document.querySelector('#ingredients').style.paddingTop  = '20px'
+            try{    
+                let height = box.offsetHeight;
+                if (height > 80) document.querySelector('#ingredients').style.paddingTop  = '20px'
+            }catch(e){}
+           
         },
 
 
@@ -248,12 +274,13 @@ export default {
 
      computed: {
         sum() {
-            if (this.checkedPrices[this.checkedPrices.length - 1] === 0 && this.checkedPrices.length > 1 ) {
+            if (this.checkedPrices[this.checkedPrices.length - 1] === 0 ) {
                 this.checkedPrices = [0]           //if last chosen element is "no additions" -> reset array
             }
             else if (this.checkedPrices.includes(0) ) {
                  this.checkedPrices = this.checkedPrices.filter(price => price != 0) //else fill array with more choices
             }
+            else if ( this.checkedPrices.length === 0) this.checkedPrices = [0] //dont allow all checkboxes to be unchecked
            
            
             let filteredPrices = this.checkedPrices.map(value => Object.values(this.additions)[value]);
@@ -262,6 +289,8 @@ export default {
            
         }
     },
+
+  
 
 };
 </script>
@@ -549,7 +578,7 @@ small{
 .toast-container {
     overflow: hidden;
     position: relative;
-    z-index:4
+    z-index:16
 }
 .toast-container > .toast {
     width: fit-content;
@@ -576,6 +605,11 @@ small{
 
 .btn{
     font-size:1.25rem;
+}
+
+
+#clockIcon{
+    margin-right: 2px;
 }
 
 @keyframes example1 {

@@ -3,10 +3,10 @@ import $router from '@/router'
 import store from '@/store.js';
 
 
-// instanca axios-a za potrebe myOrder backenda
+// axios instance for myOrder backend
 let Api = axios.create({
-    baseURL: 'http://localhost:5000/',
-    //baseURL: 'https://my-order.herokuapp.com/',
+    // baseURL: 'http://localhost:5000/',
+    baseURL: 'https://my-order.herokuapp.com/',
     timeout: 20000, 
 });
 
@@ -17,12 +17,12 @@ Api.interceptors.request.use((request) => {
     } catch (e) {
         console.error(e);
     }
-    //dodaje token u header i returna odnoso šalje dalje na backend
+    //adds token to header and returns/send it with requests on backend
     return request;
 });
 
 
-//Dodan i ovaj interceptor jer se može desiti da dodamo token i token ide prema backendu, backend skuži da je token isteko i vrati 401 grešku, pa da nas rerouta na login
+//this interceptor is added because it can happen that we add token and token goes to backend, backend figures out that token expired and returns 401 error, so this interceptor reroutes us to /login
 Api.interceptors.response.use( 
     (response) => {return response},
     (error) => {
@@ -36,7 +36,7 @@ Api.interceptors.response.use(
 
 let Auth = {
     async register(new_user){
-        //pass ide preko SSL-a pa ga nije nužno heshirati
+        //password goes through SSL so it isn't necessary to hash it in post request?
         const response = await Api.post('/register', {new_user});
         
         if(!response)
@@ -54,7 +54,6 @@ let Auth = {
 
         if(response.data){
             let user = response.data
-            //prvi put spremamo radi tokena
             localStorage.setItem('user', JSON.stringify(user));
             store.userType = user.type
             
@@ -68,7 +67,9 @@ let Auth = {
     logout() {
         localStorage.removeItem('orderID');
         localStorage.removeItem('user');
+        localStorage.removeItem('cart');
         $router.go(); //this should be enough
+        
         //this.$router.push({ path: `/login` });
     },
     isAuthenticated(){
@@ -86,7 +87,7 @@ let Auth = {
     },
 
     state: {
-        //javascript setteri - get ispred nekog atributa - taj atribut pretvaraju u funkciju, funkcija koja se predstavlja da je varijabla i može se čitati kao atribut, ne treba pozivati funkciju iz drugog modula nego varijablu kao i prije
+        //javascript setters(get before function name or variable) - taj atribut pretvaraju u funkciju, funkcija koja se predstavlja da je varijabla i može se čitati kao atribut, ne treba pozivati funkciju iz drugog modula nego varijablu kao i prije
 
         get authenticated() {
             return Auth.isAuthenticated();
@@ -101,15 +102,14 @@ let Auth = {
             if(user_data) return user_data;
             return false;
         },
+        //deprecated
         get loaderState() {
             return store.showLoader
         },
     },
 }
 
-// naš objekt za sve pozive koji se dotiču `Post`ova
-let Products = {
-
+let Orders = {
     async newOrder(order_info){
         const response = await Api.post('/new_order', order_info)
         
@@ -118,6 +118,7 @@ let Products = {
         else if(response.data) return response.data.id
         
     },
+
     async saveFeedback(feedback){
         const response = await Api.post('/leave_feedback', feedback)
         
@@ -125,6 +126,119 @@ let Products = {
         else if(response.data) return true
         
     },
+
+    async getOrder(id) {
+        let response = await Api.get(`/order_info/${id}`);
+
+        let doc = response.data;
+        return doc
+        
+    },
+
+    async updateOrder(order) {
+        let response = await Api.patch(`/orders/${order.id}`, order);
+
+        if(!response) return false
+        else if(response.data) return true
+
+    },
+
+    async deleteOrder(id) {
+        return await Api.delete(`/orders/${id}`);
+    },
+
+
+    async getOrderStatusTypes() {
+        let response = await Api.get(`/order_types`);
+        
+        let doc = response.data;
+        return doc
+        
+    },
+
+    async getAll(searchTerm, productType, status) {
+        let options = {};
+        if (searchTerm) {
+            options.params = {
+                _any: searchTerm,
+            };
+        }
+        
+        let response = await Api.get(`/orders/${productType}/${status}`, options)
+
+        if(response){
+            response.data.id = response.data._id
+            delete response.data._id
+            return response.data
+        }
+        else return false;
+    },
+
+
+    //status_type- optional parameter used for fetching similar meals and drinks + manager filter + orders filter
+    async fetchOrders(term, productType, status_type = '') { 
+        term = term || store.searchText; 
+        let result = await Orders.getAll(term, productType, status_type )
+
+        //this.cards = Array.isArray(result) ? result.sort((a, b) => a.posted_at.localeCompare(b.posted_at)) : result;
+        return  _.sortBy( result, 'orderInfo.date' ).reverse();
+  
+    },
+
+
+    async sendCall(data){
+        const response = await Api.post('/calls', data)
+        
+        if(!response) return false
+        else if(response.data) return true
+        
+    },
+
+
+    async updateCall(data) {
+        let response = await Api.patch(`/calls/${data._id}`, data);
+
+        if(!response) return false
+        else if(response.data) return true
+
+    },
+
+
+    //cloned code from food_list search
+    async getCalls(searchTerm, status) {
+        let options = {};
+        if (searchTerm) {
+            options.params = {
+                _any: searchTerm,
+            };
+        }
+
+        
+        let response = await Api.get(`/calls/${status}`, options)
+  
+        if(response){
+            response.data.id = response.data._id
+            delete response.data._id
+            return response.data
+        }
+        else return false;
+    },
+
+
+    async fetchCalls(term, reason = '') { 
+        term = term || store.searchText; 
+        let result = await Orders.getCalls(term, reason )
+
+        return  _.sortBy( result, 'time' ).reverse();
+  
+    },
+
+}
+
+
+
+
+let Products = {
 
     async addProduct(data){
         const response = await Api.post('/add_product', data)
@@ -156,13 +270,24 @@ let Products = {
         let doc = response.data;
     
         return {
-            //ovo premapirati i vidjeti koji podaci jos trebaju za jelo
             id: doc._id,
             name: doc.name,
             price: doc.price,
             subCategory: doc.subCategory,
             category: doc.category,
-            type: doc.type
+            type: doc.type,
+            cookingTime: doc.cookingTime,
+            description: doc.description,
+            ingredients: doc.ingredients,
+            url: doc.url,
+            energy_value: doc.energy_value,
+            carbohydrates: doc.carbohydrates,
+            protein: doc.protein,
+            fat: doc.fat,
+            vitamin_a: doc.vitamin_a,
+            vitamin_c: doc.vitamin_c,
+            calcium: doc.calcium,
+            zinc: doc.zinc
             //posted_at: Number(doc.postedAt),
             
         };
@@ -174,22 +299,7 @@ let Products = {
         return doc
         
     },
-    async getOrder(id) {
-        let response = await Api.get(`/order_info/${id}`);
-
-        let doc = response.data;
-        return doc
-        
-    },
-
-    async updateOrder(order) {
-        let response = await Api.patch(`/orders/${order.id}`, order);
-
-        if(!response) return false
-        else if(response.data) return true
-
-    },
-
+   
     
     async deleteProduct(id) {
         return await Api.delete(`/products/${id}`);
@@ -203,13 +313,6 @@ let Products = {
             };
         }
 
-        //sazeti u options.params
-        //   options.categories = {
-        //     type,
-        //     category,
-        //     subCategory: subcategory,
-
-        // }
 
         let response = await Api.get(`/menu/${type}/${category}/${subcategory}`, options)
         response.data.id = response.data._id
@@ -312,4 +415,4 @@ let Employees = {
     },
 }
 
-export { Api, Products, Auth, Employees }; // exportamo Api za ručne pozive ili Products za metode.
+export { Api, Products, Auth, Employees, Orders };

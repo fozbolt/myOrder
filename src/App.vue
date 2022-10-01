@@ -1,17 +1,18 @@
 <template>
-
-    <LoadingScreen v-if="!loaded && this.$route.path==='/'"></LoadingScreen>
+    <!--for UX purposes on customer interface only-->
+    <LoadingScreen v-if="!loaded"></LoadingScreen> 
 
     <div v-else-if="(auth.authenticated || this.$route.path ==='/login') && loaded===true" class="page-container">
       <div class="content-wrap">
         <Navbar @focusout="handleFocusOut" tabindex="0"/>
-  
+        
         <router-view v-if="store.userType === 'customer'" v-slot="{ Component, route }"> 
             <transition :name="transitionName" class="transition" mode="out-in">                 
                 <component :is="Component" :key="route.fullPath"></component>
             </transition>
         </router-view>
-        <router-view v-else />
+        
+        <router-view v-else :key="$route.fullPath" />
         
       </div>
         <!-- <Footer class="footer"/> -->
@@ -43,7 +44,7 @@ export default {
           password: '',
           store,
           auth: Auth.state,
-          loaded: true,
+          loaded: false,
           transitionName: 'animation-right',
         }
   },
@@ -61,11 +62,15 @@ export default {
       }); 
     },
 
+
     setLoader(){
-        setTimeout(()=>{
-          this.loaded=true
-        },3000)
+        if(this.store.userType !== 'customer') this.loaded = true;
+        else 
+            setTimeout(()=>{
+                this.loaded=true
+            },3000)
     },
+
 
 
     createCart(){
@@ -77,15 +82,21 @@ export default {
       }
     },
 
+
     getUserType(){
       //needed because login handler sets it only on login and it becomes a problem when store restores during refresh (could be placed in beforeEach route too)
       setTimeout(()=>{
+        //activats only on refresh
         if(this.$route.path !== '/login'){
           let user = JSON.parse(localStorage.getItem('user'));    
           this.store.userType = user.type
           this.store.username = user.username
+          this.store.userId = user.id
+          this.store.table = parseInt(JSON.parse(localStorage.getItem('table')));
         }
+
         },1000)
+        
     }
 
 
@@ -93,14 +104,13 @@ export default {
   },
 
   async beforeMount() {
-          //nek se za sada vuku na landingu, pa kasnije prebaciti u food_list?
           let my_proxy = await Products.getProductTypes()
           let destructuredProxy= {...my_proxy.type}
           if (this.store.productTypes.length === 0) this.store.productTypes.push(destructuredProxy)
       },
 
   mounted(){
-        this.setLoader();
+        this.setLoader()
   
         this.getUserType();
         this.createCart();

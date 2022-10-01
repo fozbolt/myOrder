@@ -136,7 +136,7 @@ export default {
 
                 this.$router.push('/');
             }
-            else{ //dodati još jedan elseif koji provjerava da li korisničko ime već postoji + nema smisla da imam porukice u formi i bootstrap alerte
+            else{ //add another else if which check if username already exists in db + it makes no sanse to have notificaitons variables and toast
                  this.registration_failed = "Došlo je do greške tijekom registracije!";
             }
         }

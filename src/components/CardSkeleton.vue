@@ -1,4 +1,4 @@
-<!--source: https://www.youtube.com/watch?v=2-jQ1v6X7vA radi samo na prvom potomku i ako ima samo jedan potomak-->
+<!--source: https://www.youtube.com/watch?v=2-jQ1v6X7vA works only if we have only one descendant and only on first descendant-->
 <template>
     <div class="col-lg-2 col-6">
         <div class="card" >

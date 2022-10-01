@@ -8,19 +8,24 @@
                 </button>
             </div>
             <div class="row" id="headerRow">
-            <h5><b>Checkout</b></h5>
-            <small >{{'Table: 3'}}</small>
+                <h5><b>Checkout</b></h5>
+                <small v-if="store.userType === 'customer'">Table: {{table}} </small>
+                <small v-else>
+                        Table: 
+                        <input type="text" v-model="table"  id="tableInput"/>
+                </small>
             </div>
             <div class="row" id="cardsRow">  
                 <span v-if="orderExists && cartItems.length === 0">Cart is empty. Choose some items first or check <a href="#" @click="$router.push({path: '/placed_order'})">existing order</a></span> 
                 <span v-else-if="cartItems===undefined || cartItems.length<1">No chosen items yet</span> 
             
 
-                <CartItem v-else :key="card.id" 
-                    v-for="(card, index ) in cartItems" :info="card" 
+                <CartItem v-else :key="index" 
+                    v-for="(card, index ) in cartItems" :info="addIndexAndSend(card, index)" 
                     v-bind:style= "[index===cartItems.length-1 ? {'border-bottom':'black solid 1px'} : {}]"
-                    v-on:delete-item="deleteItem(index)"
+                    @delete-item="deleteItem"
                 /> 
+           
             </div>
             <div class="row" id="calculationDiv">
                 <div class="col">
@@ -67,7 +72,7 @@
 <script>
 import CartItem from '@/components/CartItem.vue';
 import store from '@/store.js';
-import { Products } from '@/services';
+import { Orders } from '@/services';
 import Footer from '@/components/Footer.vue';
 import FloatingMenu from '@/components/FloatingMenu.vue';
 
@@ -88,24 +93,29 @@ export default {
             errorMessage: false,
             orderExists: false,
             spinnerOn: false,
-            store
+            orderCount: 0,
+            table: store.table,
+            username: undefined,
+            store,
         
         };
     },
     async mounted() {
         this.cartItems = this.cartItems || [];
         this.cartItems = JSON.parse(localStorage.getItem('cart'));
-
+        this.username = this.store.username;
+        
         if(Boolean( JSON.parse(localStorage.getItem('orderID') ))){
             this.orderExists = true;
         }
+
         
         setTimeout(() => {
-            if(store.type.toLowerCase()==='food'){
-                this.toggleCollapsible()   
-            } 
+                this.toggleCollapsible();
         }, 1000)
 
+        //faster than getting from App.vue 
+        this.store.username = JSON.parse(localStorage.getItem('user')).username;
     },
 
     computed: {
@@ -121,15 +131,17 @@ export default {
     methods:{
         toggleCollapsible(){
             let button = this.$refs['collapsibleNotes']
-            //button.classList.toggle('active')
             
-            let content = button.nextElementSibling;
-            //console.log(content)
-            if (content.style.maxHeight){
-                content.style.maxHeight = null;
+            try{
+                let content = button.nextElementSibling;
+       
+                if (content.style.maxHeight){
+                    content.style.maxHeight = null;
                 } else {
-                content.style.maxHeight = content.scrollHeight + "px";
+                    content.style.maxHeight = content.scrollHeight + "px";
                 } 
+            }catch(err){}
+           
         },
 
         toggleSpinner(){
@@ -139,59 +151,93 @@ export default {
             },5000)
         },
 
+        orderHasType(type){
+            let arr = this.cartItems.filter(item => item.type.toLowerCase() === type.toLowerCase())
+            
+            if (arr.length === 0) return false
+            else return true
+        },
+
+
         async placeOrder(){
             this.toggleSpinner();
 
             this.cartItems = this.cartItems || [];
 
-            if (this.cartItems.length > 0){
+            if (this.cartItems.length > 0 &&  this.validateTable()){
                 let info = {
                     date: Date.now(),
-                    table: '2', //hardcoded for now
+                    table: this.table,
                     totalAmount: this.totalSum,
                     note: this.textualNote,
-                    orderStatus: 'ordered/ready to take over' 
+                    orderStatus: 'ordered|ready to take over',
+                    createdBy: this.username,
+                    createdByType: this.store.userType
+                    //orderNumber: this.orderCount.length  //dummy orderNumber - now we get it through trigger in db
                 }
+
+
+                //inspect for food and drink
+                if(this.orderHasType('Food'))   info.foodStatus = 'ordered|ready to take over'
+                if (this.orderHasType('Drink')) info.drinkStatus = 'ordered|ready to take over'
+
 
                 let bill = {
                     items: this.cartItems, orderInfo: info 
                 }
 
 
-                let id = await Products.newOrder(bill)
+                let id = await Orders.newOrder(bill)
                 
                 if (id) this.getInfo(id);
                 else console.log('place order error - create message for this')
             
             }else{
-                this.errorMessage = 'Your cart is empty';
+                this.errorMessage = 'Make sure your cart and table number are not empty';
             }
         },
 
         deleteItem (index) {
-            //promijeniti u id
+            //cannot set it by id because of case when we have multiple cart items with same id
             this.cartItems.splice(index, 1);
+        
+            //quickfix for case when we delete one of multiple items with same id and quantity of current goes to 0 but item isn't removed
+            //this.cart.items = this.cart.items.filter(item => item.quantity !== 0)
+        },
+
+
+        addIndexAndSend(card, index){
+            card.index = index;
+            return card
         },
 
         async getInfo(id){
             //timeout needed because operations and triggers in backend don't return orderId immediately 
-            //delete this function in case i dont need orderId and leave only await Products.getOrder(id) in callback  function
-            try{
-               
-                setTimeout(()=>{
-                    (async() => {
-                         let order = await Products.getOrder(id)  
-                         localStorage.setItem('orderID', JSON.stringify(order._id));
-                    })();   
-                  
-                    localStorage.setItem('cart', JSON.stringify([])); 
-                    this.$router.push({ path: '/placed_order'})
-                },2000)
-            }catch(e){
-                console.log(e)
-            }
+            //delete this function in case i dont need orderId and leave only await Orders.getOrder(id) in callback  function
+            if (this.store.userType === 'customer'){
+                try{
+                    setTimeout(()=>{
+                        (async() => {
+                                let order = await Orders.getOrder(id)  
+                                localStorage.setItem('orderID', JSON.stringify(order._id));
+                        })();   
+                        
+                        localStorage.setItem('cart', JSON.stringify([])); 
+                        this.$router.push({ path: '/placed_order'})
+                    },2000)
+                }catch(e){
+                    console.log(e)
+                }
             
+                
+            }else  this.$router.push({ path: '/placed_order'})
+           
       
+        },
+
+        validateTable(){
+            //source: https://stackoverflow.com/questions/175739/how-can-i-check-if-a-string-is-a-valid-number
+            return !isNaN(parseFloat(this.table)) && isFinite(this.table);
         }
 
      },
@@ -217,6 +263,7 @@ export default {
     max-width:100%;
     margin:auto;
     flex-shrink: 1;
+    overflow-x: hidden;
 }
 
 #checkoutGif{
@@ -302,6 +349,7 @@ export default {
 #headerRow{
      text-align:left; 
      padding-left:15px;
+     margin-bottom: 10px;
 }
 
 #headerRow > h5 {
@@ -371,6 +419,17 @@ export default {
 
 #checkoutContent > Footer{
     margin-top:40px;
+}
+
+
+
+#tableInput{
+    width: 40px;
+    height: 25px;
+    padding: 0px 10px;
+    text-align: center;
+    border-radius: 10px;
+    border-width: 1px;
 }
 
 

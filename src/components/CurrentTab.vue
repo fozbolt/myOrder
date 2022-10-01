@@ -1,12 +1,12 @@
-<template>
+<template >
   <Suspense>
-    <template #default>
-      <div class="dummyDivNeededForSuspenseToWork"> <!--https://qdmana.com/2022/03/202203271244076861.html-->
-         <HorizontalScroller/>
+    <template #default >
+      <div> <!--https://qdmana.com/2022/03/202203271244076861.html-->
+        <HorizontalScroller/>
         <div class="tab-content p-3" id="myTabContent">
-          <div class="row">   
+          <div class="row" ref="row">   
               <div v-if="loaded===false" class="loader"></div>
-              <Card v-else  @click="gotoDetails(card)" :key="card.id" v-for="card in cards" :info="card" />   <!-- vrijednost varijable se prenosi u props info komponente card, dakle u info stavljamo da želimo proslijediti informaciju card, : uputa da vue ne uzima varijabblu kao običan string nego da pogleda unutra što se nalazi i to preda childu-->
+              <Card v-else  @click="gotoDetails(card)" :key="card._id" v-for="card in cards" :info="card" />   <!-- vrijednost varijable se prenosi u props info komponente card, dakle u info stavljamo da želimo proslijediti informaciju card, : uputa da vue ne uzima varijabblu kao običan string nego da pogleda unutra što se nalazi i to preda childu-->
               <span v-if="store.searchText!== '' && !cards.length">No results found!</span>
               <span v-if="!cards.length">Currently no results in this subcategory</span>
           </div>
@@ -16,12 +16,12 @@
     
     <!--Skeleton loader - unfinished-->
     <template #fallback>
-      <div class="dummyDivNeededForSuspenseToWork">
+      <div>
         <!-- <HorizontalScroller/> -->
        {{'Loading'}}
        Loading..
         <div class="tab-content p-3" id="myTabContent">
-          <div class="row">   
+          <div class="row" ref="row">   
               <Card :key="card.id" v-for="card in cards" :info="card" />     
           </div>
          </div>
@@ -56,12 +56,15 @@ export default {
         this.$watch(
         (vm) => [vm.store.type, vm.store.category, vm.store.selectedSubCategory],
         async (val)  => {
-          //nije najbolja praksa i dodan timeout da bude vise cool loader
           this.cards = await Products.fetchProducts();
-          if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 500)
 
-        //da li treba ovo?
+          //loader turns off after cards are fetched or after 2 seconds of unsuccessful fetching
+          if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 2000)
+              else this.loaded=true
+
+
           this.store.searchText = ''
+          
         },
         {
           immediate: true, //immediate set to true means we watch the initial value of the reactive properties.
@@ -72,8 +75,10 @@ export default {
 
     methods: {
         gotoDetails(card) {
-            this.store.searchText = ''
-            this.$router.push({ path: `/food_list/${card.id}` });
+            if(this.store.userType === 'customer'){
+              this.store.searchText = ''
+              this.$router.push({ path: `/food_list/${card._id}` });
+            }
         },
 
 
@@ -85,7 +90,21 @@ export default {
           this.cards = await Products.fetchProducts(val);
       }, 500),
 
+
   },
+  
+  mounted(){
+  
+    try{
+        //hardcoded wait for async
+        setTimeout(()=>{
+          try{
+            this.store.clientHeightRow = this.$refs.row.clientHeight
+          }catch(e){}
+        },3000)
+    }catch{}
+    
+  }
 
   
 

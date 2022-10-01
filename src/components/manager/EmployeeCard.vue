@@ -15,7 +15,7 @@
 
 export default {
   name: 'EmployeeCard',
-  props: ['info'],  //definiramo da card može primiti info odnosno propse
+  props: ['info'], 
 
   data() { 
         return {
@@ -61,13 +61,14 @@ export default {
 #cardHeader{
     //because of intererance
     color:black;
+    font-weight: 400;
 }
 
 
 .circle-right {
   position: absolute;
   top: -15px;
-  left: 110px; //jer right:-12px ili -15px stvaraju bug s boostrap responsivenes
+  left: 110px;
   width: 50px;
   height: 50px;
   -webkit-border-radius: 25px;

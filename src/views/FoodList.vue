@@ -1,7 +1,7 @@
 
 <template>
     <div>
-      <div id="food-list-content">
+      <div id="food-list-content" ref="foodListContent">
             <div id="search-field">
               <input 
                     v-model="store.searchText" 
@@ -35,7 +35,7 @@
                   </button>
                 </div>
 
-                <CurrentTab/>   
+                <CurrentTab ref="currTab"/>   
                 <FloatingMenu></FloatingMenu>
             </div>
           
@@ -49,7 +49,7 @@
 
 import CurrentTab from '@/components/CurrentTab';
 import store from '@/store.js'
-import FloatingMenu from '../components/FloatingMenu.vue';
+import FloatingMenu from '@/components/FloatingMenu.vue';
 import Footer from '@/components/Footer.vue';
 
 
@@ -65,6 +65,7 @@ export default {
             store,
         }
     },
+    
 
     methods:{
       selectType (event) {
@@ -87,7 +88,8 @@ export default {
       selectCategory (event=undefined) {
 
           this.store.category = event.target.textContent;
-            //privremeno rješenje za razmak
+        
+          //temporary solution for space in name
           if (event.target.textContent === 'Main course') this.store.category = 'MainCourse'
 
           //toggle active type - 
@@ -160,8 +162,21 @@ export default {
     },
 
     async mounted(){
-       document.getElementById(this.store.category).style.color="#0078D4";
-       document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
+      //hardcoded await for fetching cards so we can ge row height
+      if (window.innerWidth < 1199){
+        try{
+          setTimeout(()=>{
+            //this overrides #food-list-content
+            try{
+                this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 300}px`
+            }catch(e){}
+          },3000)
+        }catch{}
+         
+      }
+    
+      document.getElementById(this.store.category).style.color="#0078D4";
+      document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
 
     },
 
@@ -169,6 +184,8 @@ export default {
       this.store.type='Food'
       this.store.category = 'MainCourse'
       this.store.selectedSubCategory = 'All'
+      this.store.isFood = true
+      this.store.isDrink= false
     },
    
 
@@ -201,7 +218,7 @@ export default {
 
 #header-search {
   display: inline-block; 
-  width: 95%; 
+  width: 90%; 
   height: 32px;  color: black; 
   border: none; 
   outline: none;
@@ -214,8 +231,8 @@ export default {
   position: relative; 
   right: 5px;
   fill: gray; 
-  width: 5%; 
-  height: 24px;
+  width: 7%; 
+  height: 32px;
   vertical-align: middle; 
   cursor: pointer;
 }
@@ -318,7 +335,7 @@ export default {
 
 @media(max-width:500px){
   #food-list-content{
-  min-height: 150vh
+  min-height: 200vh
   }
 }
 
@@ -340,5 +357,6 @@ export default {
   #type{
     margin-top: 20px;
   }
+  
 }
 </style>

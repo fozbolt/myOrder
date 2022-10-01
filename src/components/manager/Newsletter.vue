@@ -41,12 +41,13 @@
  
  <script>
  import { Products } from '@/services';
- 
+
+
  export default {
-   name: 'Newsletter',
+    name: 'Newsletter',
     
  
-   data() { 
+    data() { 
          return {
             emails: [],
             subject: '',
@@ -56,7 +57,7 @@
          }
    },  
  
-   methods:{
+    methods:{
         async sendMessage(){
             if (this.subject === '' || this.message === '')
                 this.errorMessage='empty fields'

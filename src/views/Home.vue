@@ -4,21 +4,21 @@
     <HomeDesktop v-else-if="store.userType==='customer'"/>
 
     <Manager v-else-if="store.userType==='manager'" />
-    <Waiter v-else-if="store.userType==='waiter'" /> <!--ili opcenito staff?-->
+    <Staff v-else-if="store.userType==='chef' || store.userType==='barman' || store.userType==='waiter'" />
 
 </template>
 
 <script>
-import HomeSmartphone from '@/components/HomeSmartphone.vue';
-import HomeDesktop from '@/components/HomeDesktop.vue';
+import HomeSmartphone from '@/components/customer/HomeSmartphone.vue';
+import HomeDesktop from '@/components/customer/HomeDesktop.vue';
 import Manager from '@/components/manager/Manager.vue';
-import Waiter from '@/components/Waiter.vue';
+import Staff from '@/components/staff/Staff.vue';
 import store from '@/store.js';
 
 
 export default {
     name: "Home",
-    components: { HomeSmartphone, HomeDesktop, Manager, Waiter },
+    components: { HomeSmartphone, HomeDesktop, Manager, Staff },
 
     data() {
         return {
@@ -27,20 +27,26 @@ export default {
         };
     },
 
+    
+
     mounted() {
       this.$nextTick(() => {
         window.addEventListener('resize', this.onResize);
       })
     },
 
+
+
     beforeDestroy() { 
-      window.removeEventListener('resize', this.onResize); 
+        window.removeEventListener('resize', this.onResize); 
     },
 
+
+
     methods: {  
-      onResize() {
-        this.windowWidth = window.innerWidth
-      }
+        onResize() {
+            this.windowWidth = window.innerWidth
+        }
     }
 
 }

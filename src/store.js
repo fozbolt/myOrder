@@ -1,8 +1,9 @@
 export default {
     //user
-    userId: 'your_id',
+    userId: null,
     username: null,
-    userType: 'manager',
+    table: null,
+    userType: 'customer',
     
     //functionality
     searchText: '',
@@ -13,8 +14,12 @@ export default {
     productTypes: [],  
     isFood : true,
     isDrink: false,
-
+    clientHeightRow: undefined,
+    
     //order data
-    feedbackLeft: false
+    feedbackLeft: false,
+    selected_order_status: 'ordered|ready to take over',
+    selected_call_status: 'new',
+
 
 }

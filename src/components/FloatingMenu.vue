@@ -1,6 +1,6 @@
 <!-- source: https://www.cssscript.com/material-design-style-radial-fab-menu-pure-css/ -->
-<template>
-  <div class="wrapper" ref="target" @click="showFloatingMenu">
+<template >
+  <div v-if="store.userType === 'customer' || (store.userType==='waiter' && waiterPathList.includes($route.path))"  class="wrapper" ref="target" @click="showFloatingMenu">
 
     <!--toast-->
     <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -41,33 +41,59 @@
   <input id="triggerButton" class="triggerButton" type="checkbox"/>
   <label for="triggerButton"  ref="label" id="menuLabel"></label>
 
-  <div class="one fa-solid fa-clipboard-question"  
-      @click="$router.push({ path: `/order_status` })" 
-      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
-  </div>
-  <div class="two fa fa-solid fa-cart-plus" 
-      @click="$router.push({ path: `/checkout` })" 
-      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
-  </div>
-  <div class="three fa fa-phone" 
-      type="button" 
-      data-bs-toggle="modal" 
-      data-bs-target="#myModal" 
-      :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
-  </div>
-</div>
+  <!--content for customer-->
+    <div v-if="store.userType ==='customer'"
+        class="one fa-solid fa-clipboard-question"  
+        @click="$router.push({ path: `/order_status` })" 
+       style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+    <div  v-if="store.userType ==='customer'"
+        class="two fa fa-solid fa-cart-plus" 
+        @click="$router.push({ path: `/checkout` })" 
+        :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+    <div  v-if="store.userType ==='customer'"
+        class="three fa fa-phone" 
+        type="button" 
+        data-bs-toggle="modal" 
+        data-bs-target="#myModal" 
+        :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+
+  <!--content for waiter-->
+    <div  v-if="store.userType ==='waiter'"
+        class="one fa-solid fa-clipboard-question"  
+        @click="$router.push({ path: `/orders` })" 
+        :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+    <div  v-if="store.userType ==='waiter'"
+        class="two fa fa-solid fa-cart-plus" 
+        @click="$router.push({ path: `/checkout` })" 
+        :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+    <div  v-if="store.userType ==='waiter'"
+        class="three fa fa-phone" 
+        type="button" 
+        @click="$router.push({ path: `/calls` })" 
+        :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+    </div>
+    </div>
 
 </template>
 <script>
 
 import { onClickOutside } from '@vueuse/core'
 import { ref } from 'vue'
+import store from '@/store.js'
+import { Orders } from '@/services';
 
 export default {
   name: 'FloatingMenu',
   data(){
     return{
-      callReasons: ['Help while ordering', 'Order manually', 'Pay Bill', 'Complaint', 'Other']
+      store,
+      callReasons: ['Help while ordering', 'Order manually', 'Pay Bill', 'Complaint', 'Other'],
+      waiterPathList: ['/food_list', '/orders', '/calls']
     }
   },
 
@@ -78,10 +104,25 @@ export default {
             $("#myWaiterModal").modal("toggle");
     },
 
-    callWaiter(reason){
-      //show success notification
-      let button = this.$refs['basicToast']
-      new bootstrap.Toast(button).show();
+    async callWaiter(reason){
+      let data = {
+        table: this.store.table,
+        reason: reason,
+        time: Date.now(),
+        status: 'new',
+      }
+      
+      let success = await Orders.sendCall(data)
+
+      //show success notification - check if it returns boolean or sth els
+      if (success){
+        let button = this.$refs['basicToast']
+        new bootstrap.Toast(button).show();
+      }else{
+        console.log('Error accured during call sending - next iteration will have toast notification for it')
+      }
+
+       
     },
 
     showFloatingMenu(){
@@ -93,7 +134,9 @@ export default {
 
   mounted(){
     //change color when on this route to stand out more - can be done with inline style binding too
-    if (this.$route.path === '/food_list') this.$refs.label.style.backgroundColor= '#5A5EB9';
+    try{
+        if (this.$route.path === '/food_list') this.$refs.label.style.backgroundColor= '#5A5EB9';
+    }catch(e){}
   },
 
   setup() {
