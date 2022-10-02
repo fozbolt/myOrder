@@ -64,7 +64,7 @@ export default {
 
 
     setLoader(){
-        if(this.store.userType !== 'customer') this.loaded = true;
+        if(this.store.userType !== 'customer' || !this.$route.path.includes('/orders')) this.loaded = true;
         else 
             setTimeout(()=>{
                 this.loaded=true
@@ -115,6 +115,7 @@ export default {
         this.getUserType();
         this.createCart();
   },
+  
 
   watch: {
     ['$route'](to, from) {
