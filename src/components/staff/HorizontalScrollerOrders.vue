@@ -124,7 +124,7 @@ export default {
         'store.selected_order_status': {
           handler: async function(newValue) {
           
-            this.toggleActiveSubCategory(); 
+            this.toggleActiveSubCategory();
       }
      },
     }
@@ -287,6 +287,9 @@ export default {
 
   ul{
     width:90% !important;
+  }
+  #tabs{
+    width:100% !important;
   }
 
   .list{

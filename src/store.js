@@ -14,7 +14,7 @@ export default {
     productTypes: [],  
     isFood : true,
     isDrink: false,
-    clientHeightRow: undefined,
+    clientHeightRow: '100vh',
     
     //order data
     feedbackLeft: false,

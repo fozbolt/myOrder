@@ -68,6 +68,7 @@ let Auth = {
         localStorage.removeItem('orderID');
         localStorage.removeItem('user');
         localStorage.removeItem('cart');
+        localStorage.removeItem('table');
         $router.go(); //this should be enough
         
         //this.$router.push({ path: `/login` });
@@ -256,8 +257,8 @@ let Products = {
         
     },
 
-    async addSubscriber(email){
-        const response = await Api.post('/subscribe', email)
+    async addSubscriber(mail){
+        const response = await Api.post('/subscribe', {email: mail})
         
         if(!response) return false
 

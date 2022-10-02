@@ -118,7 +118,7 @@ left: 19px;
 
 #ratingWrapper > span{
     display:flex;
-    justify-content: end;
+    justify-content: flex-end;
     margin-bottom:5px;
 }
 

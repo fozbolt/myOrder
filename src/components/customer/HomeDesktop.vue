@@ -17,7 +17,7 @@
            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog  modal-dialog-centered">
                   <!-- Modal content-->
-                  <div class="modal-content" style="bottom: 60vh;">
+                  <div class="modal-content">
                     <div class="modal-header">
                       <h3>Enter your email and enjoy our offers</h3>
                     </div>

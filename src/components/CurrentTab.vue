@@ -4,7 +4,7 @@
       <div> <!--https://qdmana.com/2022/03/202203271244076861.html-->
         <HorizontalScroller/>
         <div class="tab-content p-3" id="myTabContent">
-          <div class="row" ref="row">   
+          <div class="row" ref="row" id="listRow">   
               <div v-if="loaded===false" class="loader"></div>
               <Card v-else  @click="gotoDetails(card)" :key="card._id" v-for="card in cards" :info="card" />   <!-- vrijednost varijable se prenosi u props info komponente card, dakle u info stavljamo da želimo proslijediti informaciju card, : uputa da vue ne uzima varijabblu kao običan string nego da pogleda unutra što se nalazi i to preda childu-->
               <span v-if="store.searchText!== '' && !cards.length">No results found!</span>
@@ -82,6 +82,15 @@ export default {
         },
 
 
+        getScreenHeight(){
+            setTimeout(()=>{
+                try{
+                    this.store.clientHeightRow = this.$refs.row.clientHeight || 0
+                }catch(e){}
+            }, 250)
+        }
+
+
   },
 
     watch: {
@@ -89,6 +98,21 @@ export default {
       'store.searchText': _.debounce(async function(val) {
           this.cards = await Products.fetchProducts(val);
       }, 500),
+
+
+      'store.category': {
+          handler: function() {
+            this.getScreenHeight();
+      },
+    },
+
+
+    'store.selectedSubCategory': {
+          handler: function() {
+            this.getScreenHeight();
+            
+      },
+    },
 
 
   },
@@ -132,6 +156,10 @@ export default {
   animation: spin 0.5s linear infinite;
 }
 
+#listRow{
+        margin-top:20px;
+    }
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -139,8 +167,15 @@ export default {
 
 
 @media(min-width:1200px){
-  .tab-content{
-    padding-top: 50px;
-  }
+    .tab-content{
+        padding-top: 50px;
+    }
+
+  
+    #listRow{
+        width: 70%;
+        margin: auto;
+        margin-top:40px;
+    }
 }
 </style>

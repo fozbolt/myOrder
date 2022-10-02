@@ -266,9 +266,10 @@
               toggleCollapsible(){
                 //source: https://getbootstrap.com/docs/5.0/components/collapse/
                 let collapseElementList = [].slice.call(document.querySelectorAll('.collapse'))
-                collapseElementList.map(function (collapseEl) {
-                  return new bootstrap.Collapse(collapseEl)
-                })
+                let seeOffers = collapseElementList[1]
+               
+                new bootstrap.Collapse(seeOffers)
+                
                 
                 this.collapsibleOpen = !this.collapsibleOpen;
   

@@ -94,7 +94,7 @@ export default {
             orderExists: false,
             spinnerOn: false,
             orderCount: 0,
-            table: store.table,
+            table: parseInt(store.table),
             username: undefined,
             store,
         
