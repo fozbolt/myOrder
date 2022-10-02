@@ -515,7 +515,9 @@ export default {
                     this.toggleModal();
 
                     setTimeout(()=>{
-                        this.$router.go();
+                        let taken = 'accepted|being prepared'
+                        if(info.foodStatus === taken || info.drinkStatus === taken) this.$router.go();
+                        else this.$router.push({ path: `/orders/` });
                     },1000)
                 }
                 else console.log('place order error')
