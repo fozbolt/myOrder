@@ -240,7 +240,12 @@ export default {
             return !isNaN(parseFloat(this.table)) && isFinite(this.table);
         }
 
-     },
+    },
+
+
+    created(){
+        this.table = parseInt(JSON.parse(localStorage.getItem('table')));
+    },
 
 
 
