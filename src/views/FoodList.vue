@@ -131,32 +131,53 @@ export default {
         
       },
 
-      getDataAttr(category) {  
-        return {
-          'id': category,
-          //'ref': category
-          }
-        },
+        getDataAttr(category) {  
+            return {
+            'id': category,
+            //'ref': category
+            }
+            },
 
+        setRowHeight(){
+            try{
+                setTimeout(()=>{
+                    if(this.store.clientHeightRow > 400 ){
+                        this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 550}px`
+                    }
+                },500)
+              
+            }catch(e){}
+        }
     
     },
+
+
      watch: {
        
       'store.type': {
-        handler: async function(newValue) {
-          //refactor to be more dynamic
-          if (this.store.type.toLowerCase() === 'food') this.store.category = 'MainCourse'
-          else this.store.category = 'Non-alcoholic'
-          
-          this.toggleActiveCategory()
-
+            handler:  function(newValue) {
+                //refactor to be more dynamic
+                if (this.store.type.toLowerCase() === 'food') this.store.category = 'MainCourse'
+                else this.store.category = 'Non-alcoholic'
+                
+                this.toggleActiveCategory()
       }
      },
 
      'store.category': {
-          handler: async function(newValue) {
-            this.store.selectSubCategory = 'All'
-      }
+            handler:  function(newValue) {
+                this.store.selectSubCategory = 'All'
+                this.setRowHeight();
+
+      },
+    },
+
+      'store.selectedSubCategory': {
+            handler:  function(newValue) {
+                this.setRowHeight();
+
+      },
+
      }
 
     },

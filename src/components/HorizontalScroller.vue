@@ -39,35 +39,34 @@ export default {
         }
     },
 
-     methods:{
+    methods:{
         selectValue (event) {
             this.store.selectedSubCategory = event.target.innerHTML;
         },
        
-       getDataAttr(index, subcategory) {
-          return {
-            'data-bs-target': '#tab' + index,
-            'id': subcategory,
-            //'ref': subcategory
-          }
-      },
+        getDataAttr(index, subcategory) {
+            return {
+                'data-bs-target': '#tab' + index,
+                'id': subcategory,
+                //'ref': subcategory
+            }
+        },
       
 
-      toggleActiveSubCategory(){
-        setTimeout(() => {
-            document.querySelectorAll('.nav-item').forEach(function(categoryBtn) {
-                      if (categoryBtn.textContent === store.selectedSubCategory){
-                          categoryBtn.style.color = '#0078D4'
-                      }  
-                      else{
-                          categoryBtn.style.color = 'black'
-                      }
-                  });
+        toggleActiveSubCategory(){
+            setTimeout(() => {
+                document.querySelectorAll('.nav-item').forEach(function(categoryBtn) {
+                        if (categoryBtn.textContent === store.selectedSubCategory){
+                            categoryBtn.style.color = '#0078D4'
+                        }  
+                        else{
+                            categoryBtn.style.color = 'black'
+                        }
+                    });
 
-        }, 25)
-      }
+            }, 25)
+         },
 
-       
     },
 
     watch: {
@@ -88,6 +87,7 @@ export default {
     'store.selectedSubCategory': {
           handler: function() {
             this.toggleActiveSubCategory()
+            
       },
     },
 

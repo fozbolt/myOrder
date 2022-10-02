@@ -56,17 +56,34 @@ export default {
 
 
     mounted(){
-      //hardcoded await for fetching cards so we can ge row height
-      if (window.innerWidth < 1199){
-          setTimeout(()=>{
+      //hardcoded await for fetching cards so we can get row height
+        setTimeout(()=>{
             //this overrides #food-list-content
             if(this.store.clientHeightRow > 400 ){
-              this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 450}px`
+              this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 600}px`
             }
         },3000)
-      }
+      
 
       if (this.store.userType === 'waiter') document.getElementById(this.store.type.toLowerCase()).style.color="#0078D4";
+    },
+
+
+    watch: {
+        'store.type': {
+            handler:  function(newValue) {
+
+                this.setRowHeight()
+            }
+        },
+        'store.selected_order_status': {
+            handler:  function(newValue) {
+
+                this.setRowHeight()
+            }
+        },
+  
+  
     },
 
  
@@ -88,6 +105,19 @@ export default {
 
         
       },
+
+
+      setRowHeight(){
+            try{
+                setTimeout(()=>{
+                    if(this.store.clientHeightRow > 400 ){
+                        this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 450}px`
+                    }
+                },500)
+              
+            }catch(e){}
+        }
+
     },
 
 

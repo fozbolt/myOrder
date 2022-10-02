@@ -1,5 +1,5 @@
 <template>
-    <div class="col-xl-4 col-lg-4 col-md-12 col-6" id="column">
+    <div class="col-xl-4 col-lg-4 col-md-12 col-6" id="menuColumn">
         <div id="contentWrapper" @click="goTo">
             <span v-if="number_of_notifications" class="circle-notification">
                 <label v-if="info.name === 'Calls'">{{number_of_notifications -1}}</label> <!--quickfix-->
@@ -75,7 +75,7 @@ export default {
 <style lang="scss">
 
 
-#column{
+#menuColumn{
   width: fit-content;
   // height:50%;
   margin:30px 10px 0px; 
