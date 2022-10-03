@@ -16,11 +16,11 @@
                 <li class="dropdown">
                   <a  class="dropdown-toggle"  data-bs-toggle="dropdown">Statistics<span class="caret"></span></a>
                   <ul class="dropdown-menu animated fadeInLeft" role="menu">
-                    <li><a  @click="this.$router.push({name: 'statistics', params: { chartName: 'firstChart' } })">First chart</a></li>
-                    <li><a @click="this.$router.push({name: 'statistics', params: { chartName: 'secondChart' } })">2nd chart</a></li>
-                    <li><a href="#books">Books</a></li>
-                    <li><a href="#art">Art</a></li>
-                    <li><a href="#awards">Awards</a></li>
+                    <li><a  @click="this.$router.push({name: 'statistics', params: { chartName: 'allCharts' } })">All charts</a></li>
+                    <li><a @click="this.$router.push({name: 'statistics', params: { chartName: 'orders' } })">Orders</a></li>
+                    <li><a @click="this.$router.push({name: 'statistics', params: { chartName: 'employees' } })">Employees</a></li>
+                    <li><a @click="this.$router.push({name: 'statistics', params: { chartName: 'products' } })">Products</a></li>
+                    <li><a @click="this.$router.push({name: 'statistics', params: { chartName: 'calls' } })">Calls</a></li>
                   </ul>
                 </li>
                 <li><a  @click="this.$router.push({name: 'feedback'})"  aria-current="#feedback">Feedback</a></li> 
@@ -118,6 +118,7 @@ export default {
     watch:{
         "$route.path": { 
               handler () {
+                $("#logoTopRight").toggle();
                 let overlay = $('.overlay');
                 let trigger = $('.hamburger');
                       if (this.closed == true) {          
