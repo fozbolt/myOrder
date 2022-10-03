@@ -45,7 +45,7 @@
     <div v-if="store.userType ==='customer'"
         class="one fa-solid fa-clipboard-question"  
         @click="$router.push({ path: `/order_status` })" 
-       style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
+        :style="$route.path === '/food_list' ? 'background-color:#5A5EB9' : 'background-color:#74CF55'">
     </div>
     <div  v-if="store.userType ==='customer'"
         class="two fa fa-solid fa-cart-plus" 

@@ -1,7 +1,7 @@
 <template >
     <div class="col-xl-3 col-lg-3 col-md-3 col-6" id="column">
         <div class="card" >
-            <span v-if="info.orderInfo.foodStatus === 'ready|waiting to be served' || info.orderInfo.drinkStatus === 'ready|waiting to be served'" class="circle-right-top">
+            <span v-if="notificationEnabled()" class="circle-right-top">
                 <img src="@/assets/notificationBell.svg" id="notificationIcon" alt="">
             </span>
             <span class="circle-right-bottom">
@@ -20,13 +20,16 @@
 
 <script>
 
+import store from '@/store.js'
+
+
 export default {
   name: 'OrderCard',
   props: ['info'],
 
   data() { 
         return {
-            
+            store
         }
   },  
 
@@ -39,6 +42,16 @@ export default {
         else  date = date.getHours()+ ":"+ date.getMinutes()
 
         return  date
+    },
+
+    notificationEnabled(){
+        let isWaiterFood = this.store.userType === 'waiter' && this.info.orderInfo.foodStatus === 'ready|waiting to be served' && this.store.type==='Food';
+        let isWaiterDrink = this.store.userType === 'waiter'  && this.info.orderInfo.drinkStatus === 'ready|waiting to be served' && this.store.type==='Drink';
+        let isBarman = this.store.userType === 'barman'  && this.info.orderInfo.drinkStatus === 'ordered|ready to take over';
+        let isChef = this.store.userType === 'chef'  && this.info.orderInfo.foodStatus === 'ordered|ready to take over';
+ 
+        if (isWaiterDrink || isWaiterFood || isBarman || isChef) return true
+        
     }
   }
 

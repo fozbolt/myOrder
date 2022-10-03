@@ -244,7 +244,7 @@ export default {
 
 
     created(){
-        this.table = parseInt(JSON.parse(localStorage.getItem('table')));
+        this.table = parseInt(JSON.parse(localStorage.getItem('table'))) || '';
     },
 
 

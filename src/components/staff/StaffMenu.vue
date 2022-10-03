@@ -2,7 +2,7 @@
     <div class="col-xl-4 col-lg-4 col-md-12 col-6" id="menuColumn">
         <div id="contentWrapper" @click="goTo">
             <span v-if="number_of_notifications" class="circle-notification">
-                <label v-if="info.name === 'Calls'">{{number_of_notifications -1}}</label> <!--quickfix-->
+                <label v-if="info.name === 'Calls'">{{number_of_notifications}}</label> <!--quickfix-->
                 <label v-else>{{number_of_notifications}}</label>
             </span>
             <div id="headline">
@@ -30,10 +30,12 @@ export default {
     },
     methods: {
       async getCount(status, type=undefined){
-
+           
           if (this.info.name === 'Calls'){
                 let dataArr =  await Orders.fetchCalls(this.store.searchText, 'new');
-                return  dataArr.length
+                
+                if( type=== 'Food' ) return  dataArr.length //because it otherwise gets called twice 
+                else return 0
               }
           else{                                 
                 let dataArr =  await Orders.fetchOrders(this.store.searchText, type, status);

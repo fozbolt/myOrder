@@ -43,7 +43,16 @@ export default {
     },
 
     methods:{
-
+        setRowHeight(){
+            try{
+                setTimeout(()=>{
+                    if(this.store.clientHeightRow > 400 ){
+                        this.$refs.foodListContent.style.minHeight = `${this.store.clientHeightRow + 450}px`
+                    }
+                },500)
+              
+            }catch(e){}
+        }
     
     },
   
@@ -59,6 +68,18 @@ export default {
         },3000)
       }
     
+    },
+
+
+    watch: {
+        'store.selected_call_status': {
+            handler:  function(newValue) {
+
+                this.setRowHeight()
+            }
+        },
+  
+  
     },
 
    

@@ -88,14 +88,17 @@ export default {
       setTimeout(()=>{
         //activats only on refresh
         if(this.$route.path !== '/login'){
-          let user = JSON.parse(localStorage.getItem('user'));    
-          this.store.userType = user.type
-          this.store.username = user.username
-          this.store.userId = user.id
-          this.store.table = parseInt(JSON.parse(localStorage.getItem('table')));
+            try{
+                let user = JSON.parse(localStorage.getItem('user'));    
+                this.store.userType = user.type
+                this.store.username = user.username
+                this.store.userId = user.id
+                this.store.table = parseInt(JSON.parse(localStorage.getItem('table')));
+            }catch(e){}
+        
         }
 
-        },1000)
+    },1000)
         
     }
 
