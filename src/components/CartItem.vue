@@ -143,7 +143,7 @@ small{
     height: 80px;
     margin: 0px 10px;
     text-align: center;
-    font-family: Cursive;
+    font-family: 'Comic Sans MS';
     display:flex;
     flex-direction: column;
     justify-content: space-evenly;
