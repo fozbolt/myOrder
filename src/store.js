@@ -3,7 +3,7 @@ export default {
     userId: null,
     username: null,
     table: null,
-    userType: 'customer',
+    userType: undefined,
     
     //functionality
     searchText: '',

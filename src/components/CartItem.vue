@@ -22,7 +22,7 @@
             <img v-if="info.url" :src="info.url" />
             <img v-else src="@/assets/foodInfo.jpg" alt="">
         </div>
-        <div id="dataDiv">
+        <div id="dataDiv" class="">
             <label>{{ info.name }}</label>
             <small>{{ info.additions.join(', ') }}</small>
             <span >{{ info.price}}$</span>
@@ -143,7 +143,7 @@ small{
     height: 80px;
     margin: 0px 10px;
     text-align: center;
-    font-family: cursive;
+    font-family: Cursive;
     display:flex;
     flex-direction: column;
     justify-content: space-evenly;

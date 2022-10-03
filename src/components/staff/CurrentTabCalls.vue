@@ -95,6 +95,15 @@
               await Orders.updateCall(this.currCard);
               this.$router.go();
           },
+
+
+          getScreenHeight(){
+            setTimeout(()=>{
+                try{
+                    this.store.clientHeightRow = this.$refs.row.clientHeight || 0
+                }catch(e){}
+            }, 250)
+        }
   
   
     },
@@ -104,6 +113,14 @@
         'store.searchText': _.debounce(async function(val) {
             this.cards = await Orders.fetchCalls(val, this.store.selected_call_status);
         }, 500),
+
+
+        'store.selected_call_status': {
+            handler: function() {
+
+                this.getScreenHeight();
+                }
+            },
   
     },
 
