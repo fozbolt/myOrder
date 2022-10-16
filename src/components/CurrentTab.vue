@@ -54,22 +54,22 @@ export default {
 
    async created() {
         this.$watch(
-        (vm) => [vm.store.type, vm.store.category, vm.store.selectedSubCategory],
-        async (val)  => {
-          this.cards = await Products.fetchProducts();
+            (vm) => [vm.store.type, vm.store.category, vm.store.selectedSubCategory],
+            async (val)  => {
+                this.cards = await Products.fetchProducts();
 
-          //loader turns off after cards are fetched or after 2 seconds of unsuccessful fetching
-          if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 2000)
-              else this.loaded=true
+                //loader turns off after cards are fetched or after 2 seconds of unsuccessful fetching
+                if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 2000)
+                    else this.loaded=true
 
 
-          this.store.searchText = ''
-          
-        },
-        {
-          immediate: true, //immediate set to true means we watch the initial value of the reactive properties.
-          deep: true, //deep set to true means we watch for changes of properties in all levels of an object.
-        }
+                this.store.searchText = ''
+            
+            },
+            {
+                immediate: true, //immediate set to true means we watch the initial value of the reactive properties.
+                deep: true, //deep set to true means we watch for changes of properties in all levels of an object.
+            }
       );
    },
 

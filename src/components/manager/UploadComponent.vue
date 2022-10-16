@@ -64,13 +64,15 @@ export default {
         }
     },
     methods: {
-        async getImageBlob(){
-            return await fetch(this.files[0].url).then(r => r.blob());
-        },
 
         alert(message) {
             alert(message)
         },
+
+        async getImageBlob(){
+            return await fetch(this.files[0].url).then(r => r.blob());
+        },
+
 
         inputFile(newFile, oldFile, prevent) {
             if (newFile && !oldFile) {

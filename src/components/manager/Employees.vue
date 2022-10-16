@@ -54,8 +54,8 @@
                                     <label for="postalCode">Postal code</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="address" v-model="address" placeholder="Adress">
-                                    <label for="address">Adress</label>
+                                    <input type="text" class="form-control" id="address" v-model="address" placeholder="Address">
+                                    <label for="address">Address</label>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" id="wage" v-model="wage" placeholder="Wage">
@@ -340,6 +340,7 @@ export default {
         //if (this.cards.length !== 0)  setTimeout(() => { this.loaded=true}, 3000) below temporarely solves the bug of infinite loading when we have empty data in db (empty cards)
         if (true)  setTimeout(() => { this.loaded=true}, 3000)
     },
+    
 
     watch: {
       'store.searchText': _.debounce(async function(val) {

@@ -339,8 +339,8 @@ export default {
     methods:{
         changeStatus(){
             // logic for status "served" for both food and drink to "paid" and opposite
-            if ((this.foodStatus === 'served' && this.drinkStatus === 'served' || (this.foodStatus === 'paid' && this.drinkStatus === 'paid'))){
-                //if status change goes backwards then we only update food or drink, if it goes forwards to paid we update both /except for served to new, then we update only one type
+            if ((this.foodStatus === 'served' && this.drinkStatus === 'served') || (this.foodStatus === 'paid' && this.drinkStatus === 'paid')){
+                //if status switches from paid to served and opposite change both food and drink status, otherwise change one
                 if((this.chosenStatus==='paid' || this.chosenStatus==='served') || this.foodStatus === 'paid' && this.drinkStatus === 'paid' ){
                     this.foodStatus = this.chosenStatus;
                     this.drinkStatus =  this.chosenStatus;
@@ -438,8 +438,8 @@ export default {
             }
             else this.update();
 
-            if(this.current_type === 'Food') this.foodAcceptedByID = 'example_id_631afb2f42bd5e3d7c4c859c'; //hardcoded for now untill I make modal (I need to fetch that chef/waiter id first)
-            else this.drinkAcceptedByID = 'example_id_a31afb2f42bd5e3d7c4c859c'; //hardcoded for now untill I make modal (I need to fetch that chef/waiter id first)
+            if(this.current_type === 'Food') this.foodAcceptedByID = id
+            else this.drinkAcceptedByID = id
         },
 
 

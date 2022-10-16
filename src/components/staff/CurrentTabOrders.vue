@@ -53,7 +53,7 @@
           }
       },
   
-     async created() {
+    async created() {
         setTimeout(() => { this.getOrders() }, 1000) 
 
             this.$watch(
@@ -82,7 +82,7 @@
             this.getOrders()
             
         },30000)
-     },
+    },
 
   
       methods: {
