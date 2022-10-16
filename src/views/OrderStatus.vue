@@ -28,7 +28,14 @@ import FloatingMenu from '@/components/FloatingMenu.vue';
 //import store from '@/store';
 
 export default {
-    name: "Navbar",
+    name: "OrderStatus",
+
+    components: {
+        Footer,
+        "progress-bar": ProgressBar,
+        FloatingMenu
+    },
+
     data() {
         return {
             //store,
@@ -36,26 +43,27 @@ export default {
               'ordered|ready to take over': 25, 
               'accepted|being prepared':50, 
               'ready|waiting to be served':90, 
-              'served':1, 
-              'paid':1,
+              'served':100, 
+              'paid':100,
             },
             currFoodStatus: undefined,
-            currDrinkStatus: undefined
+            currDrinkStatus: undefined,
+            currStatus: undefined
         };
     },
-    components: {
-    Footer,
-    "progress-bar": ProgressBar,
-    FloatingMenu
-},
+   
     
     methods: {
       async getStatus(){
         let id = JSON.parse(localStorage.getItem('orderID')); 
         let order = await Orders.getOrder(id);
-  
+        
         this.currFoodStatus = order.orderInfo.foodStatus
         this.currDrinkStatus = order.orderInfo.drinkStatus
+        console.log(this.currFoodStatus)
+
+        if (this.currFoodStatus) this.currStatus = this.currFoodStatus
+        else this.currStatus = this.currDrinkStatus
       }
     },
 

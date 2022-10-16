@@ -66,5 +66,12 @@ iframe{
     padding:5px;
 }
 
+@media (min-width:1024px){
+    #soloFrame{
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+}
+
 
 </style>

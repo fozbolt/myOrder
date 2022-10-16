@@ -47,7 +47,12 @@
 
                 <button  v-if="card.type.toLowerCase()==='food'" @click="toggleCollapsible" class="collapsible" ref="collapsible">Choose additions</button>
                 <div v-if="card.type.toLowerCase()==='food'" class="content">
-                    <div v-for="(value, key, index) in additions" class="form-check" v-bind:style= "[index===additions.length-1 ? {'border-bottom':'black solid 1px'} : {}]" :key="index" >
+                    <div 
+                    v-for="(value, key, index) in additions" 
+                    class="form-check" 
+                    v-bind:style= "[index===additions.length-1 ? {'border-bottom':'black solid 1px'} : {}]" 
+                    :key="index" 
+                    >
                         <input :value="index" v-model="checkedPrices" class="form-check-input" type="checkbox" id="flexCheckDefault" >
                         <label class="form-check-label" for="flexCheckDefault">
                             {{key}}
