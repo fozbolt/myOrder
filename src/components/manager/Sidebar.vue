@@ -96,9 +96,7 @@ export default {
                         overlay.show();
                         trigger.removeClass('is-closed');
                         trigger.addClass('is-open');
-                        isClosed = true;
-                       
-                       
+                        isClosed = true;     
                     }
                     $("#logoTopRight").toggle();
                 }
@@ -112,6 +110,7 @@ export default {
     },
 
     mounted(){
+       $("#logoTopRight").show();
        this.toggleSidebar();
     },
 
