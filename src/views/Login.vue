@@ -347,9 +347,16 @@ small{
     font-size:20px;
   }
   #logo-main{
-  margin-top: 10vh;
+  margin-top: 5vh;
  }
 
+}
+
+
+@media(min-width:1700px){
+    #logo-main{
+        margin-top: 10vh;
+ }
 }
 
 </style>
