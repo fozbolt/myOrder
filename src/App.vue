@@ -64,7 +64,9 @@ export default {
 
 
     setLoader(){
-        if(this.store.userType !== 'customer' || !this.$route.path.includes('/orders')) this.loaded = true;
+        let type = this.store.userType || 'customer'
+
+        if(type !== 'customer' || !this.$route.path.includes('/orders') ) this.loaded = true;
         else 
             setTimeout(()=>{
                 this.loaded=true
