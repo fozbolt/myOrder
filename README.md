@@ -1,10 +1,14 @@
 # myOrder
 
-##accounts:
+## accounts:
 customer2@mail.com
+
 manager@mail.com
+
 barmen@mail.com
+
 waiter@mail.com
+
 chef@mail.com
 
-##password: 123
+## password: 123
